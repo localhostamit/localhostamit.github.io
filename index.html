@@ -3,19 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Amit Kumar | Portfolio</title>
+    <title>Amit Kumar | MCU Portfolio</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;800&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Marvel:wght@400;700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
     
     <style>
         :root {
-            --bg-color: #0a0a0a;
-            --card-bg: rgba(255, 255, 255, 0.03);
-            --primary: #00f2ea;
-            --secondary: #ff0050;
+            /* Marvel Theme Colors */
+            --bg-color: #0B0E14; /* Dark Space Black */
+            --card-bg: rgba(20, 20, 30, 0.6);
+            --primary: #EC1D24; /* Marvel Red */
+            --secondary: #F5D061; /* Infinity Gold */
+            --accent: #4da6ff; /* Tesseract Blue */
             --text-main: #ffffff;
-            --text-muted: #888888;
+            --text-muted: #aebcd1;
         }
 
         * {
@@ -26,110 +28,125 @@
 
         body {
             background-color: var(--bg-color);
-            font-family: 'Outfit', sans-serif;
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
+            font-family: 'Rajdhani', sans-serif; /* Tech/Sci-Fi Font */
+            min-height: 100vh; /* Allow scrolling */
             color: var(--text-main);
             position: relative;
+            overflow-x: hidden;
+            padding: 2rem 0;
         }
 
-        /* Animated Background Blobs */
-        .blob {
-            position: absolute;
-            border-radius: 50%;
-            filter: blur(80px);
+        /* Background Energy Effects */
+        .bg-effect {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             z-index: -1;
-            opacity: 0.6;
-            animation: float 10s infinite alternate;
+            background: 
+                radial-gradient(circle at 10% 20%, rgba(236, 29, 36, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(245, 208, 97, 0.1) 0%, transparent 40%);
         }
 
-        .blob-1 {
-            width: 400px;
-            height: 400px;
-            background: var(--primary);
-            top: -100px;
-            left: -100px;
+        .container {
+            width: 90%;
+            max-width: 800px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 3rem;
         }
 
-        .blob-2 {
-            width: 300px;
-            height: 300px;
-            background: var(--secondary);
-            bottom: -50px;
-            right: -50px;
-            animation-delay: -5s;
-        }
-
-        /* The Glass Card */
+        /* --- MAIN PROFILE CARD --- */
         .card {
             background: var(--card-bg);
-            width: 90%;
-            max-width: 400px;
+            width: 100%;
+            max-width: 450px;
             padding: 3rem 2rem;
-            border-radius: 24px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            border-radius: 12px;
+            /* Tech border effect */
+            border: 1px solid rgba(236, 29, 36, 0.3);
+            box-shadow: 
+                0 0 20px rgba(236, 29, 36, 0.1),
+                inset 0 0 20px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
             text-align: center;
             transform-style: preserve-3d;
             transform: perspective(1000px);
-            transition: transform 0.1s ease;
+            position: relative;
         }
 
+        /* Corner accents for tech look */
+        .card::before, .card::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--secondary);
+            transition: 0.3s;
+        }
+        .card::before { top: -2px; left: -2px; border-right: 0; border-bottom: 0; }
+        .card::after { bottom: -2px; right: -2px; border-left: 0; border-top: 0; }
+
         /* Profile Image */
-        .avatar {
-            width: 120px; /* Slightly larger for better detail */
-            height: 120px;
-            border-radius: 50%;
+        .avatar-container {
+            width: 130px;
+            height: 130px;
             margin: 0 auto 1.5rem;
-            display: block; /* Ensures centering */
-            overflow: hidden; /* Important for image within circle */
-            box-shadow: 0 0 20px rgba(0, 242, 234, 0.3);
+            padding: 5px;
+            border-radius: 50%;
+            border: 2px dashed var(--secondary); /* Iron Man Arc Reactor vibe */
+            animation: spin-slow 20s linear infinite;
+            transform: translateZ(30px);
+        }
+
+        .avatar {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 2px solid var(--primary);
             position: relative;
-            transform: translateZ(20px);
-            border: 3px solid var(--primary); /* Nice border around image */
         }
 
         .avatar img {
             width: 100%;
             height: 100%;
-            object-fit: cover; /* Ensures image fills the circle without distortion */
-            object-position: center; /* Centers the image within the circle */
+            object-fit: cover;
+            object-position: center;
+            display: block;
         }
 
         /* Typography */
         h1 {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 2.5rem;
+            font-family: 'Marvel', sans-serif; /* Official Marvel Font Style */
+            font-size: 3.5rem;
+            letter-spacing: 2px;
             margin-bottom: 0.5rem;
-            background: linear-gradient(to right, #fff, #aaa);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            transform: translateZ(30px);
+            text-transform: uppercase;
+            color: var(--text-main);
+            text-shadow: 3px 3px 0px var(--primary);
+            transform: translateZ(40px);
         }
 
         .status-container {
-            font-size: 1.1rem;
-            color: var(--primary);
-            margin-bottom: 0.5rem;
-            font-weight: 500;
-            letter-spacing: 1px;
+            font-size: 1.2rem;
+            color: var(--secondary);
+            margin-bottom: 1rem;
+            font-weight: 700;
+            letter-spacing: 2px;
             text-transform: uppercase;
-            transform: translateZ(25px);
-            display: flex;
-            justify-content: center;
-            gap: 10px;
+            transform: translateZ(30px);
         }
 
         .degree {
             color: var(--text-muted);
-            font-size: 0.9rem;
+            font-size: 1rem;
             margin-bottom: 2rem;
             transform: translateZ(20px);
+            font-family: 'Rajdhani', sans-serif;
         }
 
         /* Github Button */
@@ -137,129 +154,168 @@
             display: inline-flex;
             align-items: center;
             gap: 10px;
-            padding: 12px 30px;
-            background: rgba(255, 255, 255, 0.05);
+            padding: 12px 40px;
+            background: linear-gradient(45deg, #8b0000, var(--primary));
             color: white;
             text-decoration: none;
-            border-radius: 50px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            font-weight: 600;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            overflow: hidden;
-            transform: translateZ(40px);
+            border: none;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            clip-path: polygon(10% 0, 100% 0, 100% 70%, 90% 100%, 0 100%, 0 30%); /* Avengers styling */
+            transition: all 0.3s ease;
+            transform: translateZ(50px);
         }
 
         .btn:hover {
-            background: white;
+            background: var(--secondary);
             color: black;
-            box-shadow: 0 0 30px rgba(255, 255, 255, 0.4);
-            transform: translateZ(50px) scale(1.05);
+            box-shadow: 0 0 20px var(--secondary);
+            transform: translateZ(60px) scale(1.05);
         }
 
-        .btn svg {
-            width: 20px;
-            height: 20px;
-            fill: currentColor;
+        .btn svg { width: 20px; height: 20px; fill: currentColor; }
+
+        /* --- PROJECTS SECTION --- */
+        .projects-title {
+            font-family: 'Marvel', sans-serif;
+            font-size: 2.5rem;
+            color: var(--text-main);
+            text-transform: uppercase;
+            border-bottom: 3px solid var(--primary);
+            padding-bottom: 5px;
+            margin-top: 2rem;
         }
 
-        /* Animations */
-        @keyframes float {
-            0% { transform: translate(0, 0); }
-            100% { transform: translate(20px, 40px); }
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            width: 100%;
         }
 
-        /* Mobile responsiveness */
-        @media (max-width: 480px) {
-            h1 { font-size: 2rem; }
-            .blob-1 { width: 200px; height: 200px; }
+        .project-card {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 1.5rem;
+            border-left: 4px solid var(--secondary);
+            transition: 0.3s;
+            position: relative;
+            overflow: hidden;
         }
+
+        .project-card:hover {
+            background: rgba(236, 29, 36, 0.1);
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+        }
+
+        .project-card h3 {
+            color: var(--secondary);
+            margin-bottom: 0.5rem;
+            font-size: 1.4rem;
+        }
+
+        .project-card p {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            line-height: 1.4;
+        }
+
+        @keyframes spin-slow {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
     </style>
 </head>
 <body>
 
-    <div class="blob blob-1"></div>
-    <div class="blob blob-2"></div>
+    <div class="bg-effect"></div>
 
-    <div class="card" id="tiltCard">
-        <div class="avatar">
-            <img profile.jpg alt="Amit Kumar Profile Picture">
-        </div>
-        
-        <h1>Amit Kumar</h1>
-        
-        <div class="status-container">
-            <span>&lt;</span>
-            <span id="typing-text"></span>
-            <span>/&gt;</span>
-        </div>
-        
-        <p class="degree">BCA Degree • Current Student</p>
+    <div class="container">
+        <div class="card" id="tiltCard">
+            <div class="avatar-container">
+                <div class="avatar">
+                    <img src="profile.jpg" alt="Amit Kumar" onerror="this.style.display='none'">
+                </div>
+            </div>
+            
+            <h1>Amit Kumar</h1>
+            
+            <div class="status-container">
+                <span id="typing-text"></span><span style="animation: blink 1s infinite">|</span>
+            </div>
+            
+            <p class="degree">BCA Degree • Current Student</p>
 
-        <a href="https://github.com/localhostamit" target="_blank" class="btn">
-            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.66-3.795-1.455-3.795-1.455-.54-1.38-1.335-1.755-1.335-1.755-1.095-.75.09-.735.09-.735 1.2.09 1.83 1.23 1.83 1.23 1.08 1.86 2.805 1.32 3.495 1.005.105-.78.42-1.32.765-1.62-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.225 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405 1.02 0 2.04.135 3 .405 2.295-1.56 3.3-1.23 3.3-1.23.66 1.695.24 2.925.12 3.225.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.285 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
-            GitHub Profile
-        </a>
+            <a href="https://github.com/localhostamit" target="_blank" class="btn">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.66-3.795-1.455-3.795-1.455-.54-1.38-1.335-1.755-1.335-1.755-1.095-.75.09-.735.09-.735 1.2.09 1.83 1.23 1.83 1.23 1.08 1.86 2.805 1.32 3.495 1.005.105-.78.42-1.32.765-1.62-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.225 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405 1.02 0 2.04.135 3 .405 2.295-1.56 3.3-1.23 3.3-1.23.66 1.695.24 2.925.12 3.225.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.285 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                Access Mainframe
+            </a>
+        </div>
+
+        <h2 class="projects-title">Mission Log / Projects</h2>
+        <div class="projects-grid">
+            <div class="project-card">
+                <h3>Library Management</h3>
+                <p>A Java-based system to track book inventory and issue records efficiently.</p>
+            </div>
+            <div class="project-card">
+                <h3>Portfolio V1</h3>
+                <p>Responsive personal website designed with HTML, CSS, and JS.</p>
+            </div>
+            <div class="project-card">
+                <h3>Waste Management</h3>
+                <p>Concept app for tracking and managing solid and e-waste disposal.</p>
+            </div>
+            <div class="project-card">
+                <h3>Coming Soon...</h3>
+                <p>Currently classifying new data. Check back later.</p>
+            </div>
+        </div>
     </div>
 
     <script>
-        // 1. Typing Effect Logic
+        // Typing Effect
         const textElement = document.getElementById('typing-text');
-        // Updated phrases to include your skills!
-        const phrases = ['C', 'C++', 'HTML', 'CSS', 'JavaScript', 'Developer', 'Student']; 
+        const phrases = ['C++', 'Java', 'HTML / CSS', 'Web Developer', 'BCA Student']; 
         let phraseIndex = 0;
         let charIndex = 0;
         let isDeleting = false;
-        let typeSpeed = 100;
 
         function type() {
             const currentPhrase = phrases[phraseIndex];
-            
             if (isDeleting) {
                 textElement.textContent = currentPhrase.substring(0, charIndex - 1);
                 charIndex--;
-                typeSpeed = 50; // Faster when deleting
             } else {
                 textElement.textContent = currentPhrase.substring(0, charIndex + 1);
                 charIndex++;
-                typeSpeed = 150; // Normal typing speed
             }
+
+            let typeSpeed = isDeleting ? 50 : 100;
 
             if (!isDeleting && charIndex === currentPhrase.length) {
                 isDeleting = true;
-                typeSpeed = 2000; // Pause at end of word
+                typeSpeed = 2000;
             } else if (isDeleting && charIndex === 0) {
                 isDeleting = false;
                 phraseIndex = (phraseIndex + 1) % phrases.length;
-                typeSpeed = 500; // Pause before new word
+                typeSpeed = 500;
             }
-
             setTimeout(type, typeSpeed);
         }
-
-        // Start typing loop
         document.addEventListener('DOMContentLoaded', type);
 
-
-        // 2. 3D Tilt Effect Logic
+        // 3D Tilt Logic
         const card = document.getElementById('tiltCard');
-        
         document.addEventListener('mousemove', (e) => {
-            const x = (window.innerWidth / 2 - e.pageX) / 25;
-            const y = (window.innerHeight / 2 - e.pageY) / 25;
-            
-            // Apply rotation to the card
-            card.style.transform = `rotateY(${x}deg) rotateX(${y}deg)`;
+            if(window.innerWidth > 768) { // Only tilt on PC, not mobile
+                const x = (window.innerWidth / 2 - e.pageX) / 25;
+                const y = (window.innerHeight / 2 - e.pageY) / 25;
+                card.style.transform = `rotateY(${x}deg) rotateX(${y}deg)`;
+            }
         });
-
-        // Reset position when mouse leaves window
-        document.addEventListener('mouseleave', () => {
-            card.style.transform = `rotateY(0deg) rotateX(0deg)`;
-        });
-
     </script>
 </body>
 </html>
-
-
-
