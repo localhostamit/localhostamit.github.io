@@ -3,21 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Amit Kumar | MCU Portfolio</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Marvel:wght@400;700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+    <title>Amit | Superhero Developer</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <style>
         :root {
-            /* Marvel Theme Colors */
-            --bg-color: #0B0E14; /* Dark Space Black */
-            --card-bg: rgba(20, 20, 30, 0.6);
-            --primary: #EC1D24; /* Marvel Red */
-            --secondary: #F5D061; /* Infinity Gold */
-            --accent: #4da6ff; /* Tesseract Blue */
-            --text-main: #ffffff;
-            --text-muted: #aebcd1;
+            --primary-bg: #0b0c10;
+            --secondary-bg: #1f2833;
+            --hero-accent: #66fcf1; /* Neon Cyan */
+            --hero-dark: #45a29e;
+            --text-color: #c5c6c7;
+            --white: #ffffff;
+            --comic-red: #e23636; /* Avengers Red Accent */
         }
 
         * {
@@ -27,297 +25,345 @@
         }
 
         body {
-            background-color: var(--bg-color);
-            font-family: 'Rajdhani', sans-serif; /* Tech/Sci-Fi Font */
-            min-height: 100vh; /* Allow scrolling */
-            color: var(--text-main);
-            position: relative;
+            background-color: var(--primary-bg);
+            color: var(--text-color);
+            font-family: 'Montserrat', sans-serif;
             overflow-x: hidden;
-            padding: 2rem 0;
         }
 
-        /* Background Energy Effects */
-        .bg-effect {
+        h1, h2, h3 {
+            font-family: 'Bebas Neue', cursive;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        /* --- Animations --- */
+        @keyframes glow {
+            0% { box-shadow: 0 0 5px var(--hero-accent); }
+            50% { box-shadow: 0 0 20px var(--hero-accent), 0 0 10px var(--hero-accent); }
+            100% { box-shadow: 0 0 5px var(--hero-accent); }
+        }
+
+        @keyframes slideInLeft {
+            from { transform: translateX(-100px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+
+        /* --- Header / Nav --- */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 50px;
+            background: rgba(11, 12, 16, 0.95);
             position: fixed;
-            top: 0;
-            left: 0;
             width: 100%;
-            height: 100%;
-            z-index: -1;
-            background: 
-                radial-gradient(circle at 10% 20%, rgba(236, 29, 36, 0.15) 0%, transparent 40%),
-                radial-gradient(circle at 90% 80%, rgba(245, 208, 97, 0.1) 0%, transparent 40%);
+            z-index: 100;
+            border-bottom: 2px solid var(--hero-dark);
         }
 
-        .container {
-            width: 90%;
-            max-width: 800px;
-            margin: 0 auto;
+        .logo {
+            font-size: 1.5rem;
+            color: var(--hero-accent);
+            font-weight: bold;
+        }
+
+        .nav-links a {
+            color: var(--white);
+            text-decoration: none;
+            margin-left: 20px;
+            font-weight: bold;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--comic-red);
+        }
+
+        /* --- Hero Section --- */
+        .hero {
+            height: 100vh;
             display: flex;
             flex-direction: column;
+            justify-content: center;
             align-items: center;
-            gap: 3rem;
-        }
-
-        /* --- MAIN PROFILE CARD --- */
-        .card {
-            background: var(--card-bg);
-            width: 100%;
-            max-width: 450px;
-            padding: 3rem 2rem;
-            border-radius: 12px;
-            /* Tech border effect */
-            border: 1px solid rgba(236, 29, 36, 0.3);
-            box-shadow: 
-                0 0 20px rgba(236, 29, 36, 0.1),
-                inset 0 0 20px rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(10px);
             text-align: center;
-            transform-style: preserve-3d;
-            transform: perspective(1000px);
+            background: radial-gradient(circle at center, #1f2833 0%, #0b0c10 70%);
+            padding: 20px;
+        }
+
+        .profile-container {
             position: relative;
+            width: 200px;
+            height: 200px;
+            margin-bottom: 30px;
+            animation: float 4s ease-in-out infinite;
         }
 
-        /* Corner accents for tech look */
-        .card::before, .card::after {
-            content: '';
-            position: absolute;
-            width: 20px;
-            height: 20px;
-            border: 2px solid var(--secondary);
-            transition: 0.3s;
-        }
-        .card::before { top: -2px; left: -2px; border-right: 0; border-bottom: 0; }
-        .card::after { bottom: -2px; right: -2px; border-left: 0; border-top: 0; }
-
-        /* Profile Image */
-        .avatar-container {
-            width: 130px;
-            height: 130px;
-            margin: 0 auto 1.5rem;
-            padding: 5px;
-            border-radius: 50%;
-            border: 2px dashed var(--secondary); /* Iron Man Arc Reactor vibe */
-            animation: spin-slow 10s linear infinite;
-            transform: translateZ(30px);
-        }
-
-        .avatar {
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            overflow: hidden;
-            border: 2px solid var(--primary);
-            position: relative;
-        }
-
-        .avatar img {
+        .profile-img {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            object-position: center;
-            display: block;
+            border-radius: 50%;
+            border: 4px solid var(--hero-accent);
+            animation: glow 3s infinite;
         }
 
-        /* Typography */
-        h1 {
-            font-family: 'Marvel', sans-serif; /* Official Marvel Font Style */
-            font-size: 3.5rem;
-            letter-spacing: 2px;
-            margin-bottom: 0.5rem;
-            text-transform: uppercase;
-            color: var(--text-main);
-            text-shadow: 3px 3px 0px var(--primary);
-            transform: translateZ(40px);
+        .hero-title {
+            font-size: 5rem;
+            color: var(--white);
+            margin-bottom: 10px;
+            animation: slideInLeft 1s ease-out;
+            text-shadow: 3px 3px 0px var(--comic-red);
         }
 
-        .status-container {
+        .hero-subtitle {
+            font-size: 1.5rem;
+            color: var(--hero-accent);
+            margin-bottom: 30px;
+        }
+
+        .cta-btn {
+            padding: 12px 30px;
+            background: transparent;
+            border: 2px solid var(--hero-accent);
+            color: var(--hero-accent);
+            font-weight: bold;
             font-size: 1.2rem;
-            color: var(--secondary);
-            margin-bottom: 1rem;
-            font-weight: 700;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            transform: translateZ(30px);
-        }
-
-        .degree {
-            color: var(--text-muted);
-            font-size: 1rem;
-            margin-bottom: 2rem;
-            transform: translateZ(20px);
-            font-family: 'Rajdhani', sans-serif;
-        }
-
-        /* Github Button */
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            padding: 12px 40px;
-            background: linear-gradient(45deg, #8b0000, var(--primary));
-            color: white;
+            cursor: pointer;
+            transition: 0.3s;
             text-decoration: none;
-            border: none;
-            font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 1px;
-            clip-path: polygon(10% 0, 100% 0, 100% 70%, 90% 100%, 0 100%, 0 30%); /* Avengers styling */
-            transition: all 0.3s ease;
-            transform: translateZ(50px);
+            font-family: 'Bebas Neue', cursive;
         }
 
-        .btn:hover {
-            background: var(--secondary);
-            color: black;
-            box-shadow: 0 0 20px var(--secondary);
-            transform: translateZ(60px) scale(1.05);
+        .cta-btn:hover {
+            background: var(--hero-accent);
+            color: var(--primary-bg);
+            box-shadow: 0 0 20px var(--hero-accent);
         }
 
-        .btn svg { width: 20px; height: 20px; fill: currentColor; }
+        /* --- GitHub Projects Section --- */
+        .projects-section {
+            padding: 80px 50px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
 
-        /* --- PROJECTS SECTION --- */
-        .projects-title {
-            font-family: 'Marvel', sans-serif;
-            font-size: 2.5rem;
-            color: var(--text-main);
-            text-transform: uppercase;
-            border-bottom: 3px solid var(--primary);
-            padding-bottom: 5px;
-            margin-top: 2rem;
+        .section-title {
+            text-align: center;
+            font-size: 3rem;
+            color: var(--white);
+            margin-bottom: 50px;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            width: 100px;
+            height: 4px;
+            background: var(--comic-red);
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
         }
 
         .projects-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
-            width: 100%;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
         }
 
         .project-card {
-            background: rgba(255, 255, 255, 0.05);
-            padding: 1.5rem;
-            border-left: 4px solid var(--secondary);
-            transition: 0.3s;
+            background: var(--secondary-bg);
+            padding: 25px;
+            border-radius: 10px;
+            border: 1px solid var(--hero-dark);
+            transition: transform 0.3s, box-shadow 0.3s;
             position: relative;
             overflow: hidden;
         }
 
         .project-card:hover {
-            background: rgba(236, 29, 36, 0.1);
-            transform: translateY(-5px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+            transform: translateY(-10px);
+            box-shadow: 0 10px 30px rgba(102, 252, 241, 0.2);
+            border-color: var(--hero-accent);
         }
 
-        .project-card h3 {
-            color: var(--secondary);
-            margin-bottom: 0.5rem;
-            font-size: 1.4rem;
+        .project-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            background: var(--comic-red);
         }
 
-        .project-card p {
+        .project-title {
+            font-size: 1.8rem;
+            color: var(--white);
+            margin-bottom: 10px;
+        }
+
+        .project-desc {
             font-size: 0.9rem;
-            color: var(--text-muted);
-            line-height: 1.4;
+            line-height: 1.5;
+            margin-bottom: 20px;
+            height: 60px; /* Fixed height for uniformity */
+            overflow: hidden;
         }
 
-        @keyframes spin-slow {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
+        .project-stats {
+            display: flex;
+            gap: 15px;
+            font-size: 0.8rem;
+            color: var(--hero-dark);
+            margin-bottom: 20px;
         }
 
+        .repo-link {
+            display: inline-block;
+            color: var(--hero-accent);
+            text-decoration: none;
+            font-weight: bold;
+            border-bottom: 1px dashed var(--hero-accent);
+        }
+
+        /* --- Loading State --- */
+        #loading {
+            text-align: center;
+            color: var(--hero-accent);
+            font-size: 1.5rem;
+        }
+
+        /* --- Footer --- */
+        footer {
+            text-align: center;
+            padding: 40px;
+            border-top: 1px solid var(--secondary-bg);
+            margin-top: 50px;
+        }
+
+        .social-icons a {
+            color: var(--white);
+            font-size: 1.5rem;
+            margin: 0 15px;
+            transition: color 0.3s;
+        }
+
+        .social-icons a:hover {
+            color: var(--hero-accent);
+        }
+
+        /* --- Mobile --- */
+        @media (max-width: 768px) {
+            .hero-title { font-size: 3.5rem; }
+            .nav-links { display: none; } /* Simple hiding for this demo */
+            .projects-section { padding: 50px 20px; }
+        }
     </style>
 </head>
 <body>
 
-    <div class="bg-effect"></div>
-
-    <div class="container">
-        <div class="card" id="tiltCard">
-            <div class="avatar-container">
-                <div class="avatar">
-                    <img src="profile.jpg" alt="Amit Kumar" onerror="this.style.display='none'">
-                </div>
-            </div>
-            
-            <h1>Amit Kumar</h1>
-            
-            <div class="status-container">
-                <span id="typing-text"></span><span style="animation: blink 1s infinite">|</span>
-            </div>
-            
-            <p class="degree">BCA Degree • Current Student</p>
-
-            <a href="https://github.com/localhostamit" target="_blank" class="btn">
-                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.66-3.795-1.455-3.795-1.455-.54-1.38-1.335-1.755-1.335-1.755-1.095-.75.09-.735.09-.735 1.2.09 1.83 1.23 1.83 1.23 1.08 1.86 2.805 1.32 3.495 1.005.105-.78.42-1.32.765-1.62-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.225 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405 1.02 0 2.04.135 3 .405 2.295-1.56 3.3-1.23 3.3-1.23.66 1.695.24 2.925.12 3.225.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.285 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
-                Access Mainframe
-            </a>
+    <nav>
+        <div class="logo">LOCALHOST<span style="color:var(--white)">AMIT</span></div>
+        <div class="nav-links">
+            <a href="#hero">HQ</a>
+            <a href="#projects">MISSIONS</a>
+            <a href="https://github.com/localhostamit" target="_blank">GITHUB</a>
         </div>
+    </nav>
 
-        <h2 class="projects-title">Mission Log / Projects</h2>
-        <div class="projects-grid">
-            <div class="project-card">
-                <h3>PYQ PLATFORM</h3>
-                <p>An Website used to find all the pyqs</p>
-            </div>
-            <div class="project-card">
-                <h3>Portfolio V1</h3>
-                <p>Responsive personal website designed with HTML, CSS, and JS.</p>
-            </div>
-            <div class="project-card">
-                <h3>Waste Management</h3>
-                <p>Concept app for tracking and managing solid and e-waste disposal.</p>
-            </div>
-            <div class="project-card">
-                <h3>Coming Soon...</h3>
-                <p>Currently classifying new data. Check back later.</p>
-            </div>
+    <section class="hero" id="hero">
+        <div class="profile-container">
+            <img src="profile.jpg" alt="Amit" class="profile-img" onerror="this.src='https://via.placeholder.com/200/0b0c10/66fcf1?text=Amit'">
         </div>
-    </div>
+        <h1 class="hero-title">AMIT</h1>
+        <h3 class="hero-subtitle">Coding the Future // Breaking the Firewall</h3>
+        <a href="#projects" class="cta-btn">View Mission Log</a>
+    </section>
+
+    <section class="projects-section" id="projects">
+        <h2 class="section-title">Mission Log (GitHub)</h2>
+        <div id="loading"><i class="fas fa-circle-notch fa-spin"></i> Accessing Mainframe...</div>
+        <div class="projects-grid" id="projects-container">
+            </div>
+    </section>
+
+    <footer>
+        <div class="social-icons">
+            <a href="https://github.com/localhostamit"><i class="fab fa-github"></i></a>
+            <a href="#"><i class="fab fa-linkedin"></i></a>
+            <a href="#"><i class="fas fa-envelope"></i></a>
+        </div>
+        <p style="margin-top: 15px; opacity: 0.6;">&copy; 2024 Amit. Styled by Jarvis.</p>
+    </footer>
 
     <script>
-        // Typing Effect
-        const textElement = document.getElementById('typing-text');
-        const phrases = ['C++', 'Java', 'HTML / CSS', 'Web Developer', 'BCA Student']; 
-        let phraseIndex = 0;
-        let charIndex = 0;
-        let isDeleting = false;
+        // GitHub Username
+        const username = 'localhostamit';
+        const container = document.getElementById('projects-container');
+        const loading = document.getElementById('loading');
 
-        function type() {
-            const currentPhrase = phrases[phraseIndex];
-            if (isDeleting) {
-                textElement.textContent = currentPhrase.substring(0, charIndex - 1);
-                charIndex--;
-            } else {
-                textElement.textContent = currentPhrase.substring(0, charIndex + 1);
-                charIndex++;
+        // Fetch Repositories
+        async function fetchProjects() {
+            try {
+                const response = await fetch(`https://api.github.com/users/${username}/repos?sort=updated&per_page=6`);
+                
+                if (!response.ok) throw new Error('Network response was not ok');
+                
+                const repos = await response.json();
+                
+                loading.style.display = 'none';
+
+                repos.forEach(repo => {
+                    // Create Card HTML
+                    const card = document.createElement('div');
+                    card.classList.add('project-card');
+
+                    const description = repo.description ? repo.description : "Top secret mission details unavailable.";
+                    const lang = repo.language ? repo.language : "Unknown";
+
+                    card.innerHTML = `
+                        <h3 class="project-title">${repo.name}</h3>
+                        <p class="project-desc">${description}</p>
+                        <div class="project-stats">
+                            <span><i class="fas fa-circle" style="font-size: 8px; color: var(--hero-accent)"></i> ${lang}</span>
+                            <span><i class="fas fa-star"></i> ${repo.stargazers_count}</span>
+                            <span><i class="fas fa-code-branch"></i> ${repo.forks_count}</span>
+                        </div>
+                        <a href="${repo.html_url}" target="_blank" class="repo-link">ACCESS CODE <i class="fas fa-arrow-right"></i></a>
+                    `;
+
+                    container.appendChild(card);
+                });
+
+            } catch (error) {
+                loading.innerHTML = "System Error: Unable to fetch data from GitHub.";
+                console.error('Error fetching repos:', error);
             }
-
-            let typeSpeed = isDeleting ? 50 : 100;
-
-            if (!isDeleting && charIndex === currentPhrase.length) {
-                isDeleting = true;
-                typeSpeed = 2000;
-            } else if (isDeleting && charIndex === 0) {
-                isDeleting = false;
-                phraseIndex = (phraseIndex + 1) % phrases.length;
-                typeSpeed = 500;
-            }
-            setTimeout(type, typeSpeed);
         }
-        document.addEventListener('DOMContentLoaded', type);
 
-        // 3D Tilt Logic
-        const card = document.getElementById('tiltCard');
-        document.addEventListener('mousemove', (e) => {
-            if(window.innerWidth > 768) { // Only tilt on PC, not mobile
-                const x = (window.innerWidth / 2 - e.pageX) / 25;
-                const y = (window.innerHeight / 2 - e.pageY) / 25;
-                card.style.transform = `rotateY(${x}deg) rotateX(${y}deg)`;
-            }
+        // Initialize
+        fetchProjects();
+
+        // Simple smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
         });
     </script>
 </body>
 </html>
-
-
