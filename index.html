@@ -3,459 +3,348 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Amit | The Archive</title>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&family=Syncopate:wght@700&display=swap" rel="stylesheet">
+    <title>SYSTEM ACCESS: AMIT</title>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
         :root {
-            --bg-dark: #050505;
-            --glass: rgba(255, 255, 255, 0.05);
-            --border: rgba(255, 255, 255, 0.1);
-            --neon-blue: #00f3ff;
-            --neon-purple: #bc13fe;
-            --text-main: #ffffff;
-            --text-muted: #888888;
+            --neon-green: #0f0;
+            --dark-green: #003300;
+            --bg-black: #050505;
+            --glass-panel: rgba(0, 20, 0, 0.85);
+            --cyan: #00f3ff;
+            --alert: #ff003c;
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            cursor: none; /* Custom cursor handling */
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            background-color: var(--bg-dark);
-            color: var(--text-main);
-            font-family: 'Space Grotesk', sans-serif;
+            background: var(--bg-black);
+            color: var(--neon-green);
+            font-family: 'Share Tech Mono', monospace;
             overflow-x: hidden;
-            position: relative;
         }
 
-        /* --- Custom Cursor --- */
-        .cursor {
-            width: 20px;
-            height: 20px;
-            border: 1px solid var(--neon-blue);
-            border-radius: 50%;
-            position: fixed;
-            pointer-events: none;
-            z-index: 9999;
-            transition: transform 0.1s;
-            mix-blend-mode: difference;
-        }
-        .cursor-dot {
-            width: 4px;
-            height: 4px;
-            background: var(--neon-blue);
-            border-radius: 50%;
-            position: fixed;
-            pointer-events: none;
-            z-index: 9999;
-        }
-
-        /* --- Cinematic Grain Overlay --- */
-        .grain {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
-            pointer-events: none;
-            z-index: 900;
-        }
-
-        /* --- Moving Spotlight Background --- */
-        .spotlight {
-            position: fixed;
-            width: 600px;
-            height: 600px;
-            background: radial-gradient(circle, rgba(0, 243, 255, 0.15) 0%, transparent 70%);
-            border-radius: 50%;
-            pointer-events: none;
-            transform: translate(-50%, -50%);
-            z-index: -1;
-            filter: blur(50px);
-        }
-
-        /* --- Navigation --- */
-        nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 30px 50px;
-            position: fixed;
-            width: 100%;
-            z-index: 1000;
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid var(--border);
-        }
-
-        .logo {
-            font-family: 'Syncopate', sans-serif;
-            font-weight: 700;
-            letter-spacing: 2px;
-            color: var(--text-main);
-            text-transform: uppercase;
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 30px;
-        }
-
-        .nav-links a {
-            color: var(--text-muted);
-            text-decoration: none;
-            text-transform: uppercase;
-            font-size: 0.8rem;
-            letter-spacing: 1px;
-            transition: 0.3s;
-        }
-
-        .nav-links a:hover {
-            color: var(--neon-blue);
-            text-shadow: 0 0 10px var(--neon-blue);
-        }
-
-        /* --- Hero Section --- */
-        .hero {
-            height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            padding: 0 50px;
-        }
-
-        .hero-content {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            align-items: center;
-            gap: 50px;
-            max-width: 1400px;
-            width: 100%;
-        }
-
-        .hero-text h1 {
-            font-family: 'Syncopate', sans-serif;
-            font-size: 6rem;
-            line-height: 0.9;
-            text-transform: uppercase;
-            position: relative;
-            animation: glitch 3s infinite;
-        }
-
-        .hero-text h1 span {
-            color: transparent;
-            -webkit-text-stroke: 2px var(--text-main);
+        /* --- MATRIX BACKGROUND --- */
+        canvas {
             display: block;
-        }
-
-        .hero-text h1 span.filled {
-            color: var(--text-main);
-            -webkit-text-stroke: 0;
-        }
-
-        .hero-subtitle {
-            margin-top: 20px;
-            font-size: 1.2rem;
-            color: var(--neon-blue);
-            letter-spacing: 3px;
-            text-transform: uppercase;
-        }
-
-        .hero-img-container {
-            position: relative;
-            width: 400px;
-            height: 500px;
-            justify-self: end;
-        }
-
-        .hero-img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            filter: grayscale(100%) contrast(1.2);
-            transition: 0.5s;
-            clip-path: polygon(10% 0, 100% 0, 100% 90%, 90% 100%, 0 100%, 0 10%);
-        }
-
-        .hero-img:hover {
-            filter: grayscale(0%) contrast(1);
-        }
-
-        .img-decoration {
-            position: absolute;
-            top: 20px;
-            left: -20px;
-            width: 100%;
-            height: 100%;
-            border: 2px solid var(--neon-purple);
+            position: fixed;
+            top: 0; left: 0;
             z-index: -1;
-            clip-path: polygon(10% 0, 100% 0, 100% 90%, 90% 100%, 0 100%, 0 10%);
+            opacity: 0.2;
         }
 
-        /* --- Glitch Animation --- */
-        @keyframes glitch {
-            0% { text-shadow: 2px 2px var(--neon-purple), -2px -2px var(--neon-blue); }
-            20% { text-shadow: -2px -2px var(--neon-purple), 2px 2px var(--neon-blue); }
-            40% { text-shadow: 0 0 transparent; }
-            100% { text-shadow: 0 0 transparent; }
+        /* --- INTRO OVERLAY --- */
+        #intro-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #000; z-index: 9999;
+            display: flex; justify-content: center; align-items: center; flex-direction: column;
+            transition: opacity 0.5s;
+        }
+        .loader-bar {
+            width: 300px; height: 4px; background: #333; margin-top: 20px;
+            position: relative; overflow: hidden;
+        }
+        .loader-progress {
+            width: 0%; height: 100%; background: var(--neon-green);
+            box-shadow: 0 0 10px var(--neon-green);
+            transition: width 0.1s;
         }
 
-        /* --- Projects Grid --- */
-        .projects-section {
-            padding: 100px 50px;
-            max-width: 1400px;
-            margin: 0 auto;
+        /* --- LAYOUT --- */
+        .container {
+            max-width: 1200px; margin: 0 auto; padding: 20px;
+            position: relative; z-index: 2;
         }
 
-        .section-header {
-            font-family: 'Syncopate', sans-serif;
-            font-size: 2rem;
+        /* --- HUD HEADER --- */
+        header {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 20px 0; border-bottom: 1px solid var(--dark-green);
             margin-bottom: 50px;
-            border-left: 5px solid var(--neon-blue);
-            padding-left: 20px;
-            color: var(--text-main);
+        }
+        .status-badge {
+            border: 1px solid var(--neon-green); padding: 5px 15px;
+            font-size: 0.8rem; letter-spacing: 2px;
+            box-shadow: 0 0 5px var(--dark-green);
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
+
+        /* --- HERO SECTION --- */
+        .hero {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 50px;
+            align-items: center; min-height: 60vh;
+        }
+
+        /* Profile Scanner Effect */
+        .scanner-frame {
+            position: relative; width: 300px; height: 300px; margin: 0 auto;
+            border: 2px solid var(--dark-green);
+            background: radial-gradient(circle, transparent 50%, #000);
+        }
+        .scanner-frame img {
+            width: 100%; height: 100%; object-fit: cover;
+            filter: grayscale(100%) brightness(0.8) sepia(100%) hue-rotate(50deg);
+            opacity: 0.9;
+        }
+        .laser-line {
+            position: absolute; top: 0; left: 0; width: 100%; height: 4px;
+            background: var(--neon-green);
+            box-shadow: 0 0 15px var(--neon-green);
+            animation: scan 3s infinite linear;
+            opacity: 0.7;
+        }
+        .corner-bracket {
+            position: absolute; width: 20px; height: 20px;
+            border: 2px solid var(--neon-green);
+        }
+        .tl { top: -5px; left: -5px; border-right: none; border-bottom: none; }
+        .tr { top: -5px; right: -5px; border-left: none; border-bottom: none; }
+        .bl { bottom: -5px; left: -5px; border-right: none; border-top: none; }
+        .br { bottom: -5px; right: -5px; border-left: none; border-top: none; }
+
+        @keyframes scan {
+            0% { top: 0%; opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { top: 100%; opacity: 0; }
+        }
+
+        /* Text Console */
+        .console-text h1 {
+            font-size: 4rem; line-height: 1; margin-bottom: 20px;
+            text-transform: uppercase; text-shadow: 0 0 10px var(--dark-green);
+        }
+        .console-text p { font-size: 1.2rem; line-height: 1.6; color: #aaffaa; }
+        .blinking-cursor { animation: blink 0.8s infinite; }
+        @keyframes blink { 50% { opacity: 0; } }
+
+        /* --- PROJECTS GRID --- */
+        .projects-wrapper { margin-top: 100px; }
+        .section-title {
+            font-size: 2rem; border-left: 5px solid var(--neon-green);
+            padding-left: 20px; margin-bottom: 40px; color: #fff;
         }
 
         .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 40px;
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 30px;
         }
 
-        /* --- Holographic Card Style --- */
-        .card {
-            background: var(--glass);
-            border: 1px solid var(--border);
-            padding: 30px;
-            border-radius: 20px;
-            position: relative;
-            transform-style: preserve-3d;
-            transform: perspective(1000px);
-            transition: 0.1s;
-            overflow: hidden;
+        /* Sci-Fi Card */
+        .data-card {
+            background: var(--glass-panel);
+            border: 1px solid var(--dark-green);
+            padding: 25px; position: relative; overflow: hidden;
+            transition: 0.3s;
+            clip-path: polygon(0 0, 100% 0, 100% 85%, 90% 100%, 0 100%);
+        }
+        
+        .data-card:hover {
+            border-color: var(--neon-green);
+            transform: translateY(-5px);
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.2);
         }
 
-        .card::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, transparent 100%);
-            z-index: 1;
-            pointer-events: none;
+        .data-card::before {
+            content: "ENCRYPTED"; position: absolute; top: 10px; right: 10px;
+            font-size: 0.6rem; color: var(--dark-green); letter-spacing: 2px;
         }
 
-        .card:hover {
-            border-color: var(--neon-blue);
-            box-shadow: 0 0 30px rgba(0, 243, 255, 0.1);
+        .card-title {
+            font-size: 1.5rem; color: var(--cyan); margin-bottom: 10px;
         }
-
-        .card-content {
-            transform: translateZ(30px); /* 3D Pop effect */
-            position: relative;
-            z-index: 2;
+        .card-desc {
+            font-size: 0.9rem; color: #ccc; margin-bottom: 20px; height: 60px; overflow: hidden;
         }
-
-        .card h3 {
-            font-size: 1.8rem;
-            margin-bottom: 15px;
-            text-transform: uppercase;
-        }
-
-        .card p {
-            color: var(--text-muted);
-            font-size: 0.95rem;
-            line-height: 1.6;
-            margin-bottom: 25px;
-            height: 60px;
-            overflow: hidden;
-            display: -webkit-box;
-            -webkit-line-clamp: 3;
-            -webkit-box-orient: vertical;
-        }
-
         .card-meta {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-top: 1px solid var(--border);
-            padding-top: 20px;
+            display: flex; gap: 15px; font-size: 0.8rem; color: var(--neon-green);
+            border-top: 1px solid var(--dark-green); padding-top: 15px;
         }
-
-        .lang-tag {
-            font-size: 0.8rem;
-            color: var(--neon-purple);
-            font-weight: bold;
-            background: rgba(188, 19, 254, 0.1);
-            padding: 5px 10px;
-            border-radius: 5px;
-        }
-
-        .btn-view {
-            text-decoration: none;
-            color: var(--text-main);
-            font-weight: bold;
-            font-size: 0.9rem;
-            display: flex;
-            align-items: center;
-            gap: 10px;
+        
+        .btn-access {
+            display: inline-block; margin-top: 15px;
+            text-decoration: none; color: var(--bg-black);
+            background: var(--neon-green); padding: 8px 20px;
+            font-weight: bold; text-transform: uppercase;
+            clip-path: polygon(0 0, 100% 0, 100% 70%, 90% 100%, 0 100%);
             transition: 0.3s;
         }
+        .btn-access:hover { background: var(--cyan); }
 
-        .btn-view:hover {
-            color: var(--neon-blue);
-            gap: 15px;
-        }
-
-        /* --- Footer --- */
+        /* --- FOOTER --- */
         footer {
-            padding: 50px;
-            text-align: center;
-            border-top: 1px solid var(--border);
-            margin-top: 100px;
-            font-size: 0.9rem;
-            color: var(--text-muted);
+            text-align: center; margin-top: 80px; padding: 40px;
+            border-top: 1px dashed var(--dark-green); opacity: 0.7;
         }
 
-        /* --- Mobile --- */
-        @media (max-width: 900px) {
-            .hero-content {
-                grid-template-columns: 1fr;
-                text-align: center;
-            }
-            .hero-text h1 { font-size: 3.5rem; }
-            .hero-img-container { display: none; }
-            .nav-links { display: none; }
+        /* --- MOBILE --- */
+        @media (max-width: 768px) {
+            .hero { grid-template-columns: 1fr; text-align: center; }
+            .console-text h1 { font-size: 2.5rem; }
+            .scanner-frame { margin-bottom: 30px; }
         }
     </style>
 </head>
 <body>
 
-    <div class="cursor"></div>
-    <div class="cursor-dot"></div>
-    <div class="grain"></div>
-    <div class="spotlight" id="spotlight"></div>
+    <div id="intro-overlay">
+        <div style="font-size: 1.5rem; letter-spacing: 3px;">ESTABLISHING UPLINK</div>
+        <div class="loader-bar"><div class="loader-progress" id="progress"></div></div>
+        <div id="loading-text" style="margin-top: 10px; font-size: 0.8rem; color: #666;">Decrypting Firewall...</div>
+    </div>
 
-    <nav>
-        <div class="logo">Localhost<span style="color:var(--neon-blue)">Amit</span></div>
-        <div class="nav-links">
-            <a href="#">Origin</a>
-            <a href="#">Archive</a>
-            <a href="https://github.com/localhostamit" target="_blank">GitHub</a>
-        </div>
-    </nav>
+    <canvas id="matrix"></canvas>
 
-    <section class="hero">
-        <div class="hero-content">
-            <div class="hero-text">
-                <h1>
-                    <span>The</span>
-                    <span class="filled">Amit</span>
-                    <span>Protocols</span>
-                </h1>
-                <div class="hero-subtitle">// Developer // Visionary</div>
+    <div class="container">
+        <header>
+            <div class="logo" style="font-size: 1.5rem;">
+                <i class="fas fa-terminal"></i> LOCALHOST<span style="color:var(--cyan)">AMIT</span>
             </div>
-            <div class="hero-img-container">
-                <div class="img-decoration"></div>
-                <img src="profile.jpg" alt="Amit" class="hero-img" onerror="this.src='https://via.placeholder.com/400x500/111/fff?text=No+Image'">
+            <div class="status-badge">SYSTEM STATUS: ONLINE</div>
+        </header>
+
+        <section class="hero">
+            <div class="console-text">
+                <h1>Identity: <br><span style="color:var(--cyan)">Amit</span></h1>
+                <p id="typing-area">
+                    > Accessing user database...<br>
+                    > Full Stack Developer identified.<br>
+                    > Specialization: Java, OOP, Web Tech.<br>
+                    > Mission: <span style="color:var(--alert)">World Domination via Code.</span>
+                </p>
             </div>
-        </div>
-    </section>
+            
+            <div class="scanner-frame">
+                <div class="laser-line"></div>
+                <div class="corner-bracket tl"></div><div class="corner-bracket tr"></div>
+                <div class="corner-bracket bl"></div><div class="corner-bracket br"></div>
+                <img src="profile.jpg" alt="Target" onerror="this.src='https://via.placeholder.com/300/001100/00ff00?text=NO+IMAGE'">
+            </div>
+        </section>
 
-    <section class="projects-section">
-        <h2 class="section-header">Project Archive_</h2>
-        <div class="grid" id="repo-grid">
-            <div style="color:white">Initializing connection to GitHub API...</div>
-        </div>
-    </section>
+        <section class="projects-wrapper">
+            <h2 class="section-title">PROJECT_DATABASE // GITHUB</h2>
+            <div class="grid" id="project-grid">
+                <div style="color:white">Retrieving Data Packets...</div>
+            </div>
+        </section>
 
-    <footer>
-        <p>SYSTEM STATUS: ONLINE // © 2025 AMIT</p>
-    </footer>
+        <footer>
+            <p>END OF LINE // © 2025 AMIT</p>
+            <div style="margin-top:10px;">
+                <a href="https://github.com/localhostamit" style="color:white; margin:0 10px; font-size:1.5rem;"><i class="fab fa-github"></i></a>
+            </div>
+        </footer>
+    </div>
 
     <script>
-        // --- 1. Custom Cursor Logic ---
-        const cursor = document.querySelector('.cursor');
-        const cursorDot = document.querySelector('.cursor-dot');
-        const spotlight = document.getElementById('spotlight');
+        // --- 1. MATRIX RAIN EFFECT ---
+        const canvas = document.getElementById('matrix');
+        const ctx = canvas.getContext('2d');
 
-        document.addEventListener('mousemove', (e) => {
-            cursor.style.left = e.clientX + 'px';
-            cursor.style.top = e.clientY + 'px';
-            
-            cursorDot.style.left = e.clientX + 'px';
-            cursorDot.style.top = e.clientY + 'px';
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
 
-            // Move spotlight
-            spotlight.style.left = e.clientX + 'px';
-            spotlight.style.top = e.clientY + 'px';
+        const katakana = 'アァカサタナハマヤャラワガザダバパイィキシチニヒミリヰギジヂビピウゥクスツヌフムユュルグズブヅプエェケセテネヘメレヱゲゼデベペオォコソトノホモヨョロヲゴゾドボポ1234567890';
+        const latin = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        const nums = '0123456789';
+        const alphabet = katakana + latin + nums;
+
+        const fontSize = 16;
+        const columns = canvas.width/fontSize;
+        const rainDrops = [];
+
+        for( let x = 0; x < columns; x++ ) {
+            rainDrops[x] = 1;
+        }
+
+        const draw = () => {
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            ctx.fillStyle = '#0F0';
+            ctx.font = fontSize + 'px monospace';
+
+            for(let i = 0; i < rainDrops.length; i++)
+            {
+                const text = alphabet.charAt(Math.floor(Math.random() * alphabet.length));
+                ctx.fillText(text, i*fontSize, rainDrops[i]*fontSize);
+
+                if(rainDrops[i]*fontSize > canvas.height && Math.random() > 0.975){
+                    rainDrops[i] = 0;
+                }
+                rainDrops[i]++;
+            }
+        };
+
+        setInterval(draw, 30);
+
+        // Handle Resize
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
         });
 
-        // --- 2. GitHub API Fetch ---
+
+        // --- 2. LOADING SEQUENCE ---
+        const progressBar = document.getElementById('progress');
+        const loadText = document.getElementById('loading-text');
+        const overlay = document.getElementById('intro-overlay');
+        let width = 0;
+
+        const loading = setInterval(() => {
+            if (width >= 100) {
+                clearInterval(loading);
+                loadText.innerText = "ACCESS GRANTED";
+                loadText.style.color = "#0f0";
+                setTimeout(() => {
+                    overlay.style.opacity = '0';
+                    setTimeout(() => overlay.style.display = 'none', 500);
+                }, 500);
+            } else {
+                width++;
+                progressBar.style.width = width + '%';
+                if(width === 30) loadText.innerText = "Compiling Assets...";
+                if(width === 60) loadText.innerText = "Bypassing Security...";
+                if(width === 90) loadText.innerText = "Initializing Interface...";
+            }
+        }, 20); // Speed of load
+
+
+        // --- 3. GITHUB FETCH ---
         const username = 'localhostamit';
-        const grid = document.getElementById('repo-grid');
+        const grid = document.getElementById('project-grid');
 
         async function fetchRepos() {
             try {
                 const res = await fetch(`https://api.github.com/users/${username}/repos?sort=updated&per_page=6`);
                 const repos = await res.json();
-                
-                grid.innerHTML = ''; // Clear loading text
+                grid.innerHTML = '';
 
                 repos.forEach(repo => {
-                    const desc = repo.description || "Classified project information.";
-                    const lang = repo.language || "N/A";
-
-                    const card = document.createElement('div');
-                    card.className = 'card';
-                    card.innerHTML = `
-                        <div class="card-content">
-                            <h3>${repo.name}</h3>
-                            <p>${desc}</p>
+                    const desc = repo.description || "Data corrupted or unavailable.";
+                    const lang = repo.language || "Unknown";
+                    
+                    grid.innerHTML += `
+                        <div class="data-card">
+                            <h3 class="card-title"><i class="fas fa-folder"></i> ${repo.name}</h3>
+                            <p class="card-desc">${desc}</p>
                             <div class="card-meta">
-                                <span class="lang-tag">${lang}</span>
-                                <a href="${repo.html_url}" target="_blank" class="btn-view">
-                                    INITIATE <i class="fas fa-arrow-right"></i>
-                                </a>
+                                <span><i class="fas fa-code"></i> ${lang}</span>
+                                <span><i class="fas fa-star"></i> ${repo.stargazers_count}</span>
                             </div>
+                            <a href="${repo.html_url}" target="_blank" class="btn-access">
+                                Initialize <i class="fas fa-arrow-right"></i>
+                            </a>
                         </div>
                     `;
-                    
-                    // Add 3D Tilt Event Listeners
-                    card.addEventListener('mousemove', handleTilt);
-                    card.addEventListener('mouseleave', resetTilt);
-                    
-                    grid.appendChild(card);
                 });
-            } catch (err) {
-                console.error(err);
-                grid.innerHTML = '<p style="color:red">Error: GitHub Uplink Failed.</p>';
+            } catch (e) {
+                grid.innerHTML = "<p style='color:red'>CRITICAL FAILURE: API CONNECTION LOST.</p>";
             }
-        }
-
-        // --- 3. 3D Tilt Effect Logic ---
-        function handleTilt(e) {
-            const card = this;
-            const rect = card.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
-            
-            const centerX = rect.width / 2;
-            const centerY = rect.height / 2;
-            
-            const rotateX = ((y - centerY) / centerY) * -10; // Rotation max 10deg
-            const rotateY = ((x - centerX) / centerX) * 10;
-
-            card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
-        }
-
-        function resetTilt() {
-            this.style.transform = `perspective(1000px) rotateX(0) rotateY(0)`;
         }
 
         fetchRepos();
