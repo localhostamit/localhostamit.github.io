@@ -3,22 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AMIT_SYSTEM_V.2.0</title>
+    <title>AMIT_SYSTEM_V.2.5 [INTERACTIVE]</title>
     <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=VT323&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
         :root {
-            /* Hacker Palette */
             --bg-deep: #020202;
             --bg-panel: #0a0e14;
             --neon-green: #00ff41;
             --neon-pink: #ff0055;
             --neon-blue: #00f3ff;
             --syntax-yellow: #f1fa8c;
-            --syntax-purple: #bd93f9;
             --dim-text: #6272a4;
-            --scanline: rgba(0, 255, 65, 0.05);
+            --modal-bg: rgba(10, 14, 20, 0.98);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -26,25 +24,18 @@
         body {
             background-color: var(--bg-deep);
             color: #f8f8f2;
-            font-family: 'Fira Code', monospace; /* True coding font */
+            font-family: 'Fira Code', monospace;
             overflow-x: hidden;
             font-size: 16px;
         }
 
         /* --- BACKGROUND FX --- */
-        #matrix-canvas {
-            position: fixed; top: 0; left: 0; z-index: -2; opacity: 0.15;
-        }
-        
+        #matrix-canvas { position: fixed; top: 0; left: 0; z-index: -2; opacity: 0.15; }
         .hex-overlay {
-            position: fixed; top: 0; right: 0; width: 100px; height: 100%;
-            z-index: -1;
-            color: var(--dim-text); opacity: 0.1; font-size: 10px;
-            overflow: hidden; padding-top: 20px;
-            text-align: right; pointer-events: none;
+            position: fixed; top: 0; right: 0; width: 100px; height: 100%; z-index: -1;
+            color: var(--dim-text); opacity: 0.1; font-size: 10px; padding-top: 20px;
+            text-align: right; pointer-events: none; overflow: hidden;
         }
-
-        /* Scanlines */
         body::after {
             content: " "; display: block; position: absolute; top: 0; left: 0; bottom: 0; right: 0;
             background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
@@ -53,33 +44,22 @@
 
         /* --- LAYOUT --- */
         .ide-container {
-            max-width: 1200px; margin: 0 auto;
-            padding: 20px 20px 20px 50px; /* Space for line numbers */
+            max-width: 1200px; margin: 0 auto; padding: 20px 20px 20px 50px;
             position: relative; z-index: 10;
         }
-
-        /* Line Numbers Sidebar */
         .line-numbers {
-            position: fixed; left: 10px; top: 0; bottom: 0;
-            width: 30px; color: var(--dim-text);
-            text-align: right; font-size: 0.9rem; padding-top: 20px;
-            border-right: 1px solid #333; opacity: 0.5;
-            user-select: none;
+            position: fixed; left: 10px; top: 0; bottom: 0; width: 30px; color: var(--dim-text);
+            text-align: right; font-size: 0.9rem; padding-top: 20px; border-right: 1px solid #333; opacity: 0.5;
         }
 
         /* --- HEADER & GLITCH --- */
         header {
-            border-bottom: 1px dashed var(--dim-text);
-            padding-bottom: 20px; margin-bottom: 40px;
+            border-bottom: 1px dashed var(--dim-text); padding-bottom: 20px; margin-bottom: 40px;
             display: flex; justify-content: space-between; align-items: flex-end;
         }
-
         .glitch {
-            font-size: 3rem; font-weight: bold; position: relative;
-            color: var(--neon-green); text-transform: uppercase;
+            font-size: 3rem; font-weight: bold; position: relative; color: var(--neon-green); text-transform: uppercase;
         }
-        
-        /* CSS Glitch Effect */
         .glitch::before, .glitch::after {
             content: attr(data-text); position: absolute; top: 0; left: 0; width: 100%; height: 100%;
         }
@@ -92,62 +72,40 @@
             animation: glitch-anim 2.5s infinite linear alternate-reverse;
         }
         @keyframes glitch-anim {
-            0% { clip: rect(14px, 9999px, 127px, 0); }
-            20% { clip: rect(80px, 9999px, 30px, 0); }
-            40% { clip: rect(109px, 9999px, 86px, 0); }
-            60% { clip: rect(5px, 9999px, 15px, 0); }
-            80% { clip: rect(138px, 9999px, 49px, 0); }
-            100% { clip: rect(35px, 9999px, 78px, 0); }
+            0% { clip: rect(14px, 9999px, 127px, 0); } 100% { clip: rect(35px, 9999px, 78px, 0); }
         }
 
-        /* --- PROFILE SECTION --- */
+        /* --- PROFILE --- */
         .hero-section {
-            display: grid; grid-template-columns: 300px 1fr; gap: 40px;
-            align-items: center; margin-bottom: 80px;
+            display: grid; grid-template-columns: 300px 1fr; gap: 40px; align-items: center; margin-bottom: 80px;
         }
-
         .img-wrapper {
-            position: relative; border: 2px solid var(--neon-green);
-            padding: 5px; background: rgba(0,255,0,0.05);
+            position: relative; border: 2px solid var(--neon-green); padding: 5px; background: rgba(0,255,0,0.05);
         }
-        .img-wrapper img {
-            width: 100%; display: block; filter: grayscale(100%) contrast(1.2);
-            mix-blend-mode: luminosity;
-        }
+        .img-wrapper img { width: 100%; display: block; filter: grayscale(100%) contrast(1.2); }
         .img-wrapper::after {
             content: "TARGET_LOCKED"; position: absolute; bottom: -20px; left: 0;
-            background: var(--neon-green); color: black; font-size: 0.8rem; padding: 2px 5px;
-            font-weight: bold;
+            background: var(--neon-green); color: black; font-size: 0.8rem; padding: 2px 5px; font-weight: bold;
         }
-
-        .code-block {
-            font-family: 'Fira Code', monospace;
-            font-size: 1.1rem; line-height: 1.6;
-        }
-        .kwd { color: var(--neon-pink); } /* Keywords */
-        .str { color: var(--syntax-yellow); } /* Strings */
-        .cls { color: var(--neon-blue); } /* Classes */
-        .func { color: var(--neon-green); } /* Functions */
+        .code-block { font-family: 'Fira Code', monospace; font-size: 1.1rem; line-height: 1.6; }
+        .kwd { color: var(--neon-pink); } .str { color: var(--syntax-yellow); } 
+        .cls { color: var(--neon-blue); } .func { color: var(--neon-green); } 
         .comment { color: var(--dim-text); font-style: italic; }
 
         /* --- PROJECTS GRID --- */
         .projects-header {
-            font-size: 1.5rem; margin-bottom: 30px; color: var(--syntax-purple);
+            font-size: 1.5rem; margin-bottom: 30px; color: var(--neon-blue);
             border-left: 4px solid var(--neon-pink); padding-left: 15px;
         }
-
-        .grid {
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px;
-        }
-
-        /* Project Card = Code Snippet Style */
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; }
+        
         .repo-card {
-            background: var(--bg-panel); border: 1px solid #333;
-            padding: 20px; transition: 0.3s; position: relative;
+            background: var(--bg-panel); border: 1px solid #333; padding: 20px; transition: 0.3s;
+            cursor: pointer; position: relative;
         }
         .repo-card:hover {
-            border-color: var(--neon-green);
-            transform: translateY(-5px); box-shadow: 0 5px 20px rgba(0,255,65,0.1);
+            border-color: var(--neon-green); transform: translateY(-5px);
+            box-shadow: 0 5px 20px rgba(0,255,65,0.1);
         }
         .repo-title { font-size: 1.2rem; margin-bottom: 10px; color: var(--neon-blue); }
         .repo-desc { color: #ccc; font-size: 0.9rem; margin-bottom: 15px; height: 50px; overflow: hidden; }
@@ -156,47 +114,93 @@
             border-top: 1px solid #333; padding-top: 10px;
         }
 
-        /* --- HELP BY GEMINI SECTION --- */
-        .gemini-section {
-            margin-top: 100px; padding: 40px;
-            background: rgba(10, 14, 20, 0.9);
-            border: 1px solid var(--dim-text);
-            position: relative; overflow: hidden;
-            display: flex; align-items: center; gap: 30px;
+        /* --- MODAL (POPUP) STYLES --- */
+        .modal-overlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.8); z-index: 9999;
+            backdrop-filter: blur(5px);
+            justify-content: center; align-items: center;
         }
         
-        /* Animated AI Core */
+        .modal-window {
+            width: 80%; max-width: 900px; height: 80vh;
+            background: var(--bg-panel); border: 1px solid var(--neon-green);
+            box-shadow: 0 0 50px rgba(0, 255, 65, 0.2);
+            display: flex; flex-direction: column;
+            animation: window-open 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+        }
+
+        @keyframes window-open { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+        /* Modal Header (Like a browser tab) */
+        .modal-bar {
+            background: #111; padding: 10px 20px; border-bottom: 1px solid #333;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .modal-title { color: var(--neon-green); font-size: 1rem; text-transform: uppercase; }
+        .close-btn { 
+            color: var(--neon-pink); cursor: pointer; font-size: 1.5rem; transition: 0.2s; 
+        }
+        .close-btn:hover { text-shadow: 0 0 10px var(--neon-pink); }
+
+        /* Modal Content */
+        .modal-content {
+            padding: 20px; overflow-y: auto; flex-grow: 1;
+            font-family: 'Fira Code', monospace;
+        }
+
+        .stats-row {
+            display: flex; gap: 20px; margin-bottom: 20px;
+            background: rgba(0,0,0,0.3); padding: 10px; border-left: 3px solid var(--neon-blue);
+        }
+        .stat-item { font-size: 0.9rem; color: #fff; }
+        .stat-label { color: var(--dim-text); font-size: 0.8rem; text-transform: uppercase; }
+
+        .code-preview {
+            background: #000; border: 1px solid #333; padding: 15px;
+            font-size: 0.9rem; color: #ccc; white-space: pre-wrap;
+            height: 60%; overflow-y: scroll;
+            border-left: 2px solid var(--neon-pink);
+        }
+
+        .modal-actions {
+            padding: 15px; border-top: 1px solid #333; text-align: right;
+            background: #050505;
+        }
+        .btn-git {
+            background: var(--neon-green); color: black; padding: 10px 20px;
+            text-decoration: none; font-weight: bold; text-transform: uppercase;
+            display: inline-block;
+        }
+        .btn-git:hover { background: #fff; box-shadow: 0 0 15px var(--neon-green); }
+
+        /* --- HEL BY GEMINI --- */
+        .gemini-section {
+            margin-top: 100px; padding: 40px; background: rgba(10, 14, 20, 0.9);
+            border: 1px solid var(--dim-text); display: flex; align-items: center; gap: 30px;
+        }
         .ai-core {
-            width: 80px; height: 80px; border-radius: 50%;
-            background: radial-gradient(circle, #fff, #00f3ff);
-            box-shadow: 0 0 30px var(--neon-blue);
-            position: relative;
-            animation: pulse-core 2s infinite;
+            width: 80px; height: 80px; border-radius: 50%; background: radial-gradient(circle, #fff, #00f3ff);
+            box-shadow: 0 0 30px var(--neon-blue); position: relative; animation: pulse-core 2s infinite;
         }
         .ai-ring {
             position: absolute; top: -10px; left: -10px; right: -10px; bottom: -10px;
-            border: 2px dashed var(--neon-blue); border-radius: 50%;
-            animation: spin 10s linear infinite;
+            border: 2px dashed var(--neon-blue); border-radius: 50%; animation: spin 10s linear infinite;
         }
-        @keyframes pulse-core { 0% { opacity: 0.8; transform: scale(1); } 50% { opacity: 1; transform: scale(1.1); } 100% { opacity: 0.8; transform: scale(1); } }
+        @keyframes pulse-core { 0% { opacity: 0.8; transform: scale(1); } 50% { opacity: 1; transform: scale(1.1); } }
         @keyframes spin { 100% { transform: rotate(360deg); } }
 
-        .gemini-text h3 { color: var(--neon-blue); margin-bottom: 5px; font-size: 1.5rem; }
-        .gemini-text p { color: var(--dim-text); font-size: 0.9rem; }
-
         /* --- FOOTER --- */
-        footer {
-            margin-top: 50px; text-align: center; font-size: 0.8rem;
-            color: var(--dim-text); padding-bottom: 20px;
-        }
+        footer { margin-top: 50px; text-align: center; color: var(--dim-text); padding-bottom: 20px; }
 
-        /* --- MOBILE --- */
+        /* Mobile */
         @media (max-width: 768px) {
             .hero-section { grid-template-columns: 1fr; }
             .ide-container { padding-left: 20px; }
-            .line-numbers { display: none; }
-            .hex-overlay { display: none; }
+            .line-numbers, .hex-overlay { display: none; }
             .gemini-section { flex-direction: column; text-align: center; }
+            .modal-window { width: 95%; height: 90vh; }
+            .stats-row { flex-wrap: wrap; }
         }
     </style>
 </head>
@@ -205,6 +209,30 @@
     <canvas id="matrix-canvas"></canvas>
     <div class="hex-overlay" id="hex-dump"></div>
     <div class="line-numbers" id="line-numbers"></div>
+
+    <div class="modal-overlay" id="projectModal">
+        <div class="modal-window">
+            <div class="modal-bar">
+                <div class="modal-title"><i class="fas fa-terminal"></i> <span id="m-title">LOADING...</span></div>
+                <div class="close-btn" onclick="closeModal()"><i class="fas fa-times"></i></div>
+            </div>
+            <div class="modal-content">
+                <div class="stats-row" id="m-stats">
+                    </div>
+                <div style="margin-bottom: 5px; color: var(--neon-pink); font-size: 0.8rem;">
+                    // PREVIEW: README.md
+                </div>
+                <div class="code-preview" id="m-code">
+                    Initializing data stream...
+                </div>
+            </div>
+            <div class="modal-actions">
+                <a href="#" target="_blank" id="m-link" class="btn-git">
+                    OPEN ON GITHUB <i class="fas fa-external-link-alt"></i>
+                </a>
+            </div>
+        </div>
+    </div>
 
     <div class="ide-container">
         
@@ -225,12 +253,11 @@
             <div class="img-wrapper">
                 <img src="profile.jpg" alt="Amit" onerror="this.src='https://via.placeholder.com/300/000000/00ff00?text=USER_IMG'">
             </div>
-            
             <div class="code-block">
                 <span class="comment">// Initialize User Profile</span><br>
                 <span class="kwd">const</span> <span class="func">developer</span> = <span class="kwd">new</span> <span class="cls">Human</span>({<br>
                 &nbsp;&nbsp;name: <span class="str">"Amit"</span>,<br>
-                &nbsp;&nbsp;Goal: <span class="str">"Eithical Hacker"</span>,<br>
+                &nbsp;&nbsp;role: <span class="str">"Full Stack Engineer"</span>,<br>
                 &nbsp;&nbsp;skills: [<span class="str">"Java"</span>, <span class="str">"Web"</span>, <span class="str">"Security"</span>],<br>
                 &nbsp;&nbsp;location: <span class="str">"Localhost"</span><br>
                 });<br><br>
@@ -253,7 +280,7 @@
                 <div class="ai-ring"></div>
             </div>
             <div class="gemini-text">
-                <h3><i class="fas fa-microchip"></i> HELP BY GEMINI AI 😁</h3>
+                <h3><i class="fas fa-microchip"></i> HEL BY GEMINI AI 😁</h3>
                 <p>
                     <span class="comment">// AI CO-PILOT ACTIVE</span><br>
                     This architecture was synthesized with the assistance of Google's Gemini AI. 
@@ -269,20 +296,15 @@
     </div>
 
     <script>
-        // --- 1. MATRIX RAIN ---
+        // --- 1. MATRIX & HEX FX ---
         const canvas = document.getElementById('matrix-canvas');
         const ctx = canvas.getContext('2d');
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
+        canvas.width = window.innerWidth; canvas.height = window.innerHeight;
         const chars = '01ABCDEFGHIJKLMNOPQRSTUVWXYZ';
         const drops = Array(Math.floor(canvas.width / 14)).fill(1);
-
         function drawMatrix() {
-            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            ctx.fillStyle = '#00ff41';
-            ctx.font = '14px monospace';
-            
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)'; ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = '#00ff41'; ctx.font = '14px monospace';
             drops.forEach((y, i) => {
                 const text = chars[Math.floor(Math.random() * chars.length)];
                 ctx.fillText(text, i * 14, y * 14);
@@ -292,32 +314,21 @@
         }
         setInterval(drawMatrix, 40);
 
-        // --- 2. HEX DUMP & LINE NUMBERS ---
-        const hexContainer = document.getElementById('hex-dump');
-        const lineContainer = document.getElementById('line-numbers');
-        
-        // Generate random hex
         setInterval(() => {
-            let hex = "";
-            for(let i=0; i<30; i++) {
-                hex += Math.floor(Math.random()*16777215).toString(16).toUpperCase() + "<br>";
-            }
-            hexContainer.innerHTML = hex;
+            let hex = ""; for(let i=0; i<30; i++) { hex += Math.floor(Math.random()*16777215).toString(16).toUpperCase() + "<br>"; }
+            document.getElementById('hex-dump').innerHTML = hex;
         }, 500);
 
-        // Generate line numbers (static for now)
-        let lines = "";
-        for(let i=1; i<50; i++) { lines += i + "<br>"; }
-        lineContainer.innerHTML = lines;
+        let lines = ""; for(let i=1; i<50; i++) { lines += i + "<br>"; }
+        document.getElementById('line-numbers').innerHTML = lines;
+        let sec = 0; setInterval(() => { document.getElementById('uptime').innerText = sec++; }, 1000);
 
-        // --- 3. UPTIME COUNTER ---
-        let sec = 0;
-        setInterval(() => { document.getElementById('uptime').innerText = sec++; }, 1000);
-
-        // --- 4. GITHUB FETCH (JSON STYLE) ---
+        // --- 2. GITHUB LOGIC & MODAL ---
         const username = 'localhostamit';
         const grid = document.getElementById('repo-grid');
+        const modal = document.getElementById('projectModal');
 
+        // Fetch Repos
         async function fetchRepos() {
             try {
                 const res = await fetch(`https://api.github.com/users/${username}/repos?sort=updated&per_page=6`);
@@ -325,23 +336,22 @@
                 grid.innerHTML = '';
 
                 repos.forEach(repo => {
-                    const desc = repo.description || "No description provided.";
-                    const lang = repo.language || "Plain Text";
-
+                    // We store repo data in a data-attribute to use in the modal later
+                    // Note: onclick calls openModal with the Repo Name
                     grid.innerHTML += `
-                        <div class="repo-card">
+                        <div class="repo-card" onclick="openModal('${repo.name}')">
                             <div class="repo-title">
                                 <i class="fas fa-box"></i> ${repo.name}
                             </div>
                             <div class="repo-desc">
-                                <span class="str">"${desc}"</span>
+                                <span class="str">"${repo.description || 'No description'}"</span>
                             </div>
                             <div class="repo-stats">
-                                <span><span class="kwd">lang:</span> ${lang}</span>
+                                <span><span class="kwd">lang:</span> ${repo.language || 'Txt'}</span>
                                 <span><span class="kwd">stars:</span> ${repo.stargazers_count}</span>
-                                <a href="${repo.html_url}" target="_blank" style="margin-left:auto; color:var(--neon-green); text-decoration:none;">
-                                    <i class="fas fa-external-link-alt"></i> OPEN
-                                </a>
+                                <span style="margin-left:auto; color:var(--neon-green);">
+                                    INITIALIZE <i class="fas fa-play"></i>
+                                </span>
                             </div>
                         </div>
                     `;
@@ -350,6 +360,63 @@
                 grid.innerHTML = `<span style="color:red">ERROR: GITHUB API CONNECTION REFUSED.</span>`;
             }
         }
+
+        // Open Modal & Fetch Details
+        async function openModal(repoName) {
+            modal.style.display = 'flex';
+            document.getElementById('m-title').innerText = repoName;
+            document.getElementById('m-code').innerText = "> Establishing link to " + repoName + "...\n> Downloading assets...";
+            document.getElementById('m-link').href = `https://github.com/${username}/${repoName}`;
+            
+            try {
+                // 1. Fetch Basic Info
+                const repoRes = await fetch(`https://api.github.com/repos/${username}/${repoName}`);
+                const repo = await repoRes.json();
+
+                // 2. Fetch Pull Requests
+                const pullsRes = await fetch(`https://api.github.com/repos/${username}/${repoName}/pulls?state=all`);
+                const pulls = await pullsRes.json();
+
+                // 3. Fetch Readme (Content)
+                // We use the 'raw' header to get text, but Github API usually returns base64. 
+                // Using the raw download URL is often blocked by CORS.
+                // We will use the API to get content, then decode.
+                let readmeContent = "// README.md not found or empty.";
+                try {
+                    const readmeRes = await fetch(`https://api.github.com/repos/${username}/${repoName}/readme`);
+                    if(readmeRes.ok) {
+                        const readmeData = await readmeRes.json();
+                        // Decode Base64
+                        readmeContent = atob(readmeData.content); 
+                    }
+                } catch(e) { console.log("No readme"); }
+
+                // Update UI
+                const statsHTML = `
+                    <div class="stat-item"><span class="stat-label">Stars:</span> ${repo.stargazers_count} <i class="fas fa-star" style="color:gold"></i></div>
+                    <div class="stat-item"><span class="stat-label">Forks:</span> ${repo.forks_count} <i class="fas fa-code-branch"></i></div>
+                    <div class="stat-item"><span class="stat-label">Open PRs:</span> ${pulls.length} <i class="fas fa-code-pull-request"></i></div>
+                    <div class="stat-item"><span class="stat-label">Watchers:</span> ${repo.watchers_count} <i class="fas fa-eye"></i></div>
+                `;
+                document.getElementById('m-stats').innerHTML = statsHTML;
+                document.getElementById('m-code').innerText = readmeContent;
+
+            } catch (err) {
+                document.getElementById('m-code').innerText = "> ERROR: DATA STREAM INTERRUPTED.\n> " + err.message;
+            }
+        }
+
+        function closeModal() {
+            modal.style.display = 'none';
+        }
+
+        // Close on clicking outside
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                closeModal();
+            }
+        }
+
         fetchRepos();
     </script>
 </body>
