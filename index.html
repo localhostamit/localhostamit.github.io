@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AMIT_SYSTEM_V.3.0 [ROOT ACCESS]</title>
+    <title>AMIT_SYSTEM_V.4.0 [CINE_LOG_ADDED]</title>
     <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=VT323&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
@@ -14,7 +14,7 @@
             --neon-green: #00ff41;
             --neon-pink: #ff0055;
             --neon-blue: #00f3ff;
-            --syntax-yellow: #f1fa8c;
+            --neon-yellow: #f1fa8c;
             --dim-text: #6272a4;
             --kali-bg: #101010;
             --kali-header: #2d2d2d;
@@ -89,7 +89,7 @@
             background: var(--neon-green); color: black; font-size: 0.8rem; padding: 2px 5px; font-weight: bold;
         }
         .code-block { font-family: 'Fira Code', monospace; font-size: 1.1rem; line-height: 1.6; }
-        .kwd { color: var(--neon-pink); } .str { color: var(--syntax-yellow); } 
+        .kwd { color: var(--neon-pink); } .str { color: var(--neon-yellow); } 
         .cls { color: var(--neon-blue); } .func { color: var(--neon-green); } 
         .comment { color: var(--dim-text); font-style: italic; }
 
@@ -155,6 +155,59 @@
             border-top: 1px solid #333; padding-top: 10px;
         }
 
+        /* --- CINEPHILE SECTION (NEW) --- */
+        .cine-section {
+            margin-top: 100px;
+            margin-bottom: 80px;
+            position: relative;
+        }
+        .cine-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .cine-card {
+            background: rgba(10, 10, 10, 0.8);
+            border: 1px solid var(--dim-text);
+            padding: 20px;
+            text-align: center;
+            transition: 0.3s;
+            position: relative;
+            overflow: hidden;
+            height: 200px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        /* Scanner Effect */
+        .cine-card::after {
+            content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%;
+            background: linear-gradient(to right, transparent, rgba(255,255,255,0.1), transparent);
+            transform: skewX(-20deg);
+            transition: 0.5s;
+        }
+        .cine-card:hover::after { left: 150%; transition: 0.7s ease-in-out; }
+        
+        .cine-card:hover {
+            border-color: var(--neon-yellow);
+            box-shadow: 0 0 20px rgba(241, 250, 140, 0.1);
+            transform: scale(1.02);
+        }
+        
+        .cine-icon { font-size: 3rem; margin-bottom: 15px; color: var(--dim-text); transition: 0.3s; }
+        .cine-card:hover .cine-icon { color: var(--neon-blue); text-shadow: 0 0 10px var(--neon-blue); }
+        
+        .cine-title { font-size: 1.2rem; color: #fff; font-weight: bold; margin-bottom: 5px; }
+        .cine-desc { font-size: 0.8rem; color: var(--dim-text); }
+        
+        /* Specific Styles for genres */
+        .marvel:hover .cine-icon { color: #ff0000; text-shadow: 0 0 15px #ff0000; } /* Marvel Red */
+        .boys:hover .cine-icon { color: #f1fa8c; text-shadow: 0 0 15px #f1fa8c; } /* Electric Yellow */
+        .scifi:hover .cine-icon { color: #00f3ff; text-shadow: 0 0 15px #00f3ff; } /* SciFi Blue */
+
+
         /* --- MODAL (POPUP) --- */
         .modal-overlay {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -200,7 +253,7 @@
 
         /* --- HELP BY GEMINI --- */
         .gemini-section {
-            margin-top: 100px; padding: 40px; background: rgba(10, 14, 20, 0.9);
+            margin-top: 50px; padding: 40px; background: rgba(10, 14, 20, 0.9);
             border: 1px solid var(--dim-text); display: flex; align-items: center; gap: 30px;
         }
         .ai-core {
@@ -241,8 +294,7 @@
                 <div class="close-btn" onclick="closeModal()"><i class="fas fa-times"></i></div>
             </div>
             <div class="modal-content">
-                <div class="stats-row" id="m-stats">
-                    </div>
+                <div class="stats-row" id="m-stats"></div>
                 <div style="margin-bottom: 5px; color: var(--neon-pink); font-size: 0.8rem;">
                     // PREVIEW: README.md
                 </div>
@@ -293,8 +345,7 @@
                     <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
                     <span class="kali-title">root@kali: ~</span>
                 </div>
-                <div class="kali-body" id="kali-output">
-                    </div>
+                <div class="kali-body" id="kali-output"></div>
             </div>
         </section>
 
@@ -304,6 +355,31 @@
             </div>
             <div class="grid" id="repo-grid">
                 <div style="color:var(--dim-text)">> Fetching Repositories...</div>
+            </div>
+        </section>
+
+        <section class="cine-section">
+            <div class="projects-header" style="border-left-color: var(--neon-yellow)">
+                <span class="kwd">const</span> <span class="func">personal_db</span> = <span class="str">"Cinephile Archives"</span>;
+            </div>
+            <div class="cine-grid">
+                <div class="cine-card marvel">
+                    <div class="cine-icon"><i class="fas fa-shield-alt"></i></div>
+                    <div class="cine-title">MARVEL UNIVERSE</div>
+                    <div class="cine-desc">Status: Endgame Survivor<br>Threat Level: AVENGERS</div>
+                </div>
+
+                <div class="cine-card boys">
+                    <div class="cine-icon"><i class="fas fa-bolt"></i></div>
+                    <div class="cine-title">VOUGHT / KRYPTON</div>
+                    <div class="cine-desc">Subject: Homelander / Superman<br>Warning: Laser Vision Detected</div>
+                </div>
+
+                <div class="cine-card scifi">
+                    <div class="cine-icon"><i class="fas fa-robot"></i></div>
+                    <div class="cine-title">SCI-FI & ANIMATION</div>
+                    <div class="cine-desc">Protocol: Future Tech<br>Reality Distortion: ACTIVE</div>
+                </div>
             </div>
         </section>
 
@@ -357,10 +433,7 @@
 
         // --- 2. KALI TERMINAL TYPING EFFECT ---
         const termOutput = document.getElementById('kali-output');
-        // The prompt HTML to reuse
         const promptHTML = `<span class="prompt">root@kali</span>:<span class="path">~</span># `;
-        
-        // Sequence of commands and outputs
         const terminalSequence = [
             { type: 'cmd', text: 'whoami' },
             { type: 'out', text: 'root' },
@@ -376,44 +449,26 @@
 
         function typeTerminal() {
             if (seqIndex >= terminalSequence.length) {
-                // Done, just show cursor
                 termOutput.innerHTML = currentHTML + promptHTML + `<span class="cmd-cursor"></span>`;
                 return;
             }
-
             const item = terminalSequence[seqIndex];
-
             if (item.type === 'cmd') {
-                // If starting a new command line
-                if (charIndex === 0) {
-                    currentHTML += (seqIndex > 0 ? "<br>" : "") + promptHTML;
-                }
-                
-                // Type character
+                if (charIndex === 0) currentHTML += (seqIndex > 0 ? "<br>" : "") + promptHTML;
                 termOutput.innerHTML = currentHTML + item.text.substring(0, charIndex + 1) + `<span class="cmd-cursor"></span>`;
                 charIndex++;
-
-                if (charIndex < item.text.length) {
-                    setTimeout(typeTerminal, 100); // Typing speed
-                } else {
-                    charIndex = 0;
-                    seqIndex++;
-                    setTimeout(typeTerminal, 600); // Pause before output
-                }
+                if (charIndex < item.text.length) setTimeout(typeTerminal, 100);
+                else { charIndex = 0; seqIndex++; setTimeout(typeTerminal, 600); }
             } else {
-                // Output appears instantly (or simulate line by line if preferred, but instant is better for output)
                 currentHTML += "<br>" + item.text.replace(/\n/g, "<br>");
                 termOutput.innerHTML = currentHTML;
                 seqIndex++;
-                setTimeout(typeTerminal, 300); // Pause before next prompt
+                setTimeout(typeTerminal, 300);
             }
         }
-        
-        // Start typing loop
         typeTerminal();
 
-
-        // --- 3. GITHUB LOGIC & MODAL ---
+        // --- 3. GITHUB LOGIC ---
         const username = 'localhostamit';
         const grid = document.getElementById('repo-grid');
         const modal = document.getElementById('projectModal');
@@ -423,29 +478,20 @@
                 const res = await fetch(`https://api.github.com/users/${username}/repos?sort=updated&per_page=6`);
                 const repos = await res.json();
                 grid.innerHTML = '';
-
                 repos.forEach(repo => {
                     grid.innerHTML += `
                         <div class="repo-card" onclick="openModal('${repo.name}')">
-                            <div class="repo-title">
-                                <i class="fas fa-box"></i> ${repo.name}
-                            </div>
-                            <div class="repo-desc">
-                                <span class="str">"${repo.description || 'No description'}"</span>
-                            </div>
+                            <div class="repo-title"><i class="fas fa-box"></i> ${repo.name}</div>
+                            <div class="repo-desc"><span class="str">"${repo.description || 'No description'}"</span></div>
                             <div class="repo-stats">
                                 <span><span class="kwd">lang:</span> ${repo.language || 'Txt'}</span>
                                 <span><span class="kwd">stars:</span> ${repo.stargazers_count}</span>
-                                <span style="margin-left:auto; color:var(--neon-green);">
-                                    INITIALIZE <i class="fas fa-play"></i>
-                                </span>
+                                <span style="margin-left:auto; color:var(--neon-green);">INITIALIZE <i class="fas fa-play"></i></span>
                             </div>
                         </div>
                     `;
                 });
-            } catch (err) {
-                grid.innerHTML = `<span style="color:red">ERROR: GITHUB API CONNECTION REFUSED.</span>`;
-            }
+            } catch (err) { grid.innerHTML = `<span style="color:red">ERROR: GITHUB API CONNECTION REFUSED.</span>`; }
         }
 
         async function openModal(repoName) {
@@ -453,13 +499,12 @@
             document.getElementById('m-title').innerText = repoName;
             document.getElementById('m-code').innerText = "> Establishing link to " + repoName + "...\n> Downloading assets...";
             document.getElementById('m-link').href = `https://github.com/${username}/${repoName}`;
-            
             try {
                 const repoRes = await fetch(`https://api.github.com/repos/${username}/${repoName}`);
                 const repo = await repoRes.json();
                 const pullsRes = await fetch(`https://api.github.com/repos/${username}/${repoName}/pulls?state=all`);
                 const pulls = await pullsRes.json();
-                let readmeContent = "// README.md not found or empty.";
+                let readmeContent = "// README.md not found.";
                 try {
                     const readmeRes = await fetch(`https://api.github.com/repos/${username}/${repoName}/readme`);
                     if(readmeRes.ok) {
@@ -468,17 +513,14 @@
                     }
                 } catch(e) {}
 
-                const statsHTML = `
+                document.getElementById('m-stats').innerHTML = `
                     <div class="stat-item"><span class="stat-label">Stars:</span> ${repo.stargazers_count} <i class="fas fa-star" style="color:gold"></i></div>
                     <div class="stat-item"><span class="stat-label">Forks:</span> ${repo.forks_count} <i class="fas fa-code-branch"></i></div>
                     <div class="stat-item"><span class="stat-label">Open PRs:</span> ${pulls.length} <i class="fas fa-code-pull-request"></i></div>
                     <div class="stat-item"><span class="stat-label">Watchers:</span> ${repo.watchers_count} <i class="fas fa-eye"></i></div>
                 `;
-                document.getElementById('m-stats').innerHTML = statsHTML;
                 document.getElementById('m-code').innerText = readmeContent;
-            } catch (err) {
-                document.getElementById('m-code').innerText = "> ERROR: DATA STREAM INTERRUPTED.\n> " + err.message;
-            }
+            } catch (err) { document.getElementById('m-code').innerText = "> ERROR: DATA STREAM INTERRUPTED.\n> " + err.message; }
         }
 
         function closeModal() { modal.style.display = 'none'; }
