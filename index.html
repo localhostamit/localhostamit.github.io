@@ -3,44 +3,53 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AMIT_SYSTEM_V.4.0 [CINE_LOG_ADDED]</title>
+    <title>AMIT_SYSTEM_V.BAT [WAYNETECH_PROTOCOL]</title>
     <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=VT323&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
         :root {
-            --bg-deep: #020202;
-            --bg-panel: #0a0e14;
-            --neon-green: #00ff41;
-            --neon-pink: #ff0055;
-            --neon-blue: #00f3ff;
-            --neon-yellow: #f1fa8c;
-            --dim-text: #6272a4;
-            --kali-bg: #101010;
-            --kali-header: #2d2d2d;
+            /* BATMAN COLOR PALETTE */
+            --bg-deep: #010103; /* Gotham Night Black */
+            --bg-panel: #0a0b10; /* Dark Armor Grey */
+            --bat-blue: #2a5298; /* WayneTech Electric Blue */
+            --bat-gold: #d4af37; /* Utility Belt Gold */
+            --bat-grey: #4a4a4a;
+            
+            --neon-green: var(--bat-blue); /* Replaced for main theme */
+            --neon-pink: var(--bat-gold);  /* Replaced for main theme */
+            --neon-blue: #5e96ff; /* Brighter highlight blue */
+            
+            /* Keeping terminal slightly green for realism, mixed with blue */
+            --kali-prompt: #00ff41; 
+            
+            --dim-text: #607d8b;
+            --kali-bg: #050505;
+            --kali-header: #1a1a1a;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
             background-color: var(--bg-deep);
-            color: #f8f8f2;
+            color: #e0e0e0;
             font-family: 'Fira Code', monospace;
             overflow-x: hidden;
             font-size: 16px;
         }
 
         /* --- BACKGROUND FX --- */
-        #matrix-canvas { position: fixed; top: 0; left: 0; z-index: -2; opacity: 0.15; }
+        #matrix-canvas { position: fixed; top: 0; left: 0; z-index: -2; opacity: 0.2; }
         .hex-overlay {
             position: fixed; top: 0; right: 0; width: 100px; height: 100%; z-index: -1;
             color: var(--dim-text); opacity: 0.1; font-size: 10px; padding-top: 20px;
             text-align: right; pointer-events: none; overflow: hidden;
         }
+        /* subtle bat-fog overlay */
         body::after {
             content: " "; display: block; position: absolute; top: 0; left: 0; bottom: 0; right: 0;
-            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
-            z-index: 2; background-size: 100% 2px, 3px 100%; pointer-events: none;
+            background: radial-gradient(circle at center, transparent 50%, rgba(0,0,0,0.8) 100%), linear-gradient(to bottom, transparent, rgba(10, 11, 16, 0.8));
+            z-index: 2; pointer-events: none;
         }
 
         /* --- LAYOUT --- */
@@ -59,13 +68,14 @@
             display: flex; justify-content: space-between; align-items: flex-end;
         }
         .glitch {
-            font-size: 3rem; font-weight: bold; position: relative; color: var(--neon-green); text-transform: uppercase;
+            font-size: 3rem; font-weight: bold; position: relative; color: var(--bat-blue); text-transform: uppercase;
+            text-shadow: 0 0 10px rgba(42, 82, 152, 0.5);
         }
         .glitch::before, .glitch::after {
             content: attr(data-text); position: absolute; top: 0; left: 0; width: 100%; height: 100%;
         }
         .glitch::before {
-            left: 2px; text-shadow: -1px 0 var(--neon-pink); clip: rect(24px, 550px, 90px, 0);
+            left: 2px; text-shadow: -1px 0 var(--bat-gold); clip: rect(24px, 550px, 90px, 0);
             animation: glitch-anim-2 3s infinite linear alternate-reverse;
         }
         .glitch::after {
@@ -81,16 +91,16 @@
             display: grid; grid-template-columns: 300px 1fr; gap: 40px; align-items: center; margin-bottom: 50px;
         }
         .img-wrapper {
-            position: relative; border: 2px solid var(--neon-green); padding: 5px; background: rgba(0,255,0,0.05);
+            position: relative; border: 2px solid var(--bat-blue); padding: 5px; background: rgba(42, 82, 152, 0.1);
         }
-        .img-wrapper img { width: 100%; display: block; filter: grayscale(100%) contrast(1.2); }
+        .img-wrapper img { width: 100%; display: block; filter: grayscale(100%) contrast(1.1) brightness(0.9); }
         .img-wrapper::after {
-            content: "TARGET_LOCKED"; position: absolute; bottom: -20px; left: 0;
-            background: var(--neon-green); color: black; font-size: 0.8rem; padding: 2px 5px; font-weight: bold;
+            content: "IDENTITY: CONFIRMED"; position: absolute; bottom: -20px; left: 0;
+            background: var(--bat-blue); color: #fff; font-size: 0.8rem; padding: 2px 10px; font-weight: bold; letter-spacing: 1px;
         }
         .code-block { font-family: 'Fira Code', monospace; font-size: 1.1rem; line-height: 1.6; }
-        .kwd { color: var(--neon-pink); } .str { color: var(--neon-yellow); } 
-        .cls { color: var(--neon-blue); } .func { color: var(--neon-green); } 
+        .kwd { color: var(--bat-gold); } .str { color: #98c379; } 
+        .cls { color: var(--neon-blue); } .func { color: var(--bat-blue); } 
         .comment { color: var(--dim-text); font-style: italic; }
 
         /* --- KALI LINUX TERMINAL SECTION --- */
@@ -100,172 +110,145 @@
         }
         .kali-window {
             background-color: var(--kali-bg);
-            border: 1px solid #444;
+            border: 1px solid var(--bat-grey);
             border-radius: 5px;
             overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
         }
         .kali-header {
             background-color: var(--kali-header);
             padding: 5px 15px;
             display: flex;
             align-items: center;
-            border-bottom: 1px solid #444;
+            border-bottom: 1px solid #333;
         }
-        .dot { height: 12px; width: 12px; border-radius: 50%; display: inline-block; margin-right: 8px; }
-        .red { background-color: #ff5f56; }
-        .yellow { background-color: #ffbd2e; }
-        .green { background-color: #27c93f; }
+        .dot { height: 12px; width: 12px; border-radius: 50%; display: inline-block; margin-right: 8px; opacity: 0.7;}
+        .red { background-color: #ff5f56; } .yellow { background-color: #ffbd2e; } .green { background-color: #27c93f; }
         .kali-title { margin-left: 10px; font-size: 0.8rem; color: #ccc; }
         
         .kali-body {
-            padding: 15px;
-            height: 200px;
-            overflow-y: hidden;
-            color: #dcdcdc;
-            font-size: 0.9rem;
+            padding: 15px; height: 200px; overflow-y: hidden; color: #dcdcdc; font-size: 0.9rem;
+            /* Slight green tint for terminal realism against the blue theme */
+            filter: hue-rotate(290deg); 
         }
-        .prompt { color: var(--neon-pink); font-weight: bold; }
+        .prompt { color: var(--bat-gold); font-weight: bold; }
         .path { color: var(--neon-blue); font-weight: bold; }
         .cmd-cursor { 
-            display: inline-block; width: 8px; height: 15px; background: #ccc; 
+            display: inline-block; width: 8px; height: 15px; background: var(--bat-blue);
             animation: blink 1s infinite; vertical-align: middle;
         }
         @keyframes blink { 50% { opacity: 0; } }
 
         /* --- PROJECTS GRID --- */
         .projects-header {
-            font-size: 1.5rem; margin-bottom: 30px; color: var(--neon-blue);
-            border-left: 4px solid var(--neon-pink); padding-left: 15px;
+            font-size: 1.5rem; margin-bottom: 30px; color: var(--bat-blue);
+            border-left: 4px solid var(--bat-gold); padding-left: 15px;
         }
         .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; }
         
         .repo-card {
-            background: var(--bg-panel); border: 1px solid #333; padding: 20px; transition: 0.3s;
+            background: var(--bg-panel); border: 1px solid var(--bat-grey); padding: 20px; transition: 0.3s;
             cursor: pointer; position: relative;
         }
         .repo-card:hover {
-            border-color: var(--neon-green); transform: translateY(-5px);
-            box-shadow: 0 5px 20px rgba(0,255,65,0.1);
+            border-color: var(--bat-blue); transform: translateY(-5px);
+            box-shadow: 0 5px 20px rgba(42, 82, 152, 0.2);
         }
         .repo-title { font-size: 1.2rem; margin-bottom: 10px; color: var(--neon-blue); }
-        .repo-desc { color: #ccc; font-size: 0.9rem; margin-bottom: 15px; height: 50px; overflow: hidden; }
+        .repo-desc { color: #aaa; font-size: 0.9rem; margin-bottom: 15px; height: 50px; overflow: hidden; }
         .repo-stats {
             font-size: 0.8rem; color: var(--dim-text); display: flex; gap: 15px; margin-top: 15px;
             border-top: 1px solid #333; padding-top: 10px;
         }
 
-        /* --- CINEPHILE SECTION (NEW) --- */
-        .cine-section {
-            margin-top: 100px;
-            margin-bottom: 80px;
-            position: relative;
-        }
-        .cine-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin-top: 20px;
-        }
+        /* --- CINEPHILE SECTION --- */
+        .cine-section { margin-top: 100px; margin-bottom: 80px; position: relative; }
+        .cine-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-top: 20px; }
         .cine-card {
-            background: rgba(10, 10, 10, 0.8);
-            border: 1px solid var(--dim-text);
-            padding: 20px;
-            text-align: center;
-            transition: 0.3s;
-            position: relative;
-            overflow: hidden;
-            height: 200px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
+            background: rgba(15, 15, 20, 0.8); border: 1px solid var(--bat-grey);
+            padding: 20px; text-align: center; transition: 0.3s; position: relative; overflow: hidden;
+            height: 200px; display: flex; flex-direction: column; justify-content: center; align-items: center;
         }
-        /* Scanner Effect */
         .cine-card::after {
             content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%;
-            background: linear-gradient(to right, transparent, rgba(255,255,255,0.1), transparent);
-            transform: skewX(-20deg);
-            transition: 0.5s;
+            background: linear-gradient(to right, transparent, rgba(42, 82, 152, 0.2), transparent);
+            transform: skewX(-20deg); transition: 0.5s;
         }
         .cine-card:hover::after { left: 150%; transition: 0.7s ease-in-out; }
-        
         .cine-card:hover {
-            border-color: var(--neon-yellow);
-            box-shadow: 0 0 20px rgba(241, 250, 140, 0.1);
-            transform: scale(1.02);
+            border-color: var(--bat-blue); box-shadow: 0 0 20px rgba(42, 82, 152, 0.2); transform: scale(1.02);
         }
-        
         .cine-icon { font-size: 3rem; margin-bottom: 15px; color: var(--dim-text); transition: 0.3s; }
-        .cine-card:hover .cine-icon { color: var(--neon-blue); text-shadow: 0 0 10px var(--neon-blue); }
-        
+        .cine-card:hover .cine-icon { color: var(--bat-gold); text-shadow: 0 0 10px var(--bat-gold); }
         .cine-title { font-size: 1.2rem; color: #fff; font-weight: bold; margin-bottom: 5px; }
         .cine-desc { font-size: 0.8rem; color: var(--dim-text); }
         
-        /* Specific Styles for genres */
-        .marvel:hover .cine-icon { color: #ff0000; text-shadow: 0 0 15px #ff0000; } /* Marvel Red */
-        .boys:hover .cine-icon { color: #f1fa8c; text-shadow: 0 0 15px #f1fa8c; } /* Electric Yellow */
-        .scifi:hover .cine-icon { color: #00f3ff; text-shadow: 0 0 15px #00f3ff; } /* SciFi Blue */
-
-
         /* --- MODAL (POPUP) --- */
         .modal-overlay {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.8); z-index: 9999;
-            backdrop-filter: blur(5px);
+            background: rgba(0, 0, 0, 0.9); z-index: 9999; backdrop-filter: blur(5px);
             justify-content: center; align-items: center;
         }
         .modal-window {
             width: 80%; max-width: 900px; height: 80vh;
-            background: var(--bg-panel); border: 1px solid var(--neon-green);
-            box-shadow: 0 0 50px rgba(0, 255, 65, 0.2);
-            display: flex; flex-direction: column;
-            animation: window-open 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+            background: var(--bg-panel); border: 1px solid var(--bat-blue);
+            box-shadow: 0 0 30px rgba(42, 82, 152, 0.3);
+            display: flex; flex-direction: column; animation: window-open 0.3s ease-out;
         }
-        @keyframes window-open { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        @keyframes window-open { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
         .modal-bar {
-            background: #111; padding: 10px 20px; border-bottom: 1px solid #333;
+            background: #080808; padding: 10px 20px; border-bottom: 1px solid var(--bat-blue);
             display: flex; justify-content: space-between; align-items: center;
         }
-        .modal-title { color: var(--neon-green); font-size: 1rem; text-transform: uppercase; }
-        .close-btn { color: var(--neon-pink); cursor: pointer; font-size: 1.5rem; transition: 0.2s; }
-        .close-btn:hover { text-shadow: 0 0 10px var(--neon-pink); }
+        .modal-title { color: var(--bat-blue); font-size: 1rem; text-transform: uppercase; letter-spacing: 1px;}
+        .close-btn { color: var(--bat-gold); cursor: pointer; font-size: 1.5rem; transition: 0.2s; }
+        .close-btn:hover { text-shadow: 0 0 10px var(--bat-gold); }
         .modal-content { padding: 20px; overflow-y: auto; flex-grow: 1; font-family: 'Fira Code', monospace; }
         .stats-row {
             display: flex; gap: 20px; margin-bottom: 20px;
-            background: rgba(0,0,0,0.3); padding: 10px; border-left: 3px solid var(--neon-blue);
+            background: rgba(42, 82, 152, 0.1); padding: 10px; border-left: 3px solid var(--bat-gold);
         }
         .stat-item { font-size: 0.9rem; color: #fff; }
         .stat-label { color: var(--dim-text); font-size: 0.8rem; text-transform: uppercase; }
         .code-preview {
-            background: #000; border: 1px solid #333; padding: 15px;
-            font-size: 0.9rem; color: #ccc; white-space: pre-wrap;
-            height: 60%; overflow-y: scroll;
-            border-left: 2px solid var(--neon-pink);
+            background: #050505; border: 1px solid #333; padding: 15px;
+            font-size: 0.9rem; color: #ccc; white-space: pre-wrap; height: 60%; overflow-y: scroll;
+            border-left: 2px solid var(--bat-blue);
         }
-        .modal-actions { padding: 15px; border-top: 1px solid #333; text-align: right; background: #050505; }
+        .modal-actions { padding: 15px; border-top: 1px solid #333; text-align: right; background: #020202; }
         .btn-git {
-            background: var(--neon-green); color: black; padding: 10px 20px;
-            text-decoration: none; font-weight: bold; text-transform: uppercase;
-            display: inline-block;
+            background: var(--bat-blue); color: #fff; padding: 10px 20px;
+            text-decoration: none; font-weight: bold; text-transform: uppercase; display: inline-block;
+            transition: 0.3s;
         }
-        .btn-git:hover { background: #fff; box-shadow: 0 0 15px var(--neon-green); }
+        .btn-git:hover { background: var(--bat-gold); color: #000; box-shadow: 0 0 15px var(--bat-gold); }
 
-        /* --- HELP BY GEMINI --- */
+        /* --- HELP BY GEMINI (BAT-SIGNAL) --- */
         .gemini-section {
             margin-top: 50px; padding: 40px; background: rgba(10, 14, 20, 0.9);
-            border: 1px solid var(--dim-text); display: flex; align-items: center; gap: 30px;
+            border: 1px solid var(--bat-grey); display: flex; align-items: center; gap: 30px;
+            position: relative; overflow: hidden;
         }
+        /* BAT-SIGNAL ANIMATION */
         .ai-core {
-            width: 80px; height: 80px; border-radius: 50%; background: radial-gradient(circle, #fff, #00f3ff);
-            box-shadow: 0 0 30px var(--neon-blue); position: relative; animation: pulse-core 2s infinite;
+            width: 80px; height: 80px; border-radius: 50%;
+            background: radial-gradient(circle, #fff4e6, var(--bat-gold));
+            box-shadow: 0 0 40px var(--bat-gold), 0 0 10px rgba(255, 255, 255, 0.5) inset;
+            position: relative; display: flex; justify-content: center; align-items: center;
+            animation: pulse-signal 4s infinite ease-in-out;
+        }
+        .ai-core i {
+            font-size: 40px; color: #000; z-index: 2; filter: drop-shadow(0 0 5px var(--bat-gold));
         }
         .ai-ring {
             position: absolute; top: -10px; left: -10px; right: -10px; bottom: -10px;
-            border: 2px dashed var(--neon-blue); border-radius: 50%; animation: spin 10s linear infinite;
+            border: 2px dashed var(--bat-blue); border-radius: 50%; animation: spin 20s linear infinite; opacity: 0.5;
         }
-        @keyframes pulse-core { 0% { opacity: 0.8; transform: scale(1); } 50% { opacity: 1; transform: scale(1.1); } }
-        @keyframes spin { 100% { transform: rotate(360deg); } }
+        @keyframes pulse-signal { 
+            0% { opacity: 0.8; transform: scale(1); box-shadow: 0 0 20px var(--bat-gold); } 
+            50% { opacity: 1; transform: scale(1.05); box-shadow: 0 0 50px var(--bat-gold), 0 0 20px var(--bat-blue); }
+            100% { opacity: 0.8; transform: scale(1); box-shadow: 0 0 20px var(--bat-gold); } 
+        }
 
         /* --- FOOTER --- */
         footer { margin-top: 50px; text-align: center; color: var(--dim-text); padding-bottom: 20px; }
@@ -290,18 +273,18 @@
     <div class="modal-overlay" id="projectModal">
         <div class="modal-window">
             <div class="modal-bar">
-                <div class="modal-title"><i class="fas fa-terminal"></i> <span id="m-title">LOADING...</span></div>
+                <div class="modal-title"><i class="fas fa-database"></i> <span id="m-title">ACCESSING...</span></div>
                 <div class="close-btn" onclick="closeModal()"><i class="fas fa-times"></i></div>
             </div>
             <div class="modal-content">
                 <div class="stats-row" id="m-stats"></div>
-                <div style="margin-bottom: 5px; color: var(--neon-pink); font-size: 0.8rem;">
-                    // PREVIEW: README.md
+                <div style="margin-bottom: 5px; color: var(--bat-gold); font-size: 0.8rem;">
+                    // DECRYPTED SOURCE: README.md
                 </div>
-                <div class="code-preview" id="m-code">Initializing data stream...</div>
+                <div class="code-preview" id="m-code">Initializing WayneTech data stream...</div>
             </div>
             <div class="modal-actions">
-                <a href="#" target="_blank" id="m-link" class="btn-git">OPEN ON GITHUB <i class="fas fa-external-link-alt"></i></a>
+                <a href="#" target="_blank" id="m-link" class="btn-git">ACCESS GITHUB UPLINK <i class="fas fa-external-link-alt"></i></a>
             </div>
         </div>
     </div>
@@ -311,39 +294,39 @@
         <header>
             <div>
                 <div class="glitch" data-text="AMIT_DEV">AMIT_DEV</div>
-                <div style="color:var(--neon-pink); font-size: 0.9rem; margin-top:5px;">
-                    <i class="fas fa-lock"></i> ENCRYPTED CONNECTION
+                <div style="color:var(--bat-gold); font-size: 0.9rem; margin-top:5px; letter-spacing: 1px;">
+                    <i class="fas fa-shield-alt"></i> GOTHAM ENCRYPTED CONNECTION
                 </div>
             </div>
             <div style="text-align: right; font-size: 0.8rem; color: var(--dim-text)">
                 UPTIME: <span id="uptime">0</span>s<br>
-                RAM: 16GB // CPU: 12%
+                SYSTEM: WAYNETECH OS V.4.5
             </div>
         </header>
 
         <section class="hero-section">
             <div class="img-wrapper">
-                <img src="profile.jpg" alt="Amit" onerror="this.src='https://via.placeholder.com/300/000000/00ff00?text=USER_IMG'">
+                <img src="profile.jpg" alt="Amit" onerror="this.src='https://via.placeholder.com/300/000022/2a5298?text=SUBJECT_IMG'">
             </div>
             <div class="code-block">
-                <span class="comment">// Initialize User Profile</span><br>
-                <span class="kwd">const</span> <span class="func">developer</span> = <span class="kwd">new</span> <span class="cls">Human</span>({<br>
+                <span class="comment">// Initialize Subject Profile</span><br>
+                <span class="kwd">const</span> <span class="func">vigilante_coder</span> = <span class="kwd">new</span> <span class="cls">Human</span>({<br>
                 &nbsp;&nbsp;name: <span class="str">"Amit"</span>,<br>
                 &nbsp;&nbsp;goal: <span class="str">"Ethical Hacker"</span>,<br>
-                &nbsp;&nbsp;tools: [<span class="str">"Burp Suite"</span>, <span class="str">"Kali"</span>, <span class="str">"Nmap"</span>],<br>
-                &nbsp;&nbsp;location: <span class="str">"Localhost"</span><br>
+                &nbsp;&nbsp;tools: [<span class="str">"Burp Suite"</span>, <span class="str">"Kali"</span>, <span class="str">"Batarang.js"</span>],<br>
+                &nbsp;&nbsp;location: <span class="str">"Gotham Node"</span><br>
                 });<br><br>
                 <span class="comment">// Execute Mission</span><br>
-                <span class="func">developer</span>.<span class="func">penetrateSystem</span>();
+                <span class="func">vigilante_coder</span>.<span class="func">secureTheCity</span>();
             </div>
         </section>
 
         <section class="kali-container">
-            <div style="margin-bottom:10px; color:var(--dim-text)">// TERMINAL ACCESS</div>
+            <div style="margin-bottom:10px; color:var(--dim-text)">// REMOTE TERMINAL ACCESS</div>
             <div class="kali-window">
                 <div class="kali-header">
                     <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
-                    <span class="kali-title">root@kali: ~</span>
+                    <span class="kali-title">oracle@wayne-server: ~</span>
                 </div>
                 <div class="kali-body" id="kali-output"></div>
             </div>
@@ -351,15 +334,15 @@
 
         <section id="projects">
             <div class="projects-header">
-                <span class="kwd">import</span> { Targets } <span class="kwd">from</span> <span class="str">'./github'</span>;
+                <span class="kwd">import</span> { Evidence } <span class="kwd">from</span> <span class="str">'./github_archives'</span>;
             </div>
             <div class="grid" id="repo-grid">
-                <div style="color:var(--dim-text)">> Fetching Repositories...</div>
+                <div style="color:var(--dim-text)">> Scanning Archives...</div>
             </div>
         </section>
 
         <section class="cine-section">
-            <div class="projects-header" style="border-left-color: var(--neon-yellow)">
+            <div class="projects-header" style="border-left-color: var(--bat-gold)">
                 <span class="kwd">const</span> <span class="func">personal_db</span> = <span class="str">"Cinephile Archives"</span>;
             </div>
             <div class="cine-grid">
@@ -368,13 +351,11 @@
                     <div class="cine-title">MARVEL UNIVERSE</div>
                     <div class="cine-desc">Status: Endgame Survivor<br>Threat Level: AVENGERS</div>
                 </div>
-
                 <div class="cine-card boys">
                     <div class="cine-icon"><i class="fas fa-bolt"></i></div>
                     <div class="cine-title">VOUGHT / KRYPTON</div>
                     <div class="cine-desc">Subject: Homelander / Superman<br>Warning: Laser Vision Detected</div>
                 </div>
-
                 <div class="cine-card scifi">
                     <div class="cine-icon"><i class="fas fa-robot"></i></div>
                     <div class="cine-title">SCI-FI & ANIMATION</div>
@@ -385,36 +366,37 @@
 
         <section class="gemini-section">
             <div class="ai-core">
+                <i class="fab fa-old-republic"></i> 
                 <div class="ai-ring"></div>
             </div>
             <div class="gemini-text">
-                <h3><i class="fas fa-microchip"></i> HELP BY GEMINI AI </h3>
+                <h3><i class="fas fa-microchip"></i> HELP BY GEMINI AI</h3>
                 <p>
-                    <span class="comment">// AI CO-PILOT ACTIVE</span><br>
+                    <span class="comment">// ORACLE CO-PILOT ACTIVE</span><br>
                     This architecture was synthesized with the assistance of Google's Gemini AI. 
-                    Optimizing logic paths and aesthetic parameters for maximum efficiency.
-                    JI App Sahi Samaj rahe hai Vibe coding ki hai beacuse mai abhi seekh raha hu and Mujhe inspiration chahiye
-                    thi soo i vibe coded this through gemini but not whole thing but 70 percent is vibe coded 
+                    Optimizing logic paths for maximum efficiency in the field.
                 </p>
             </div>
         </section>
 
         <footer>
-            <span>&copy; 2025 AMIT.SYSTEM // END OF FILE</span>
+            <span>&copy; 2025 AMIT // WAYNETECH SYSTEMS // END OF LINE</span>
         </footer>
 
     </div>
 
     <script>
-        // --- 1. MATRIX & HEX FX ---
+        // --- 1. WAYNETECH DATA RAIN (Color changed to Blue) ---
         const canvas = document.getElementById('matrix-canvas');
         const ctx = canvas.getContext('2d');
         canvas.width = window.innerWidth; canvas.height = window.innerHeight;
         const chars = '01ABCDEFGHIJKLMNOPQRSTUVWXYZ';
         const drops = Array(Math.floor(canvas.width / 14)).fill(1);
         function drawMatrix() {
-            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)'; ctx.fillRect(0, 0, canvas.width, canvas.height);
-            ctx.fillStyle = '#00ff41'; ctx.font = '14px monospace';
+            ctx.fillStyle = 'rgba(1, 1, 3, 0.1)'; /* Darker fade for night feel */
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = '#2a5298'; /* WayneTech Blue */
+            ctx.font = '14px monospace';
             drops.forEach((y, i) => {
                 const text = chars[Math.floor(Math.random() * chars.length)];
                 ctx.fillText(text, i * 14, y * 14);
@@ -433,16 +415,16 @@
         document.getElementById('line-numbers').innerHTML = lines;
         let sec = 0; setInterval(() => { document.getElementById('uptime').innerText = sec++; }, 1000);
 
-        // --- 2. KALI TERMINAL TYPING EFFECT ---
+        // --- 2. TERMINAL TYPING EFFECT (Prompt color changed in CSS) ---
         const termOutput = document.getElementById('kali-output');
-        const promptHTML = `<span class="prompt">root@kali</span>:<span class="path">~</span># `;
+        const promptHTML = `<span class="prompt">oracle@wayne-server</span>:<span class="path">~</span># `;
         const terminalSequence = [
             { type: 'cmd', text: 'whoami' },
-            { type: 'out', text: 'root' },
-            { type: 'cmd', text: 'nmap -sV 192.168.1.1' },
-            { type: 'out', text: 'Starting Nmap 7.94... \nScanning 192.168.1.1 [1000 ports]...\nPORT   STATE SERVICE\n22/tcp open  ssh\n80/tcp open  http' },
-            { type: 'cmd', text: 'burpsuite &' },
-            { type: 'out', text: '[1] 1337\nStarting Burp Suite Community Edition...\nLoading Extensions...' }
+            { type: 'out', text: 'oracle' },
+            { type: 'cmd', text: 'nmap -sV 192.168.1.1 --script=vuln' },
+            { type: 'out', text: 'Starting Nmap 7.94... \nScanning target network...\nPORT   STATE SERVICE\n22/tcp open  ssh (OpenSSH 8.2p1)\n80/tcp open  http (Apache 2.4.41)\n| http-enum: Potential vulnerability found in /admin' },
+            { type: 'cmd', text: 'initiate_protocol --silent' },
+            { type: 'out', text: '[>] DEPLOYING COUNTERMEASURES...\n[>] SYSTEM SECURE.' }
         ];
 
         let seqIndex = 0;
@@ -470,7 +452,7 @@
         }
         typeTerminal();
 
-        // --- 3. GITHUB LOGIC ---
+        // --- 3. GITHUB LOGIC (Unchanged) ---
         const username = 'localhostamit';
         const grid = document.getElementById('repo-grid');
         const modal = document.getElementById('projectModal');
@@ -483,30 +465,30 @@
                 repos.forEach(repo => {
                     grid.innerHTML += `
                         <div class="repo-card" onclick="openModal('${repo.name}')">
-                            <div class="repo-title"><i class="fas fa-box"></i> ${repo.name}</div>
+                            <div class="repo-title"><i class="fas fa-database"></i> ${repo.name}</div>
                             <div class="repo-desc"><span class="str">"${repo.description || 'No description'}"</span></div>
                             <div class="repo-stats">
                                 <span><span class="kwd">lang:</span> ${repo.language || 'Txt'}</span>
                                 <span><span class="kwd">stars:</span> ${repo.stargazers_count}</span>
-                                <span style="margin-left:auto; color:var(--neon-green);">INITIALIZE <i class="fas fa-play"></i></span>
+                                <span style="margin-left:auto; color:var(--bat-blue);">INITIALIZE <i class="fas fa-play"></i></span>
                             </div>
                         </div>
                     `;
                 });
-            } catch (err) { grid.innerHTML = `<span style="color:red">ERROR: GITHUB API CONNECTION REFUSED.</span>`; }
+            } catch (err) { grid.innerHTML = `<span style="color:red">ERROR: UPLINK FAILED.</span>`; }
         }
 
         async function openModal(repoName) {
             modal.style.display = 'flex';
             document.getElementById('m-title').innerText = repoName;
-            document.getElementById('m-code').innerText = "> Establishing link to " + repoName + "...\n> Downloading assets...";
+            document.getElementById('m-code').innerText = "> Establishing secure link to " + repoName + "...\n> Decrypting assets...";
             document.getElementById('m-link').href = `https://github.com/${username}/${repoName}`;
             try {
                 const repoRes = await fetch(`https://api.github.com/repos/${username}/${repoName}`);
                 const repo = await repoRes.json();
                 const pullsRes = await fetch(`https://api.github.com/repos/${username}/${repoName}/pulls?state=all`);
                 const pulls = await pullsRes.json();
-                let readmeContent = "// README.md not found.";
+                let readmeContent = "// README.md not found or encrypted.";
                 try {
                     const readmeRes = await fetch(`https://api.github.com/repos/${username}/${repoName}/readme`);
                     if(readmeRes.ok) {
@@ -516,13 +498,13 @@
                 } catch(e) {}
 
                 document.getElementById('m-stats').innerHTML = `
-                    <div class="stat-item"><span class="stat-label">Stars:</span> ${repo.stargazers_count} <i class="fas fa-star" style="color:gold"></i></div>
+                    <div class="stat-item"><span class="stat-label">Stars:</span> ${repo.stargazers_count} <i class="fas fa-star" style="color:var(--bat-gold)"></i></div>
                     <div class="stat-item"><span class="stat-label">Forks:</span> ${repo.forks_count} <i class="fas fa-code-branch"></i></div>
                     <div class="stat-item"><span class="stat-label">Open PRs:</span> ${pulls.length} <i class="fas fa-code-pull-request"></i></div>
                     <div class="stat-item"><span class="stat-label">Watchers:</span> ${repo.watchers_count} <i class="fas fa-eye"></i></div>
                 `;
                 document.getElementById('m-code').innerText = readmeContent;
-            } catch (err) { document.getElementById('m-code').innerText = "> ERROR: DATA STREAM INTERRUPTED.\n> " + err.message; }
+            } catch (err) { document.getElementById('m-code').innerText = "> ERROR: SIGNAL LOST.\n> " + err.message; }
         }
 
         function closeModal() { modal.style.display = 'none'; }
