@@ -3,26 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AMIT_SYSTEM_V.BAT [WAYNETECH_PROTOCOL]</title>
+    <title>AMIT | VIBE_CODED_V.5 [WAYNETECH]</title>
     <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=VT323&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
         :root {
             /* BATMAN COLOR PALETTE */
-            --bg-deep: #010103; /* Gotham Night Black */
-            --bg-panel: #0a0b10; /* Dark Armor Grey */
-            --bat-blue: #2a5298; /* WayneTech Electric Blue */
-            --bat-gold: #d4af37; /* Utility Belt Gold */
+            --bg-deep: #010103;
+            --bg-panel: #0a0b10;
+            --bat-blue: #2a5298;
+            --bat-gold: #d4af37;
             --bat-grey: #4a4a4a;
             
-            --neon-green: var(--bat-blue); /* Replaced for main theme */
-            --neon-pink: var(--bat-gold);  /* Replaced for main theme */
-            --neon-blue: #5e96ff; /* Brighter highlight blue */
-            
-            /* Keeping terminal slightly green for realism, mixed with blue */
-            --kali-prompt: #00ff41; 
-            
+            --neon-blue: #5e96ff;
             --dim-text: #607d8b;
             --kali-bg: #050505;
             --kali-header: #1a1a1a;
@@ -36,20 +30,39 @@
             font-family: 'Fira Code', monospace;
             overflow-x: hidden;
             font-size: 16px;
+            position: relative;
         }
 
         /* --- BACKGROUND FX --- */
-        #matrix-canvas { position: fixed; top: 0; left: 0; z-index: -2; opacity: 0.2; }
+        #matrix-canvas { position: fixed; top: 0; left: 0; z-index: -2; opacity: 0.15; }
+        
         .hex-overlay {
             position: fixed; top: 0; right: 0; width: 100px; height: 100%; z-index: -1;
             color: var(--dim-text); opacity: 0.1; font-size: 10px; padding-top: 20px;
             text-align: right; pointer-events: none; overflow: hidden;
         }
-        /* subtle bat-fog overlay */
+
+        /* BAT SIGNAL BACKGROUND WATERMARK */
+        .bat-bg-watermark {
+            position: fixed;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80vmin; /* Responsive size */
+            opacity: 0.08; /* Very subtle */
+            z-index: -3;
+            pointer-events: none;
+            filter: drop-shadow(0 0 50px var(--bat-blue));
+            animation: breathe 6s infinite ease-in-out;
+        }
+        @keyframes breathe {
+            0%, 100% { opacity: 0.08; transform: translate(-50%, -50%) scale(1); }
+            50% { opacity: 0.12; transform: translate(-50%, -50%) scale(1.05); }
+        }
+
         body::after {
             content: " "; display: block; position: absolute; top: 0; left: 0; bottom: 0; right: 0;
-            background: radial-gradient(circle at center, transparent 50%, rgba(0,0,0,0.8) 100%), linear-gradient(to bottom, transparent, rgba(10, 11, 16, 0.8));
-            z-index: 2; pointer-events: none;
+            background: radial-gradient(circle at center, transparent 40%, #010103 100%);
+            z-index: -1; pointer-events: none;
         }
 
         /* --- LAYOUT --- */
@@ -103,7 +116,7 @@
         .cls { color: var(--neon-blue); } .func { color: var(--bat-blue); } 
         .comment { color: var(--dim-text); font-style: italic; }
 
-        /* --- KALI LINUX TERMINAL SECTION --- */
+        /* --- KALI LINUX TERMINAL --- */
         .kali-container {
             margin-bottom: 80px;
             font-family: 'Fira Code', monospace;
@@ -125,10 +138,8 @@
         .dot { height: 12px; width: 12px; border-radius: 50%; display: inline-block; margin-right: 8px; opacity: 0.7;}
         .red { background-color: #ff5f56; } .yellow { background-color: #ffbd2e; } .green { background-color: #27c93f; }
         .kali-title { margin-left: 10px; font-size: 0.8rem; color: #ccc; }
-        
         .kali-body {
             padding: 15px; height: 200px; overflow-y: hidden; color: #dcdcdc; font-size: 0.9rem;
-            /* Slight green tint for terminal realism against the blue theme */
             filter: hue-rotate(290deg); 
         }
         .prompt { color: var(--bat-gold); font-weight: bold; }
@@ -223,50 +234,55 @@
         }
         .btn-git:hover { background: var(--bat-gold); color: #000; box-shadow: 0 0 15px var(--bat-gold); }
 
-        /* --- HELP BY GEMINI (BAT-SIGNAL) --- */
+        /* --- HELP BY GEMINI (VIBE CODED) --- */
         .gemini-section {
-            margin-top: 50px; padding: 40px; background: rgba(10, 14, 20, 0.9);
-            border: 1px solid var(--bat-grey); display: flex; align-items: center; gap: 30px;
+            margin-top: 50px; padding: 40px; background: rgba(10, 14, 20, 0.95);
+            border: 1px solid var(--bat-blue); display: flex; align-items: center; gap: 30px;
             position: relative; overflow: hidden;
+            box-shadow: 0 0 20px rgba(42, 82, 152, 0.1);
         }
-        /* BAT-SIGNAL ANIMATION */
         .ai-core {
             width: 80px; height: 80px; border-radius: 50%;
             background: radial-gradient(circle, #fff4e6, var(--bat-gold));
-            box-shadow: 0 0 40px var(--bat-gold), 0 0 10px rgba(255, 255, 255, 0.5) inset;
+            box-shadow: 0 0 30px var(--bat-gold);
             position: relative; display: flex; justify-content: center; align-items: center;
             animation: pulse-signal 4s infinite ease-in-out;
         }
         .ai-core i {
-            font-size: 40px; color: #000; z-index: 2; filter: drop-shadow(0 0 5px var(--bat-gold));
+            font-size: 40px; color: #000; z-index: 2; 
         }
-        .ai-ring {
-            position: absolute; top: -10px; left: -10px; right: -10px; bottom: -10px;
-            border: 2px dashed var(--bat-blue); border-radius: 50%; animation: spin 20s linear infinite; opacity: 0.5;
+        .gemini-text h3 {
+            color: var(--bat-gold); font-size: 1.2rem; margin-bottom: 10px; letter-spacing: 1px;
+        }
+        .gemini-text p {
+            color: var(--dim-text); font-size: 0.95rem; line-height: 1.6;
         }
         @keyframes pulse-signal { 
-            0% { opacity: 0.8; transform: scale(1); box-shadow: 0 0 20px var(--bat-gold); } 
-            50% { opacity: 1; transform: scale(1.05); box-shadow: 0 0 50px var(--bat-gold), 0 0 20px var(--bat-blue); }
-            100% { opacity: 0.8; transform: scale(1); box-shadow: 0 0 20px var(--bat-gold); } 
+            0% { opacity: 0.9; box-shadow: 0 0 20px var(--bat-gold); } 
+            50% { opacity: 1; box-shadow: 0 0 50px var(--bat-gold), 0 0 30px var(--bat-blue); }
+            100% { opacity: 0.9; box-shadow: 0 0 20px var(--bat-gold); } 
         }
 
         /* --- FOOTER --- */
         footer { margin-top: 50px; text-align: center; color: var(--dim-text); padding-bottom: 20px; }
 
-        /* Mobile */
         @media (max-width: 768px) {
             .hero-section { grid-template-columns: 1fr; }
             .ide-container { padding-left: 20px; }
             .line-numbers, .hex-overlay { display: none; }
             .gemini-section { flex-direction: column; text-align: center; }
             .modal-window { width: 95%; height: 90vh; }
-            .stats-row { flex-wrap: wrap; }
         }
     </style>
 </head>
 <body>
 
+    <svg class="bat-bg-watermark" viewBox="0 0 512 512" fill="#2a5298">
+        <path d="M256,193.3c-15.3-26.7-44.5-45.7-89.9-52.6c-45.3-6.9-106.3,1.4-129.5,41.9c-8.8,15.3-7.5,60.8-7.5,60.8s26.8-19.1,65.3-19.1 c20.1,0,32.3,4.1,43.3,7.9c-12,23.5-35.1,64.2-35.1,64.2s69.2-22.1,98.6-22.1c11.5,0,22.1,1.9,30.3,4.4c9.9,2.9,18.4,7.4,24.5,13.2 c6.1-5.7,14.6-10.3,24.5-13.2c8.2-2.5,18.9-4.4,30.3-4.4c29.4,0,98.6,22.1,98.6,22.1s-23.1-40.7-35.1-64.2 c11-3.8,23.2-7.9,43.3-7.9c38.5,0,65.3,19.1,65.3,19.1s1.3-45.4-7.5-60.8c-23.1-40.5-84.2-48.8-129.5-41.9 C300.5,147.6,271.3,166.6,256,193.3z"/>
+    </svg>
+
     <canvas id="matrix-canvas"></canvas>
+    
     <div class="hex-overlay" id="hex-dump"></div>
     <div class="line-numbers" id="line-numbers"></div>
 
@@ -300,7 +316,7 @@
             </div>
             <div style="text-align: right; font-size: 0.8rem; color: var(--dim-text)">
                 UPTIME: <span id="uptime">0</span>s<br>
-                SYSTEM: WAYNETECH OS V.4.5
+                SYSTEM: WAYNETECH OS V.5.0
             </div>
         </header>
 
@@ -366,15 +382,15 @@
 
         <section class="gemini-section">
             <div class="ai-core">
-                <i class="fab fa-old-republic"></i> 
-                <div class="ai-ring"></div>
+                <i class="fab fa-old-republic"></i>
             </div>
             <div class="gemini-text">
-                <h3><i class="fas fa-microchip"></i> HELP BY GEMINI AI</h3>
+                <h3><i class="fas fa-microchip"></i> VIBE CODED WITH GEMINI</h3>
                 <p>
-                    <span class="comment">// ORACLE CO-PILOT ACTIVE</span><br>
-                    This architecture was synthesized with the assistance of Google's Gemini AI. 
-                    Optimizing logic paths for maximum efficiency in the field.
+                    <span class="comment">// COLLABORATION LOG</span><br>
+                    Status: Learning Protocol Active.<br>
+                    Composition: <span class="kwd">70% Gemini AI</span> / <span class="str">30% Human Intuition</span>.<br>
+                    "I supply the vibe, the AI writes the lines."
                 </p>
             </div>
         </section>
@@ -386,14 +402,14 @@
     </div>
 
     <script>
-        // --- 1. WAYNETECH DATA RAIN (Color changed to Blue) ---
+        // --- 1. WAYNETECH DATA RAIN ---
         const canvas = document.getElementById('matrix-canvas');
         const ctx = canvas.getContext('2d');
         canvas.width = window.innerWidth; canvas.height = window.innerHeight;
         const chars = '01ABCDEFGHIJKLMNOPQRSTUVWXYZ';
         const drops = Array(Math.floor(canvas.width / 14)).fill(1);
         function drawMatrix() {
-            ctx.fillStyle = 'rgba(1, 1, 3, 0.1)'; /* Darker fade for night feel */
+            ctx.fillStyle = 'rgba(1, 1, 3, 0.1)';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
             ctx.fillStyle = '#2a5298'; /* WayneTech Blue */
             ctx.font = '14px monospace';
@@ -415,7 +431,7 @@
         document.getElementById('line-numbers').innerHTML = lines;
         let sec = 0; setInterval(() => { document.getElementById('uptime').innerText = sec++; }, 1000);
 
-        // --- 2. TERMINAL TYPING EFFECT (Prompt color changed in CSS) ---
+        // --- 2. TERMINAL TYPING EFFECT ---
         const termOutput = document.getElementById('kali-output');
         const promptHTML = `<span class="prompt">oracle@wayne-server</span>:<span class="path">~</span># `;
         const terminalSequence = [
@@ -452,7 +468,7 @@
         }
         typeTerminal();
 
-        // --- 3. GITHUB LOGIC (Unchanged) ---
+        // --- 3. GITHUB LOGIC ---
         const username = 'localhostamit';
         const grid = document.getElementById('repo-grid');
         const modal = document.getElementById('projectModal');
