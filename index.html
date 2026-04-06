@@ -1,292 +1,392 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Amit Kumar | Frontend Developer</title>
+    <title>AMIT KUMAR | WEB DEVELOPER</title>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    
     <script>
         tailwind.config = {
-            darkMode: 'class', // Enables dark mode toggling via a class on the HTML tag
+            darkMode: 'class', 
             theme: {
                 extend: {
+                    fontFamily: { mono: ['Space Mono', 'monospace'] },
                     colors: {
-                        primary: '#2563eb', // Blue-600
-                        secondary: '#1e40af', // Blue-800
-                        darkbg: '#0f172a', // Slate-900
-                        darkcard: '#1e293b', // Slate-800
+                        brutal: {
+                            yellow: '#ffde03',
+                            cyan: '#06b6d4',
+                            pink: '#e11d48',
+                            dark: '#09090b',
+                            light: '#f8fafc'
+                        }
                     }
                 }
             }
         }
     </script>
+    <style>
+        body { font-family: 'Space Mono', monospace; overflow-x: hidden; }
+        html { scroll-behavior: smooth; }
+        
+        /* Custom scrollbar for brutalist feel */
+        ::-webkit-scrollbar { width: 10px; border-left: 2px solid #000; }
+        ::-webkit-scrollbar-track { background: #f8fafc; }
+        ::-webkit-scrollbar-thumb { background: #000; }
+        .dark ::-webkit-scrollbar { border-left: 2px solid #fff; }
+        .dark ::-webkit-scrollbar-track { background: #09090b; }
+        .dark ::-webkit-scrollbar-thumb { background: #ffde03; }
+    </style>
 </head>
-<body class="bg-gray-50 dark:bg-darkbg text-gray-800 dark:text-gray-200 font-sans antialiased transition-colors duration-300">
+<body class="antialiased">
+    <div id="root"></div>
 
-    <nav class="bg-white dark:bg-darkcard shadow-sm border-b border-gray-200 dark:border-gray-800 sticky top-0 z-50 transition-colors duration-300">
-        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-16 items-center">
-                <div class="flex-shrink-0 font-bold text-xl text-primary tracking-tight">
-                    <a href="#">&lt;Amit/&gt;</a>
-                </div>
-                <div class="hidden md:flex space-x-8">
-                    <a href="#about" class="text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition">About</a>
-                    <a href="#projects" class="text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition">Projects</a>
-                    <a href="#certifications" class="text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition">Certifications</a>
-                    <a href="#github" class="text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition">GitHub</a>
-                </div>
-                <div class="flex items-center space-x-4">
-                    <button id="theme-toggle" type="button" class="text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none rounded-lg text-sm p-2.5 transition">
-                        <i id="theme-toggle-dark-icon" class="fas fa-moon hidden text-lg"></i>
-                        <i id="theme-toggle-light-icon" class="fas fa-sun hidden text-lg"></i>
-                    </button>
-                    <a href="https://github.com/localhostamit" target="_blank" class="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white text-xl transition"><i class="fab fa-github"></i></a>
-                    <a href="https://www.linkedin.com/in/amitkumar7988/" target="_blank" class="text-gray-600 dark:text-gray-400 hover:text-blue-700 dark:hover:text-blue-400 text-xl transition"><i class="fab fa-linkedin"></i></a>
-                </div>
-            </div>
-        </div>
-    </nav>
+    <script type="text/babel">
+        const { useState, useEffect } = React;
 
-    <header id="about" class="pt-20 pb-16 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto text-center md:text-left flex flex-col md:flex-row items-center gap-10">
-        <div class="md:w-2/3">
-            <h1 class="text-4xl sm:text-5xl font-extrabold text-gray-900 dark:text-white tracking-tight mb-4">
-                Hi, I'm <span class="text-primary">Amit Kumar</span>.
-            </h1>
-            <p class="text-xl text-gray-600 dark:text-gray-300 mb-6 leading-relaxed">
-                A tech-savvy 4th-semester BCA student at <strong>Shaheed Udham Singh Govt College (KUK)</strong>, specializing in Frontend Web Development. I thrive in Linux environments and am passionate about leveraging Generative AI to build efficient, scalable web applications.
-            </p>
-            <div class="flex flex-wrap gap-3 justify-center md:justify-start mb-8">
-                <span class="px-4 py-2 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 rounded-full text-sm font-semibold">HTML/CSS/JS</span>
-                <span class="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-full text-sm font-semibold">Linux (Ubuntu, Kali, Pop!_OS)</span>
-                <span class="px-4 py-2 bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 rounded-full text-sm font-semibold">C/C++/Java</span>
-                <span class="px-4 py-2 bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200 rounded-full text-sm font-semibold">Prompt Engineering</span>
-            </div>
-            <div class="flex gap-4 justify-center md:justify-start">
-                <a href="#projects" class="bg-primary hover:bg-secondary text-white font-bold py-3 px-6 rounded-lg transition shadow-md">View My Work</a>
-                <a href="mailto:kumaramit02934@gmail.com" class="bg-white dark:bg-transparent border-2 border-primary text-primary hover:bg-blue-50 dark:hover:bg-gray-800 font-bold py-3 px-6 rounded-lg transition shadow-sm">Contact Me</a>
-            </div>
-        </div>
-        <div class="md:w-1/3 flex justify-center">
-            <img src="profile.jpg" alt="Amit Kumar" class="w-64 h-64 object-cover rounded-full shadow-xl border-4 border-white dark:border-gray-700 bg-gray-200 dark:bg-gray-800">
-        </div>
-    </header>
+        const App = () => {
+            const [repos, setRepos] = useState([]);
+            const [loading, setLoading] = useState(true);
+            const [isDark, setIsDark] = useState(false);
+            const username = "localhostamit"; 
 
-    <hr class="border-gray-200 dark:border-gray-800">
-
-    <section id="projects" class="py-20 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto">
-        <div class="text-center mb-12">
-            <h2 class="text-3xl font-bold text-gray-900 dark:text-white">Featured Projects</h2>
-            <p class="text-gray-600 dark:text-gray-400 mt-2">Applications I've built, deployed, and currently maintain.</p>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div class="bg-white dark:bg-darkcard rounded-xl shadow-md hover:shadow-xl transition-shadow border border-gray-100 dark:border-gray-700 overflow-hidden flex flex-col">
-                <div class="p-6 flex-grow">
-                    <div class="flex justify-between items-start mb-4">
-                        <h3 class="text-xl font-bold text-gray-900 dark:text-white">pyqhubs.in</h3>
-                        <i class="fas fa-book-open text-primary text-2xl"></i>
-                    </div>
-                    <p class="text-gray-600 dark:text-gray-400 text-sm mb-4">Educational Resource Platform serving KUK students. Curates and hosts academic resources, including Previous Year Questions (PYQs), significantly improving accessibility for the student community.</p>
-                </div>
-                <div class="bg-gray-50 dark:bg-gray-800/50 p-4 border-t border-gray-100 dark:border-gray-700 text-center">
-                    <a href="https://www.pyqhubs.in" target="_blank" class="text-primary dark:text-blue-400 font-semibold hover:underline">View Live Site &rarr;</a>
-                </div>
-            </div>
-
-            <div class="bg-white dark:bg-darkcard rounded-xl shadow-md hover:shadow-xl transition-shadow border border-gray-100 dark:border-gray-700 overflow-hidden flex flex-col">
-                <div class="p-6 flex-grow">
-                    <div class="flex justify-between items-start mb-4">
-                        <h3 class="text-xl font-bold text-gray-900 dark:text-white">Ghostlink</h3>
-                        <i class="fas fa-comments text-primary text-2xl"></i>
-                    </div>
-                    <p class="text-gray-600 dark:text-gray-400 text-sm mb-4">A real-time, browser-based chat application utilizing Peer-to-Peer (P2P) networking concepts. Successfully deployed and hosted live on a subdomain of my portfolio.</p>
-                </div>
-                <div class="bg-gray-50 dark:bg-gray-800/50 p-4 border-t border-gray-100 dark:border-gray-700 text-center">
-                    <a href="https://ghostlink.localhostamit.me" target="_blank" class="text-primary dark:text-blue-400 font-semibold hover:underline">Chat Live &rarr;</a>
-                </div>
-            </div>
-
-            <div class="bg-white dark:bg-darkcard rounded-xl shadow-md hover:shadow-xl transition-shadow border border-gray-100 dark:border-gray-700 overflow-hidden flex flex-col">
-                <div class="p-6 flex-grow">
-                    <div class="flex justify-between items-start mb-4">
-                        <h3 class="text-xl font-bold text-gray-900 dark:text-white">KisanMitra</h3>
-                        <i class="fas fa-tractor text-primary text-2xl"></i>
-                    </div>
-                    <p class="text-gray-600 dark:text-gray-400 text-sm mb-4">Live Mandi Rates Checker built to assist local farmers. Integrated with the Open Government Data (OGD) platform API to pull and display real-time, accurate agricultural market data streams.</p>
-                </div>
-                <div class="bg-gray-50 dark:bg-gray-800/50 p-4 border-t border-gray-100 dark:border-gray-700 text-center">
-                    <a href="https://kisanmitra.localhostamit.me/" target="_blank" class="text-primary dark:text-blue-400 font-semibold hover:underline">Check Rates &rarr;</a>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="certifications" class="py-16 bg-blue-50 dark:bg-gray-800 transition-colors duration-300">
-        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-10">
-                <h2 class="text-3xl font-bold text-gray-900 dark:text-white">Certifications & Training</h2>
-            </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="bg-white dark:bg-darkcard p-6 rounded-lg shadow-sm border-l-4 border-primary">
-                    <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Yuva AI for All</h3>
-                    <p class="text-gray-600 dark:text-gray-400">Completed comprehensive training on the fundamentals and practical applications of Artificial Intelligence and Prompt Engineering.</p>
-                </div>
-                <div class="bg-white dark:bg-darkcard p-6 rounded-lg shadow-sm border-l-4 border-primary">
-                    <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">FCCB Course - Hartron</h3>
-                    <p class="text-gray-600 dark:text-gray-400">Certified by Hartron, establishing a strong foundation in core computer operations, software applications, and typing speed.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="github" class="py-20 bg-gray-900 text-white">
-        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-12">
-                <h2 class="text-3xl font-bold text-white mb-2"><i class="fab fa-github mr-2"></i> Highlighted Open Source</h2>
-                <p class="text-gray-400">Specific repositories fetched dynamically from my GitHub profile.</p>
-            </div>
-            
-            <div id="repo-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <div class="col-span-full text-center py-10" id="loading-state">
-                    <i class="fas fa-spinner fa-spin text-3xl text-gray-400 mb-4"></i>
-                    <p class="text-gray-400">Fetching specific repositories from GitHub...</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <footer class="bg-white dark:bg-darkbg border-t border-gray-200 dark:border-gray-800 pt-12 pb-8 transition-colors duration-300">
-        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center">
-            <div class="mb-4 md:mb-0 text-center md:text-left">
-                <h3 class="font-bold text-lg text-gray-900 dark:text-white">Amit Kumar</h3>
-                <p class="text-gray-500 dark:text-gray-400 text-sm mt-1"><i class="fas fa-map-marker-alt mr-1"></i> Karnal, Haryana, India</p>
-                <p class="text-gray-500 dark:text-gray-400 text-sm"><i class="fas fa-phone mr-1"></i> +91 7988650874</p>
-            </div>
-            <div class="flex space-x-6">
-                <a href="mailto:kumaramit02934@gmail.com" class="text-gray-400 hover:text-primary dark:hover:text-primary transition"><i class="fas fa-envelope text-2xl"></i></a>
-                <a href="https://github.com/localhostamit" target="_blank" class="text-gray-400 hover:text-gray-900 dark:hover:text-white transition"><i class="fab fa-github text-2xl"></i></a>
-                <a href="https://www.linkedin.com/in/amitkumar7988/" target="_blank" class="text-gray-400 hover:text-blue-700 dark:hover:text-blue-400 transition"><i class="fab fa-linkedin text-2xl"></i></a>
-            </div>
-        </div>
-        <div class="mt-8 text-center text-sm text-gray-400">
-            &copy; 2026 Amit Kumar. All rights reserved. | <a href="https://localhostamit.me" class="hover:text-primary">localhostamit.me</a>
-        </div>
-    </footer>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            
-            /* --- 1. DARK MODE TOGGLE LOGIC --- */
-            const themeToggleBtn = document.getElementById('theme-toggle');
-            const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
-            const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
-
-            // Check initial theme preference
-            if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-                document.documentElement.classList.add('dark');
-                themeToggleLightIcon.classList.remove('hidden');
-            } else {
-                themeToggleDarkIcon.classList.remove('hidden');
-            }
-
-            themeToggleBtn.addEventListener('click', function() {
-                // Toggle icons inside button
-                themeToggleDarkIcon.classList.toggle('hidden');
-                themeToggleLightIcon.classList.toggle('hidden');
-
-                // Toggle theme
-                if (document.documentElement.classList.contains('dark')) {
-                    document.documentElement.classList.remove('dark');
-                    localStorage.setItem('color-theme', 'light');
-                } else {
-                    document.documentElement.classList.add('dark');
-                    localStorage.setItem('color-theme', 'dark');
+            useEffect(() => {
+                if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                    setIsDark(true);
                 }
-            });
+                
+                fetch(`https://api.github.com/users/${username}/repos?sort=updated&per_page=6`)
+                    .then(res => res.json())
+                    .then(data => {
+                        setRepos(data);
+                        setLoading(false);
+                    })
+                    .catch(err => console.error(err));
+            }, []);
 
-            /* --- 2. FETCH SPECIFIC GITHUB REPOS LOGIC --- */
-            const username = 'localhostamit';
-            const repoContainer = document.getElementById('repo-container');
-            const loadingState = document.getElementById('loading-state');
-
+            const wrapperClass = isDark ? "dark bg-brutal-dark text-white" : "bg-brutal-light text-black";
+            const navClass = "fixed w-full z-50 top-0 border-b-4 transition-colors duration-300 " + 
+                             (isDark ? "bg-brutal-dark border-white" : "bg-brutal-light border-black");
             
-            const specificReposToFetch = [
-                'Ghostlink_chat',
-                'Chandrayaan', 
-                'mockgen',
-                'Amitflix',
-            ];
+            const brutalCard = `border-4 p-6 md:p-8 transition-all duration-200 flex flex-col
+                ${isDark 
+                    ? 'bg-zinc-900 border-white shadow-[4px_4px_0px_#ffde03] md:shadow-[6px_6px_0px_#ffde03] hover:shadow-[2px_2px_0px_#ffde03]' 
+                    : 'bg-white border-black shadow-[4px_4px_0px_#000] md:shadow-[6px_6px_0px_#000] hover:shadow-[2px_2px_0px_#000]'} 
+                hover:translate-x-[2px] hover:translate-y-[2px] md:hover:translate-x-[4px] md:hover:translate-y-[4px]`;
+                
+            const brutalBadge = `border-2 px-3 py-1 font-bold text-xs md:text-sm shadow-[2px_2px_0px_currentColor] 
+                ${isDark ? 'bg-zinc-800 border-white text-white' : 'bg-white border-black text-black'}`;
 
-            async function fetchSpecificRepos() {
-                try {
-                    // Fetch each repository specifically using Promise.all
-                    const requests = specificReposToFetch.map(repoName => 
-                        fetch(`https://api.github.com/repos/${username}/${repoName}`)
-                    );
+            return (
+                <div className={`${wrapperClass} min-h-screen transition-colors duration-300`}>
                     
-                    const responses = await Promise.all(requests);
-                    const repos = [];
-
-                    for (const response of responses) {
-                        if (response.ok) {
-                            repos.push(await response.json());
-                        } else {
-                            console.warn(`Could not fetch one of the specified repos. Status: ${response.status}`);
-                        }
-                    }
-                    
-                    // Remove loading state
-                    loadingState.style.display = 'none';
-
-                    if (repos.length === 0) {
-                        repoContainer.innerHTML = `<p class="text-gray-400 col-span-full text-center">Please update the JavaScript array with your exact repository names.</p>`;
-                        return;
-                    }
-
-                    // Populate UI
-                    repos.forEach(repo => {
-                        let langColor = 'text-gray-400';
-                        if (repo.language === 'JavaScript') langColor = 'text-yellow-400';
-                        if (repo.language === 'HTML') langColor = 'text-orange-500';
-                        if (repo.language === 'CSS') langColor = 'text-blue-400';
-                        if (repo.language === 'C++' || repo.language === 'C') langColor = 'text-blue-600';
-
-                        const card = document.createElement('div');
-                        card.className = 'bg-gray-800 rounded-lg p-6 border border-gray-700 hover:border-primary transition duration-300 flex flex-col';
-                        card.innerHTML = `
-                            <div class="flex-grow">
-                                <h3 class="text-lg font-bold text-white mb-2 truncate">
-                                    <a href="${repo.html_url}" target="_blank" class="hover:text-primary transition flex items-center">
-                                        <i class="far fa-folder mr-2 text-gray-400"></i> ${repo.name}
-                                    </a>
-                                </h3>
-                                <p class="text-gray-400 text-sm mb-4 line-clamp-2">
-                                    ${repo.description || 'No description provided for this repository.'}
-                                </p>
+                    {/* --- NAVIGATION --- */}
+                    <nav className={navClass}>
+                        <div className="max-w-7xl mx-auto px-4 md:px-6 py-4 flex justify-between items-center">
+                            <a href="#" className="font-bold text-xl md:text-2xl tracking-tighter hover:bg-brutal-yellow hover:text-black px-2 transition-colors truncate">
+                                AMIT_KUMAR
+                            </a>
+                            <div className="flex items-center gap-4 md:gap-6">
+                                <div className="hidden lg:flex gap-6 font-bold text-sm md:text-base">
+                                    <a href="#skills" className="hover:underline decoration-brutal-pink decoration-4 underline-offset-4">SKILLS</a>
+                                    <a href="#projects" className="hover:underline decoration-brutal-cyan decoration-4 underline-offset-4">PROJECTS</a>
+                                    <a href="#education" className="hover:underline decoration-brutal-yellow decoration-4 underline-offset-4">EDU</a>
+                                    <a href="#contact" className="hover:underline decoration-brutal-pink decoration-4 underline-offset-4">CONTACT</a>
+                                </div>
+                                {/* Dark Mode Toggle */}
+                                <button 
+                                    onClick={() => setIsDark(!isDark)}
+                                    className={`border-2 p-2 w-10 h-10 flex items-center justify-center shadow-[2px_2px_0px_currentColor] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none transition-all
+                                    ${isDark ? 'border-white bg-brutal-yellow text-black' : 'border-black bg-black text-white'}`}
+                                >
+                                    <i className={`fas ${isDark ? 'fa-sun' : 'fa-moon'}`}></i>
+                                </button>
                             </div>
-                            <div class="flex justify-between items-center text-xs font-semibold text-gray-500 mt-4">
-                                <span><i class="fas fa-circle ${langColor} mr-1 text-[10px]"></i> ${repo.language || 'Code'}</span>
-                                <div class="flex space-x-3">
-                                    <span><i class="far fa-star mr-1"></i> ${repo.stargazers_count}</span>
-                                    <span><i class="fas fa-code-branch mr-1"></i> ${repo.forks_count}</span>
+                        </div>
+                    </nav>
+
+                    {/* --- HERO SECTION --- */}
+                    <header className="pt-32 pb-16 md:pt-40 md:pb-20 px-4 md:px-6 max-w-7xl mx-auto grid lg:grid-cols-[3fr,2fr] gap-8 md:gap-12 items-center">
+                        <div>
+                            <div className={`inline-block border-2 px-3 py-1 text-sm md:text-base font-bold mb-6 shadow-[3px_3px_0px_currentColor]
+                                ${isDark ? 'bg-brutal-pink border-white text-white' : 'bg-brutal-yellow border-black text-black'}`}>
+                                [ LOCATION: KARNAL, HARYANA ]
+                            </div>
+                            <h1 className="text-4xl md:text-6xl lg:text-7xl font-black leading-[1.1] mb-6 uppercase tracking-tighter break-words">
+                                Scaling <span className={isDark ? "text-brutal-yellow" : "bg-brutal-cyan px-2"}>Web</span> Solutions.
+                            </h1>
+                            <p className="text-lg md:text-xl mb-8 max-w-2xl font-bold leading-relaxed opacity-90">
+                                Self-driven web developer and BCA student. Experienced in building and managing platforms serving over 10,000+ users, leveraging API integrations, Firebase, and AI tools to create robust applications.
+                            </p>
+                            <div className="flex flex-col sm:flex-row gap-4 font-bold">
+                                <a href="https://linkedin.com/in/amitkumar7988" target="_blank" className={`text-center border-4 px-6 py-3 shadow-[4px_4px_0px_currentColor] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_currentColor] transition-all
+                                    ${isDark ? 'bg-brutal-cyan border-white text-black' : 'bg-[#0A66C2] border-black text-white'}`}>
+                                    <i className="fab fa-linkedin mr-2"></i> LINKEDIN
+                                </a>
+                                <a href="https://github.com/localhostamit" target="_blank" className={`text-center border-4 px-6 py-3 shadow-[4px_4px_0px_currentColor] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_currentColor] transition-all
+                                    ${isDark ? 'bg-brutal-dark border-white text-white' : 'bg-white border-black text-black'}`}>
+                                    <i className="fab fa-github mr-2"></i> GITHUB
+                                </a>
+                            </div>
+                        </div>
+                        
+                        <div className={`border-4 p-6 shadow-[6px_6px_0px_currentColor] md:shadow-[8px_8px_0px_currentColor] ${isDark ? 'border-white bg-zinc-900' : 'border-black bg-brutal-pink text-white'}`}>
+                            <div className="border-b-4 pb-4 mb-4 font-bold text-xl md:text-2xl flex justify-between items-center" style={{borderColor: 'inherit'}}>
+                                <span>SYS_INFO</span>
+                                <i className="fas fa-terminal"></i>
+                            </div>
+                            <ul className="space-y-3 font-mono text-sm md:text-lg break-all md:break-normal">
+                                <li>> ROLE: <span className={isDark ? 'text-brutal-cyan' : 'text-brutal-yellow'}>Web Developer</span></li>
+                                <li>> OS: <span className={isDark ? 'text-brutal-cyan' : 'text-brutal-yellow'}>Linux (Ubuntu/Kali)</span></li>
+                                <li>> IMPACT: <span className={isDark ? 'text-brutal-cyan' : 'text-brutal-yellow'}>10k+ Platform Users</span></li>
+                                <li>> PORTFOLIO: <a href="https://localhostamit.me" target="_blank" className="underline decoration-2 hover:text-white">localhostamit.me</a></li>
+                            </ul>
+                        </div>
+                    </header>
+
+                    {/* --- SKILLS & TOOLS --- */}
+                    <section id="skills" className={`py-16 md:py-20 border-y-4 ${isDark ? 'border-white bg-black' : 'border-black bg-brutal-yellow'}`}>
+                        <div className="max-w-7xl mx-auto px-4 md:px-6">
+                            <h2 className="text-3xl md:text-5xl lg:text-6xl font-black tracking-tighter mb-10 md:mb-12 uppercase">Tech_Stack</h2>
+                            
+                            <div className="grid lg:grid-cols-2 gap-8 md:gap-12">
+                                {/* Core Dev */}
+                                <div className={`border-4 p-6 md:p-8 ${isDark ? 'bg-zinc-900 border-white' : 'bg-white border-black'}`}>
+                                    <h3 className="text-xl md:text-2xl font-bold mb-6 border-b-2 pb-2" style={{borderColor: 'inherit'}}>DEVELOPMENT</h3>
+                                    <div className="flex flex-wrap gap-2 md:gap-3">
+                                        <span className={brutalBadge}>HTML / CSS / JS</span>
+                                        <span className={brutalBadge}>React (UI)</span>
+                                        <span className={`${brutalBadge} ${isDark ? '!text-brutal-pink' : '!text-brutal-pink'}`}>Firebase (Auth/DB)</span>
+                                        <span className={brutalBadge}>API Integration</span>
+                                        <span className={brutalBadge}>Blogger CMS</span>
+                                    </div>
+                                </div>
+
+                                {/* Tools & Environment */}
+                                <div className={`border-4 p-6 md:p-8 ${isDark ? 'bg-zinc-900 border-white' : 'bg-white border-black'}`}>
+                                    <h3 className="text-xl md:text-2xl font-bold mb-6 border-b-2 pb-2" style={{borderColor: 'inherit'}}>TOOLS & UTILITIES</h3>
+                                    <div className="flex flex-wrap gap-2 md:gap-3">
+                                        <span className={`${brutalBadge} ${isDark ? '!text-brutal-cyan' : '!text-brutal-cyan'}`}>AI Tools (ChatGPT/Gemini/Claude)</span>
+                                        <span className={brutalBadge}>SEO Optimization</span>
+                                        <span className={brutalBadge}>Domain & DNS Management</span>
+                                        <span className={brutalBadge}>Linux CLI</span>
+                                        <span className={brutalBadge}>Git / GitHub</span>
+                                    </div>
                                 </div>
                             </div>
-                        `;
-                        repoContainer.appendChild(card);
-                    });
+                        </div>
+                    </section>
 
-                } catch (error) {
-                    console.error('Error fetching GitHub repos:', error);
-                    loadingState.innerHTML = `
-                        <i class="fas fa-exclamation-triangle text-3xl text-red-500 mb-4"></i>
-                        <p class="text-red-400">Unable to load specific repositories. Check the console and ensure your repository names are exact matches.</p>
-                    `;
-                }
-            }
+                    {/* --- PROJECTS --- */}
+                    <section id="projects" className="py-16 md:py-24 px-4 md:px-6 max-w-7xl mx-auto">
+                        <h2 className="text-4xl md:text-6xl lg:text-7xl font-black mb-12 md:mb-16 tracking-tighter">PROJECTS.EXE</h2>
+                        <div className="grid md:grid-cols-2 gap-8">
+                            
+                            {/* Project 1 */}
+                            <div className={brutalCard}>
+                                <div className="flex justify-between items-start mb-4">
+                                    <div className={`inline-block border-2 px-2 py-1 text-[10px] md:text-xs font-bold ${isDark ? 'border-white bg-brutal-cyan text-black' : 'border-black bg-black text-white'}`}>
+                                        EDUCATION / 10K+ USERS
+                                    </div>
+                                </div>
+                                <h3 className="text-2xl md:text-3xl font-black mb-3">PyqHubs.in</h3>
+                                <p className="mb-6 opacity-90 text-sm md:text-base flex-grow">Educational platform providing PYQs for KUK students. Custom built on Blogger CMS with Google Drive integration for file distribution. SEO optimized.</p>
+                                <div className="flex flex-wrap gap-2 mb-6 border-t-2 pt-4" style={{borderColor: 'inherit'}}>
+                                    <span className="text-xs md:text-sm font-bold text-brutal-pink">#BloggerCMS</span>
+                                    <span className="text-xs md:text-sm font-bold text-brutal-cyan">#SEO</span>
+                                </div>
+                                <a href="https://www.pyqhubs.in" target="_blank" className="block text-center border-2 border-current py-2 font-bold hover:bg-current hover:text-black transition-colors text-sm md:text-base">
+                                    [ VISIT SITE ]
+                                </a>
+                            </div>
 
-            fetchSpecificRepos();
-        });
+                            {/* Project 2 */}
+                            <div className={brutalCard}>
+                                <div className="flex justify-between items-start mb-4">
+                                    <div className={`inline-block border-2 px-2 py-1 text-[10px] md:text-xs font-bold ${isDark ? 'border-white bg-brutal-yellow text-black' : 'border-black bg-brutal-pink text-white'}`}>
+                                        ENTERTAINMENT / DATABASE
+                                    </div>
+                                </div>
+                                <h3 className="text-2xl md:text-3xl font-black mb-3 break-all">AmitFlix</h3>
+                                <p className="mb-6 opacity-90 text-sm md:text-base flex-grow">Movie database fetching real-time data via Open Movie APIs. Features a Firebase-powered admin panel and automated download-to-stream link conversion.</p>
+                                <div className="flex flex-wrap gap-2 mb-6 border-t-2 pt-4" style={{borderColor: 'inherit'}}>
+                                    <span className="text-xs md:text-sm font-bold text-brutal-yellow">#Firebase</span>
+                                    <span className="text-xs md:text-sm font-bold text-brutal-pink">#REST_API</span>
+                                </div>
+                                <a href="https://amitflix.localhostamit.me" target="_blank" className="block text-center border-2 border-current py-2 font-bold hover:bg-current hover:text-black transition-colors text-sm md:text-base">
+                                    [ VISIT SITE ]
+                                </a>
+                            </div>
+
+                            {/* Project 3 */}
+                            <div className={brutalCard}>
+                                <div className="flex justify-between items-start mb-4">
+                                    <div className={`inline-block border-2 px-2 py-1 text-[10px] md:text-xs font-bold ${isDark ? 'border-white bg-brutal-pink text-white' : 'border-black bg-brutal-cyan text-black'}`}>
+                                        NETWORKING
+                                    </div>
+                                </div>
+                                <h3 className="text-2xl md:text-3xl font-black mb-3 break-all">GhostLink</h3>
+                                <p className="mb-6 opacity-90 text-sm md:text-base flex-grow">A real-time, browser-based peer-to-peer web chat application enabling direct communication without traditional backend server infrastructure.</p>
+                                <div className="flex flex-wrap gap-2 mb-6 border-t-2 pt-4" style={{borderColor: 'inherit'}}>
+                                    <span className="text-xs md:text-sm font-bold text-brutal-cyan">#WebRTC</span>
+                                    <span className="text-xs md:text-sm font-bold text-brutal-yellow">#P2P</span>
+                                </div>
+                                <a href="https://ghostlink.localhostamit.me" target="_blank" className="block text-center border-2 border-current py-2 font-bold hover:bg-current hover:text-black transition-colors text-sm md:text-base">
+                                    [ VISIT SITE ]
+                                </a>
+                            </div>
+
+                            {/* Project 4 */}
+                            <div className={brutalCard}>
+                                <div className="flex justify-between items-start mb-4">
+                                    <div className={`inline-block border-2 px-2 py-1 text-[10px] md:text-xs font-bold ${isDark ? 'border-white bg-[#22c55e] text-black' : 'border-black bg-[#22c55e] text-white'}`}>
+                                        AGRI-TECH
+                                    </div>
+                                </div>
+                                <h3 className="text-2xl md:text-3xl font-black mb-3 break-all">KisanMitra</h3>
+                                <p className="mb-6 opacity-90 text-sm md:text-base flex-grow">Utility application displaying real-time agricultural market (mandi) rates by integrating with Government Open Data APIs to assist local farmers.</p>
+                                <div className="flex flex-wrap gap-2 mb-6 border-t-2 pt-4" style={{borderColor: 'inherit'}}>
+                                    <span className="text-xs md:text-sm font-bold text-[#22c55e]">#GovAPI</span>
+                                    <span className="text-xs md:text-sm font-bold text-brutal-yellow">#JavaScript</span>
+                                </div>
+                                <a href="https://kisanmitra.localhostamit.me" target="_blank" className="block text-center border-2 border-current py-2 font-bold hover:bg-current hover:text-black transition-colors text-sm md:text-base">
+                                    [ VISIT SITE ]
+                                </a>
+                            </div>
+
+                        </div>
+                    </section>
+
+                    {/* --- EDUCATION & CERTIFICATIONS --- */}
+                    <section id="education" className={`py-16 md:py-20 border-y-4 ${isDark ? 'bg-zinc-900 border-white' : 'bg-brutal-cyan border-black'}`}>
+                        <div className="max-w-7xl mx-auto px-4 md:px-6">
+                            <h2 className="text-3xl md:text-5xl lg:text-6xl font-black tracking-tighter mb-10 md:mb-12 uppercase text-center md:text-left">Background</h2>
+                            
+                            <div className="grid md:grid-cols-[1fr,1fr] gap-8">
+                                {/* Education */}
+                                <div className={`border-4 p-6 md:p-8 shadow-[6px_6px_0px_currentColor] ${isDark ? 'bg-black border-white text-white' : 'bg-white border-black text-black'}`}>
+                                    <h3 className="text-2xl md:text-3xl font-black mb-6 border-b-4 pb-2" style={{borderColor: 'inherit'}}>EDUCATION</h3>
+                                    <div>
+                                        <h4 className="text-xl md:text-2xl font-bold">Bachelor of Computer Applications (BCA)</h4>
+                                        <p className="text-lg md:text-xl opacity-80 mt-2">Kurukshetra University (KUK)</p>
+                                        <div className="mt-4 inline-block border-2 px-3 py-1 font-bold bg-brutal-yellow text-black border-black">
+                                            Expected Graduation: 2027
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Certifications */}
+                                <div className={`border-4 p-6 md:p-8 shadow-[6px_6px_0px_currentColor] ${isDark ? 'bg-black border-white text-white' : 'bg-brutal-pink border-black text-white shadow-black'}`}>
+                                    <h3 className="text-2xl md:text-3xl font-black mb-6 border-b-4 pb-2" style={{borderColor: 'inherit'}}>CERTIFICATIONS</h3>
+                                    <ul className="space-y-6">
+                                        <li>
+                                            <h4 className="text-lg md:text-xl font-bold flex items-start gap-2">
+                                                <i className="fas fa-certificate mt-1 text-brutal-yellow"></i>
+                                                Yuva AI for All
+                                            </h4>
+                                            <p className="opacity-90 ml-6 text-sm md:text-base">Fundamentals and applications of Artificial Intelligence.</p>
+                                        </li>
+                                        <li>
+                                            <h4 className="text-lg md:text-xl font-bold flex items-start gap-2">
+                                                <i className="fas fa-certificate mt-1 text-brutal-yellow"></i>
+                                                FCCB (Hartron)
+                                            </h4>
+                                            <p className="opacity-90 ml-6 text-sm md:text-base">Computer operations and applications.</p>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    {/* --- GITHUB API SECTION --- */}
+                    <section className={`py-16 md:py-20 px-4 md:px-6 ${isDark ? 'bg-brutal-dark text-white' : 'bg-brutal-light text-black'}`}>
+                        <div className="max-w-7xl mx-auto">
+                            <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-10 md:mb-12 border-b-4 pb-6" style={{borderColor: 'inherit'}}>
+                                <div>
+                                    <h2 className="text-3xl md:text-4xl lg:text-5xl font-black tracking-tighter">API::REPOS</h2>
+                                    <p className="font-bold text-lg md:text-xl mt-2 opacity-80">Fetching live from @{username}</p>
+                                </div>
+                                <a href={`https://github.com/${username}`} target="_blank" className="mt-4 md:mt-0 font-bold hover:underline text-sm md:text-base border-2 px-3 py-2" style={{borderColor: 'inherit'}}>
+                                    VIEW ALL REPOS →
+                                </a>
+                            </div>
+
+                            {loading ? (
+                                <div className="text-center py-12 text-xl md:text-2xl font-bold animate-pulse">
+                                    > CONNECTING TO GITHUB...
+                                </div>
+                            ) : (
+                                <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                                    {repos.map(repo => (
+                                        <a key={repo.id} href={repo.html_url} target="_blank" 
+                                           className={`border-2 p-5 md:p-6 transition-all duration-200 block hover:-translate-y-2 
+                                           ${isDark ? 'border-white bg-zinc-900 hover:bg-zinc-800 hover:shadow-[4px_4px_0px_#22d3ee]' : 'border-black bg-white hover:bg-gray-50 hover:shadow-[4px_4px_0px_#000]'}`}>
+                                            <div className="flex justify-between items-start mb-3">
+                                                <i className="fab fa-github text-2xl"></i>
+                                                <span className="text-xs md:text-sm font-bold border border-current px-2 py-0.5"><i className="fas fa-star text-brutal-yellow"></i> {repo.stargazers_count}</span>
+                                            </div>
+                                            <h4 className="font-bold text-lg md:text-xl mb-2 truncate">{repo.name}</h4>
+                                            <p className="text-xs md:text-sm opacity-70 h-10 overflow-hidden mb-4">{repo.description || "// No description."}</p>
+                                            <div className="flex justify-between items-center text-[10px] md:text-xs font-bold border-t border-current pt-3 opacity-80">
+                                                <span>{repo.language || "HTML"}</span>
+                                                <span>{(repo.size / 1024).toFixed(1)} MB</span>
+                                            </div>
+                                        </a>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+                    </section>
+
+                    {/* --- CONTACT SECTION --- */}
+                    <section id="contact" className="py-16 md:py-24 px-4 md:px-6 max-w-4xl mx-auto text-center">
+                        <div className={`border-4 md:border-8 p-8 md:p-16 shadow-[8px_8px_0px_currentColor] md:shadow-[12px_12px_0px_currentColor] 
+                            ${isDark ? 'border-brutal-yellow bg-black text-white shadow-brutal-yellow' : 'border-black bg-brutal-yellow text-black shadow-black'}`}>
+                            <h2 className="text-4xl md:text-6xl lg:text-7xl font-black mb-4 md:mb-6 uppercase tracking-tighter">Let's Connect.</h2>
+                            <p className="text-base md:text-xl font-bold mb-8 md:mb-12 opacity-90 max-w-2xl mx-auto">
+                                Open to discussing web development roles, API integrations, and building scalable platforms. Let's build something brutal.
+                            </p>
+                            
+                            <div className="space-y-4 md:space-y-6 text-sm sm:text-lg md:text-2xl font-black flex flex-col items-center">
+                                <a href="mailto:kumaramit02934@gmail.com" className={`flex items-center gap-3 md:gap-4 border-4 px-4 md:px-8 py-3 md:py-4 w-full md:w-auto justify-center hover:translate-x-1 hover:translate-y-1 transition-transform truncate
+                                    ${isDark ? 'bg-white text-black border-white' : 'bg-white text-black border-black shadow-[4px_4px_0px_#000] hover:shadow-none'}`}>
+                                    <i className="fas fa-envelope text-xl md:text-3xl"></i>
+                                    <span className="truncate">kumaramit02934@gmail.com</span>
+                                </a>
+                                
+                                <a href="tel:+917988650874" className={`flex items-center gap-3 md:gap-4 border-4 px-4 md:px-8 py-3 md:py-4 w-full md:w-auto justify-center hover:translate-x-1 hover:translate-y-1 transition-transform
+                                    ${isDark ? 'bg-brutal-cyan text-black border-white' : 'bg-brutal-cyan text-black border-black shadow-[4px_4px_0px_#000] hover:shadow-none'}`}>
+                                    <i className="fas fa-phone-alt text-xl md:text-3xl"></i>
+                                    +91 79886 50874
+                                </a>
+                            </div>
+                        </div>
+                    </section>
+
+                    {/* --- FOOTER --- */}
+                    <footer className={`py-8 md:py-10 px-4 md:px-6 border-t-4 text-center font-bold text-sm md:text-base ${isDark ? 'bg-zinc-900 border-white text-white' : 'bg-white border-black text-black'}`}>
+                        <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+                            <span>© 2026 AMIT KUMAR. ALL RIGHTS RESERVED.</span>
+                            <div className="flex gap-6 text-xl md:text-2xl">
+                                <a href="https://linkedin.com/in/amitkumar7988" target="_blank" className="hover:text-brutal-pink transition-colors"><i className="fab fa-linkedin"></i></a>
+                                <a href="https://github.com/localhostamit" target="_blank" className="hover:text-brutal-pink transition-colors"><i className="fab fa-github"></i></a>
+                                <a href="https://localhostamit.me" target="_blank" className="hover:text-brutal-pink transition-colors"><i className="fas fa-globe"></i></a>
+                            </div>
+                        </div>
+                    </footer>
+
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
     </script>
 </body>
 </html>
