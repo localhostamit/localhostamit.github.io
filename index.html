@@ -1,29 +1,32 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AMIT KUMAR | WEB DEVELOPER</title>
+    <title>Amit Kumar | Frontend Developer</title>
+    
     <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
     <script src="https://cdn.tailwindcss.com"></script>
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <script>
         tailwind.config = {
             darkMode: 'class', 
             theme: {
                 extend: {
-                    fontFamily: { mono: ['Space Mono', 'monospace'] },
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
                     colors: {
-                        brutal: {
-                            yellow: '#ffde03',
-                            cyan: '#06b6d4',
-                            pink: '#e11d48',
-                            dark: '#09090b',
-                            light: '#f8fafc'
+                        brand: {
+                            50: '#eff6ff',
+                            100: '#dbeafe',
+                            500: '#3b82f6', // Primary Accent
+                            600: '#2563eb', // Hover Accent
+                            900: '#1e3a8a',
                         }
                     }
                 }
@@ -31,78 +34,131 @@
         }
     </script>
     <style>
-        body { font-family: 'Space Mono', monospace; overflow-x: hidden; }
-        html { scroll-behavior: smooth; }
-        
-        /* Custom scrollbar for brutalist feel */
-        ::-webkit-scrollbar { width: 10px; border-left: 2px solid #000; }
-        ::-webkit-scrollbar-track { background: #f8fafc; }
-        ::-webkit-scrollbar-thumb { background: #000; }
-        .dark ::-webkit-scrollbar { border-left: 2px solid #fff; }
-        .dark ::-webkit-scrollbar-track { background: #09090b; }
-        .dark ::-webkit-scrollbar-thumb { background: #ffde03; }
+        body { font-family: 'Inter', sans-serif; }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 4px; }
+        .dark ::-webkit-scrollbar-thumb { background-color: #475569; }
     </style>
 </head>
-<body class="antialiased">
+<body class="bg-gray-50 text-gray-900 dark:bg-gray-950 dark:text-gray-100 transition-colors duration-300 antialiased">
     <div id="root"></div>
 
     <script type="text/babel">
         const { useState, useEffect } = React;
 
         const App = () => {
-            const [repos, setRepos] = useState([]);
-            const [loading, setLoading] = useState(true);
+            // --- STATE MANAGEMENT ---
             const [isDark, setIsDark] = useState(false);
-            const username = "localhostamit"; 
+            const [repos, setRepos] = useState([]);
+            const [apiStatus, setApiStatus] = useState('loading'); // loading, success, error
+            const username = "localhostamit";
 
+            // --- EFFECTS ---
+            // 1. Dark Mode Persistence
             useEffect(() => {
-                if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-                    setIsDark(true);
-                }
+                const savedTheme = localStorage.getItem('theme');
+                const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
                 
-                fetch(`https://api.github.com/users/${username}/repos?sort=updated&per_page=6`)
-                    .then(res => res.json())
-                    .then(data => {
-                        setRepos(data);
-                        setLoading(false);
-                    })
-                    .catch(err => console.error(err));
+                if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+                    setIsDark(true);
+                    document.documentElement.classList.add('dark');
+                } else {
+                    document.documentElement.classList.remove('dark');
+                }
             }, []);
 
-            const wrapperClass = isDark ? "dark bg-brutal-dark text-white" : "bg-brutal-light text-black";
-            const navClass = "fixed w-full z-50 top-0 border-b-4 transition-colors duration-300 " + 
-                             (isDark ? "bg-brutal-dark border-white" : "bg-brutal-light border-black");
-            
-            const brutalCard = `border-4 p-6 md:p-8 transition-all duration-200 flex flex-col
-                ${isDark 
-                    ? 'bg-zinc-900 border-white shadow-[4px_4px_0px_#ffde03] md:shadow-[6px_6px_0px_#ffde03] hover:shadow-[2px_2px_0px_#ffde03]' 
-                    : 'bg-white border-black shadow-[4px_4px_0px_#000] md:shadow-[6px_6px_0px_#000] hover:shadow-[2px_2px_0px_#000]'} 
-                hover:translate-x-[2px] hover:translate-y-[2px] md:hover:translate-x-[4px] md:hover:translate-y-[4px]`;
-                
-            const brutalBadge = `border-2 px-3 py-1 font-bold text-xs md:text-sm shadow-[2px_2px_0px_currentColor] 
-                ${isDark ? 'bg-zinc-800 border-white text-white' : 'bg-white border-black text-black'}`;
+            const toggleTheme = () => {
+                if (isDark) {
+                    document.documentElement.classList.remove('dark');
+                    localStorage.setItem('theme', 'light');
+                    setIsDark(false);
+                } else {
+                    document.documentElement.classList.add('dark');
+                    localStorage.setItem('theme', 'dark');
+                    setIsDark(true);
+                }
+            };
+
+            // 2. GitHub API Fetch with Error Handling
+            useEffect(() => {
+                const fetchRepos = async () => {
+                    try {
+                        const res = await fetch(`https://api.github.com/users/${username}/repos?sort=updated&per_page=6`);
+                        if (!res.ok) throw new Error("GitHub API rate limit or network issue.");
+                        const data = await res.json();
+                        setRepos(data);
+                        setApiStatus('success');
+                    } catch (error) {
+                        console.error(error);
+                        setApiStatus('error');
+                    }
+                };
+                fetchRepos();
+            }, []);
+
+            // --- DATA STRUCTURES ---
+            const skills = {
+                Frontend: ["HTML5", "CSS3", "JavaScript (ES6+)", "React.js", "Tailwind CSS"],
+                Backend: ["Firebase (Auth/DB)", "REST APIs", "C/C++/Java (Basics)"],
+                Tools: ["Git & GitHub", "Linux (Ubuntu/Kali)", "SEO Optimization", "Blogger CMS"]
+            };
+
+            const projects = [
+                {
+                    title: "PyqHubs.in",
+                    desc: "Educational platform serving 10,000+ KUK students with academic resources. Built with custom theme development and Google Drive API integration.",
+                    img: "https://placehold.co/600x300/eff6ff/1e3a8a?text=PyqHubs",
+                    tech: ["Blogger CMS", "SEO", "Drive API"],
+                    live: "https://www.pyqhubs.in",
+                    github: "https://github.com/localhostamit" 
+                },
+                {
+                    title: "AmitFlix",
+                    desc: "Dynamic movie database fetching real-time data via Open Movie APIs. Features a Firebase-powered admin panel for content management.",
+                    img: "https://placehold.co/600x300/eff6ff/1e3a8a?text=AmitFlix",
+                    tech: ["JavaScript", "Firebase", "REST API"],
+                    live: "https://amitflix.localhostamit.me",
+                    github: "https://github.com/localhostamit"
+                },
+                {
+                    title: "GhostLink",
+                    desc: "A secure, browser-based peer-to-peer web chat application enabling direct communication without traditional backend server infrastructure.",
+                    img: "https://placehold.co/600x300/eff6ff/1e3a8a?text=GhostLink",
+                    tech: ["WebRTC", "JavaScript", "P2P"],
+                    live: "https://ghostlink.localhostamit.me",
+                    github: "https://github.com/localhostamit"
+                },
+                {
+                    title: "KisanMitra",
+                    desc: "Utility dashboard displaying real-time agricultural market rates by integrating Government Open Data APIs to assist local farmers.",
+                    img: "https://placehold.co/600x300/eff6ff/1e3a8a?text=KisanMitra",
+                    tech: ["Gov API", "JavaScript", "HTML/CSS"],
+                    live: "https://kisanmitra.localhostamit.me",
+                    github: "https://github.com/localhostamit"
+                }
+            ];
 
             return (
-                <div className={`${wrapperClass} min-h-screen transition-colors duration-300`}>
+                <div className="min-h-screen flex flex-col">
                     
                     {/* --- NAVIGATION --- */}
-                    <nav className={navClass}>
-                        <div className="max-w-7xl mx-auto px-4 md:px-6 py-4 flex justify-between items-center">
-                            <a href="#" className="font-bold text-xl md:text-2xl tracking-tighter hover:bg-brutal-yellow hover:text-black px-2 transition-colors truncate">
-                                AMIT_KUMAR
+                    <nav className="fixed w-full z-50 top-0 bg-white/80 dark:bg-gray-900/80 backdrop-blur-md border-b border-gray-200 dark:border-gray-800 transition-colors">
+                        <div className="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
+                            <a href="#" className="font-bold text-xl tracking-tight text-gray-900 dark:text-white">
+                                Amit<span className="text-brand-500">.dev</span>
                             </a>
-                            <div className="flex items-center gap-4 md:gap-6">
-                                <div className="hidden lg:flex gap-6 font-bold text-sm md:text-base">
-                                    <a href="#skills" className="hover:underline decoration-brutal-pink decoration-4 underline-offset-4">SKILLS</a>
-                                    <a href="#projects" className="hover:underline decoration-brutal-cyan decoration-4 underline-offset-4">PROJECTS</a>
-                                    <a href="#education" className="hover:underline decoration-brutal-yellow decoration-4 underline-offset-4">EDU</a>
-                                    <a href="#contact" className="hover:underline decoration-brutal-pink decoration-4 underline-offset-4">CONTACT</a>
+                            <div className="flex items-center gap-6">
+                                <div className="hidden md:flex gap-6 text-sm font-medium text-gray-600 dark:text-gray-300">
+                                    <a href="#about" className="hover:text-brand-500 transition-colors">About</a>
+                                    <a href="#projects" className="hover:text-brand-500 transition-colors">Projects</a>
+                                    <a href="#skills" className="hover:text-brand-500 transition-colors">Skills</a>
+                                    <a href="#github" className="hover:text-brand-500 transition-colors">GitHub</a>
                                 </div>
-                                {/* Dark Mode Toggle */}
                                 <button 
-                                    onClick={() => setIsDark(!isDark)}
-                                    className={`border-2 p-2 w-10 h-10 flex items-center justify-center shadow-[2px_2px_0px_currentColor] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none transition-all
-                                    ${isDark ? 'border-white bg-brutal-yellow text-black' : 'border-black bg-black text-white'}`}
+                                    onClick={toggleTheme}
+                                    className="p-2 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+                                    aria-label="Toggle Dark Mode"
                                 >
                                     <i className={`fas ${isDark ? 'fa-sun' : 'fa-moon'}`}></i>
                                 </button>
@@ -111,273 +167,210 @@
                     </nav>
 
                     {/* --- HERO SECTION --- */}
-                    <header className="pt-32 pb-16 md:pt-40 md:pb-20 px-4 md:px-6 max-w-7xl mx-auto grid lg:grid-cols-[3fr,2fr] gap-8 md:gap-12 items-center">
-                        <div>
-                            <div className={`inline-block border-2 px-3 py-1 text-sm md:text-base font-bold mb-6 shadow-[3px_3px_0px_currentColor]
-                                ${isDark ? 'bg-brutal-pink border-white text-white' : 'bg-brutal-yellow border-black text-black'}`}>
-                                [ LOCATION: KARNAL, HARYANA ]
-                            </div>
-                            <h1 className="text-4xl md:text-6xl lg:text-7xl font-black leading-[1.1] mb-6 uppercase tracking-tighter break-words">
-                                Scaling <span className={isDark ? "text-brutal-yellow" : "bg-brutal-cyan px-2"}>Web</span> Solutions.
-                            </h1>
-                            <p className="text-lg md:text-xl mb-8 max-w-2xl font-bold leading-relaxed opacity-90">
-                                Self-driven web developer and BCA student. Experienced in building and managing platforms serving over 10,000+ users, leveraging API integrations, Firebase, and AI tools to create robust applications.
-                            </p>
-                            <div className="flex flex-col sm:flex-row gap-4 font-bold">
-                                <a href="https://linkedin.com/in/amitkumar7988" target="_blank" className={`text-center border-4 px-6 py-3 shadow-[4px_4px_0px_currentColor] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_currentColor] transition-all
-                                    ${isDark ? 'bg-brutal-cyan border-white text-black' : 'bg-[#0A66C2] border-black text-white'}`}>
-                                    <i className="fab fa-linkedin mr-2"></i> LINKEDIN
-                                </a>
-                                <a href="https://github.com/localhostamit" target="_blank" className={`text-center border-4 px-6 py-3 shadow-[4px_4px_0px_currentColor] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_currentColor] transition-all
-                                    ${isDark ? 'bg-brutal-dark border-white text-white' : 'bg-white border-black text-black'}`}>
-                                    <i className="fab fa-github mr-2"></i> GITHUB
-                                </a>
-                            </div>
-                        </div>
-                        
-                        <div className={`border-4 p-6 shadow-[6px_6px_0px_currentColor] md:shadow-[8px_8px_0px_currentColor] ${isDark ? 'border-white bg-zinc-900' : 'border-black bg-brutal-pink text-white'}`}>
-                            <div className="border-b-4 pb-4 mb-4 font-bold text-xl md:text-2xl flex justify-between items-center" style={{borderColor: 'inherit'}}>
-                                <span>SYS_INFO</span>
-                                <i className="fas fa-terminal"></i>
-                            </div>
-                            <ul className="space-y-3 font-mono text-sm md:text-lg break-all md:break-normal">
-                                <li>> ROLE: <span className={isDark ? 'text-brutal-cyan' : 'text-brutal-yellow'}>Web Developer</span></li>
-                                <li>> OS: <span className={isDark ? 'text-brutal-cyan' : 'text-brutal-yellow'}>Linux (Ubuntu/Kali)</span></li>
-                                <li>> IMPACT: <span className={isDark ? 'text-brutal-cyan' : 'text-brutal-yellow'}>10k+ Platform Users</span></li>
-                                <li>> PORTFOLIO: <a href="https://localhostamit.me" target="_blank" className="underline decoration-2 hover:text-white">localhostamit.me</a></li>
-                            </ul>
+                    <header id="about" className="pt-32 pb-20 md:pt-48 md:pb-32 px-6 max-w-6xl mx-auto flex flex-col justify-center min-h-[80vh]">
+                        <p className="text-brand-500 font-medium mb-4 tracking-wide text-sm uppercase">BCA Student & Web Developer</p>
+                        <h1 className="text-5xl md:text-7xl font-bold mb-6 tracking-tight text-gray-900 dark:text-white">
+                            Amit Kumar.
+                        </h1>
+                        <h2 className="text-3xl md:text-5xl font-semibold mb-6 text-gray-500 dark:text-gray-400 tracking-tight">
+                            I build scalable digital experiences.
+                        </h2>
+                        <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mb-10 leading-relaxed">
+                            Self-driven frontend developer experienced in building and managing platforms serving over 10,000+ users. I specialize in React, JavaScript, API integrations, and creating clean, user-centric interfaces.
+                        </p>
+                        <div className="flex flex-wrap items-center gap-4">
+                            <a href="#projects" className="px-6 py-3 rounded-lg bg-brand-600 hover:bg-brand-500 text-white font-medium transition-all shadow-sm hover:shadow-md hover:-translate-y-0.5">
+                                View My Work
+                            </a>
+                            <a href="https://github.com/localhostamit" target="_blank" className="px-6 py-3 rounded-lg border border-gray-300 dark:border-gray-700 hover:border-gray-400 dark:hover:border-gray-500 text-gray-700 dark:text-gray-300 font-medium transition-all hover:bg-gray-50 dark:hover:bg-gray-800">
+                                <i className="fab fa-github mr-2"></i> GitHub Profile
+                            </a>
                         </div>
                     </header>
 
-                    {/* --- SKILLS & TOOLS --- */}
-                    <section id="skills" className={`py-16 md:py-20 border-y-4 ${isDark ? 'border-white bg-black' : 'border-black bg-brutal-yellow'}`}>
-                        <div className="max-w-7xl mx-auto px-4 md:px-6">
-                            <h2 className="text-3xl md:text-5xl lg:text-6xl font-black tracking-tighter mb-10 md:mb-12 uppercase">Tech_Stack</h2>
-                            
-                            <div className="grid lg:grid-cols-2 gap-8 md:gap-12">
-                                {/* Core Dev */}
-                                <div className={`border-4 p-6 md:p-8 ${isDark ? 'bg-zinc-900 border-white' : 'bg-white border-black'}`}>
-                                    <h3 className="text-xl md:text-2xl font-bold mb-6 border-b-2 pb-2" style={{borderColor: 'inherit'}}>DEVELOPMENT</h3>
-                                    <div className="flex flex-wrap gap-2 md:gap-3">
-                                        <span className={brutalBadge}>HTML / CSS / JS</span>
-                                        <span className={brutalBadge}>React (UI)</span>
-                                        <span className={`${brutalBadge} ${isDark ? '!text-brutal-pink' : '!text-brutal-pink'}`}>Firebase (Auth/DB)</span>
-                                        <span className={brutalBadge}>API Integration</span>
-                                        <span className={brutalBadge}>Blogger CMS</span>
-                                    </div>
-                                </div>
+                    {/* --- PROJECTS SECTION --- */}
+                    <section id="projects" className="py-20 px-6 bg-white dark:bg-gray-900 border-y border-gray-100 dark:border-gray-800 transition-colors">
+                        <div className="max-w-6xl mx-auto">
+                            <div className="mb-12">
+                                <h2 className="text-3xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                                    <span className="text-brand-500">01.</span> Featured Projects
+                                </h2>
+                                <p className="text-gray-500 dark:text-gray-400 mt-2">Real-world applications I've built and deployed.</p>
+                            </div>
 
-                                {/* Tools & Environment */}
-                                <div className={`border-4 p-6 md:p-8 ${isDark ? 'bg-zinc-900 border-white' : 'bg-white border-black'}`}>
-                                    <h3 className="text-xl md:text-2xl font-bold mb-6 border-b-2 pb-2" style={{borderColor: 'inherit'}}>TOOLS & UTILITIES</h3>
-                                    <div className="flex flex-wrap gap-2 md:gap-3">
-                                        <span className={`${brutalBadge} ${isDark ? '!text-brutal-cyan' : '!text-brutal-cyan'}`}>AI Tools (ChatGPT/Gemini/Claude)</span>
-                                        <span className={brutalBadge}>SEO Optimization</span>
-                                        <span className={brutalBadge}>Domain & DNS Management</span>
-                                        <span className={brutalBadge}>Linux CLI</span>
-                                        <span className={brutalBadge}>Git / GitHub</span>
+                            <div className="grid md:grid-cols-2 gap-8">
+                                {projects.map((project, index) => (
+                                    <div key={index} className="bg-gray-50 dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all group">
+                                        {/* Project Image */}
+                                        <div className="h-48 overflow-hidden bg-gray-200 dark:bg-gray-800 relative">
+                                            <img src={project.img} alt={project.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                                        </div>
+                                        
+                                        {/* Project Content */}
+                                        <div className="p-6 flex flex-col h-[calc(100%-12rem)]">
+                                            <div className="flex justify-between items-start mb-4">
+                                                <h3 className="text-xl font-bold text-gray-900 dark:text-white">{project.title}</h3>
+                                                <div className="flex gap-4 text-gray-500 dark:text-gray-400">
+                                                    <a href={project.github} target="_blank" className="hover:text-brand-500 transition-colors" title="Source Code"><i className="fab fa-github text-xl"></i></a>
+                                                    <a href={project.live} target="_blank" className="hover:text-brand-500 transition-colors" title="Live Preview"><i className="fas fa-external-link-alt text-xl"></i></a>
+                                                </div>
+                                            </div>
+                                            <p className="text-gray-600 dark:text-gray-400 text-sm mb-6 flex-grow leading-relaxed">
+                                                {project.desc}
+                                            </p>
+                                            <div className="flex flex-wrap gap-2 text-xs font-medium text-brand-600 dark:text-brand-400">
+                                                {project.tech.map((t, i) => (
+                                                    <span key={i} className="bg-brand-50 dark:bg-brand-900/30 px-2.5 py-1 rounded-md border border-brand-100 dark:border-brand-800/50">{t}</span>
+                                                ))}
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
+                                ))}
                             </div>
                         </div>
                     </section>
 
-                    {/* --- PROJECTS --- */}
-                    <section id="projects" className="py-16 md:py-24 px-4 md:px-6 max-w-7xl mx-auto">
-                        <h2 className="text-4xl md:text-6xl lg:text-7xl font-black mb-12 md:mb-16 tracking-tighter">PROJECTS.EXE</h2>
-                        <div className="grid md:grid-cols-2 gap-8">
-                            
-                            {/* Project 1 */}
-                            <div className={brutalCard}>
-                                <div className="flex justify-between items-start mb-4">
-                                    <div className={`inline-block border-2 px-2 py-1 text-[10px] md:text-xs font-bold ${isDark ? 'border-white bg-brutal-cyan text-black' : 'border-black bg-black text-white'}`}>
-                                        EDUCATION / 10K+ USERS
-                                    </div>
-                                </div>
-                                <h3 className="text-2xl md:text-3xl font-black mb-3">PyqHubs.in</h3>
-                                <p className="mb-6 opacity-90 text-sm md:text-base flex-grow">Educational platform providing PYQs for KUK students. Custom built on Blogger CMS with Google Drive integration for file distribution. SEO optimized.</p>
-                                <div className="flex flex-wrap gap-2 mb-6 border-t-2 pt-4" style={{borderColor: 'inherit'}}>
-                                    <span className="text-xs md:text-sm font-bold text-brutal-pink">#BloggerCMS</span>
-                                    <span className="text-xs md:text-sm font-bold text-brutal-cyan">#SEO</span>
-                                </div>
-                                <a href="https://www.pyqhubs.in" target="_blank" className="block text-center border-2 border-current py-2 font-bold hover:bg-current hover:text-black transition-colors text-sm md:text-base">
-                                    [ VISIT SITE ]
-                                </a>
-                            </div>
+                    {/* --- SKILLS SECTION --- */}
+                    <section id="skills" className="py-20 px-6 max-w-6xl mx-auto w-full">
+                        <div className="mb-12">
+                            <h2 className="text-3xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                                <span className="text-brand-500">02.</span> Technical Skills
+                            </h2>
+                        </div>
 
-                            {/* Project 2 */}
-                            <div className={brutalCard}>
-                                <div className="flex justify-between items-start mb-4">
-                                    <div className={`inline-block border-2 px-2 py-1 text-[10px] md:text-xs font-bold ${isDark ? 'border-white bg-brutal-yellow text-black' : 'border-black bg-brutal-pink text-white'}`}>
-                                        ENTERTAINMENT / DATABASE
-                                    </div>
+                        <div className="grid md:grid-cols-3 gap-8">
+                            {Object.entries(skills).map(([category, items]) => (
+                                <div key={category} className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 p-6 rounded-xl shadow-sm">
+                                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 border-b border-gray-100 dark:border-gray-800 pb-2">
+                                        {category}
+                                    </h3>
+                                    <ul className="space-y-3">
+                                        {items.map((skill, index) => (
+                                            <li key={index} className="flex items-center text-gray-600 dark:text-gray-400 text-sm">
+                                                <i className="fas fa-check text-brand-500 mr-3 text-xs"></i>
+                                                {skill}
+                                            </li>
+                                        ))}
+                                    </ul>
                                 </div>
-                                <h3 className="text-2xl md:text-3xl font-black mb-3 break-all">AmitFlix</h3>
-                                <p className="mb-6 opacity-90 text-sm md:text-base flex-grow">Movie database fetching real-time data via Open Movie APIs. Features a Firebase-powered admin panel and automated download-to-stream link conversion.</p>
-                                <div className="flex flex-wrap gap-2 mb-6 border-t-2 pt-4" style={{borderColor: 'inherit'}}>
-                                    <span className="text-xs md:text-sm font-bold text-brutal-yellow">#Firebase</span>
-                                    <span className="text-xs md:text-sm font-bold text-brutal-pink">#REST_API</span>
-                                </div>
-                                <a href="https://amitflix.localhostamit.me" target="_blank" className="block text-center border-2 border-current py-2 font-bold hover:bg-current hover:text-black transition-colors text-sm md:text-base">
-                                    [ VISIT SITE ]
-                                </a>
-                            </div>
-
-                            {/* Project 3 */}
-                            <div className={brutalCard}>
-                                <div className="flex justify-between items-start mb-4">
-                                    <div className={`inline-block border-2 px-2 py-1 text-[10px] md:text-xs font-bold ${isDark ? 'border-white bg-brutal-pink text-white' : 'border-black bg-brutal-cyan text-black'}`}>
-                                        NETWORKING
-                                    </div>
-                                </div>
-                                <h3 className="text-2xl md:text-3xl font-black mb-3 break-all">GhostLink</h3>
-                                <p className="mb-6 opacity-90 text-sm md:text-base flex-grow">A real-time, browser-based peer-to-peer web chat application enabling direct communication without traditional backend server infrastructure.</p>
-                                <div className="flex flex-wrap gap-2 mb-6 border-t-2 pt-4" style={{borderColor: 'inherit'}}>
-                                    <span className="text-xs md:text-sm font-bold text-brutal-cyan">#WebRTC</span>
-                                    <span className="text-xs md:text-sm font-bold text-brutal-yellow">#P2P</span>
-                                </div>
-                                <a href="https://ghostlink.localhostamit.me" target="_blank" className="block text-center border-2 border-current py-2 font-bold hover:bg-current hover:text-black transition-colors text-sm md:text-base">
-                                    [ VISIT SITE ]
-                                </a>
-                            </div>
-
-                            {/* Project 4 */}
-                            <div className={brutalCard}>
-                                <div className="flex justify-between items-start mb-4">
-                                    <div className={`inline-block border-2 px-2 py-1 text-[10px] md:text-xs font-bold ${isDark ? 'border-white bg-[#22c55e] text-black' : 'border-black bg-[#22c55e] text-white'}`}>
-                                        AGRI-TECH
-                                    </div>
-                                </div>
-                                <h3 className="text-2xl md:text-3xl font-black mb-3 break-all">KisanMitra</h3>
-                                <p className="mb-6 opacity-90 text-sm md:text-base flex-grow">Utility application displaying real-time agricultural market (mandi) rates by integrating with Government Open Data APIs to assist local farmers.</p>
-                                <div className="flex flex-wrap gap-2 mb-6 border-t-2 pt-4" style={{borderColor: 'inherit'}}>
-                                    <span className="text-xs md:text-sm font-bold text-[#22c55e]">#GovAPI</span>
-                                    <span className="text-xs md:text-sm font-bold text-brutal-yellow">#JavaScript</span>
-                                </div>
-                                <a href="https://kisanmitra.localhostamit.me" target="_blank" className="block text-center border-2 border-current py-2 font-bold hover:bg-current hover:text-black transition-colors text-sm md:text-base">
-                                    [ VISIT SITE ]
-                                </a>
-                            </div>
-
+                            ))}
                         </div>
                     </section>
 
                     {/* --- EDUCATION & CERTIFICATIONS --- */}
-                    <section id="education" className={`py-16 md:py-20 border-y-4 ${isDark ? 'bg-zinc-900 border-white' : 'bg-brutal-cyan border-black'}`}>
-                        <div className="max-w-7xl mx-auto px-4 md:px-6">
-                            <h2 className="text-3xl md:text-5xl lg:text-6xl font-black tracking-tighter mb-10 md:mb-12 uppercase text-center md:text-left">Background</h2>
-                            
-                            <div className="grid md:grid-cols-[1fr,1fr] gap-8">
-                                {/* Education */}
-                                <div className={`border-4 p-6 md:p-8 shadow-[6px_6px_0px_currentColor] ${isDark ? 'bg-black border-white text-white' : 'bg-white border-black text-black'}`}>
-                                    <h3 className="text-2xl md:text-3xl font-black mb-6 border-b-4 pb-2" style={{borderColor: 'inherit'}}>EDUCATION</h3>
-                                    <div>
-                                        <h4 className="text-xl md:text-2xl font-bold">Bachelor of Computer Applications (BCA)</h4>
-                                        <p className="text-lg md:text-xl opacity-80 mt-2">Kurukshetra University (KUK)</p>
-                                        <div className="mt-4 inline-block border-2 px-3 py-1 font-bold bg-brutal-yellow text-black border-black">
-                                            Expected Graduation: 2027
-                                        </div>
-                                    </div>
+                    <section className="py-20 px-6 bg-white dark:bg-gray-900 border-y border-gray-100 dark:border-gray-800 transition-colors">
+                        <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-12">
+                            <div>
+                                <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
+                                    <i className="fas fa-graduation-cap text-brand-500"></i> Education
+                                </h2>
+                                <div className="border-l-2 border-gray-200 dark:border-gray-800 pl-6 ml-3 relative">
+                                    <div className="absolute w-3 h-3 bg-brand-500 rounded-full -left-[7px] top-1.5 ring-4 ring-white dark:ring-gray-900"></div>
+                                    <h3 className="text-lg font-bold text-gray-900 dark:text-white">Bachelor of Computer Applications (BCA)</h3>
+                                    <p className="text-brand-600 dark:text-brand-400 font-medium text-sm mt-1">Kurukshetra University (KUK)</p>
+                                    <p className="text-gray-500 dark:text-gray-400 text-sm mt-2">Expected Graduation: 2027 • 4th Semester Student</p>
                                 </div>
+                            </div>
 
-                                {/* Certifications */}
-                                <div className={`border-4 p-6 md:p-8 shadow-[6px_6px_0px_currentColor] ${isDark ? 'bg-black border-white text-white' : 'bg-brutal-pink border-black text-white shadow-black'}`}>
-                                    <h3 className="text-2xl md:text-3xl font-black mb-6 border-b-4 pb-2" style={{borderColor: 'inherit'}}>CERTIFICATIONS</h3>
-                                    <ul className="space-y-6">
-                                        <li>
-                                            <h4 className="text-lg md:text-xl font-bold flex items-start gap-2">
-                                                <i className="fas fa-certificate mt-1 text-brutal-yellow"></i>
-                                                Yuva AI for All
-                                            </h4>
-                                            <p className="opacity-90 ml-6 text-sm md:text-base">Fundamentals and applications of Artificial Intelligence.</p>
-                                        </li>
-                                        <li>
-                                            <h4 className="text-lg md:text-xl font-bold flex items-start gap-2">
-                                                <i className="fas fa-certificate mt-1 text-brutal-yellow"></i>
-                                                FCCB (Hartron)
-                                            </h4>
-                                            <p className="opacity-90 ml-6 text-sm md:text-base">Computer operations and applications.</p>
-                                        </li>
-                                    </ul>
+                            <div>
+                                <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
+                                    <i className="fas fa-award text-brand-500"></i> Certifications
+                                </h2>
+                                <div className="space-y-6">
+                                    <div className="bg-gray-50 dark:bg-gray-950 border border-gray-200 dark:border-gray-800 p-4 rounded-lg">
+                                        <h3 className="font-bold text-gray-900 dark:text-white">Yuva AI for All</h3>
+                                        <p className="text-gray-500 dark:text-gray-400 text-sm mt-1">Fundamentals and applications of Artificial Intelligence.</p>
+                                    </div>
+                                    <div className="bg-gray-50 dark:bg-gray-950 border border-gray-200 dark:border-gray-800 p-4 rounded-lg">
+                                        <h3 className="font-bold text-gray-900 dark:text-white">FCCB (Hartron)</h3>
+                                        <p className="text-gray-500 dark:text-gray-400 text-sm mt-1">Computer operations and applications.</p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </section>
 
                     {/* --- GITHUB API SECTION --- */}
-                    <section className={`py-16 md:py-20 px-4 md:px-6 ${isDark ? 'bg-brutal-dark text-white' : 'bg-brutal-light text-black'}`}>
-                        <div className="max-w-7xl mx-auto">
-                            <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-10 md:mb-12 border-b-4 pb-6" style={{borderColor: 'inherit'}}>
-                                <div>
-                                    <h2 className="text-3xl md:text-4xl lg:text-5xl font-black tracking-tighter">API::REPOS</h2>
-                                    <p className="font-bold text-lg md:text-xl mt-2 opacity-80">Fetching live from @{username}</p>
-                                </div>
-                                <a href={`https://github.com/${username}`} target="_blank" className="mt-4 md:mt-0 font-bold hover:underline text-sm md:text-base border-2 px-3 py-2" style={{borderColor: 'inherit'}}>
-                                    VIEW ALL REPOS →
-                                </a>
+                    <section id="github" className="py-20 px-6 max-w-6xl mx-auto w-full">
+                        <div className="flex justify-between items-end mb-10 border-b border-gray-200 dark:border-gray-800 pb-4">
+                            <div>
+                                <h2 className="text-3xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                                    <span className="text-brand-500">03.</span> Latest Repositories
+                                </h2>
+                                <p className="text-gray-500 dark:text-gray-400 mt-2 text-sm">Dynamically fetched from GitHub API</p>
                             </div>
-
-                            {loading ? (
-                                <div className="text-center py-12 text-xl md:text-2xl font-bold animate-pulse">
-                                    > CONNECTING TO GITHUB...
-                                </div>
-                            ) : (
-                                <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                                    {repos.map(repo => (
-                                        <a key={repo.id} href={repo.html_url} target="_blank" 
-                                           className={`border-2 p-5 md:p-6 transition-all duration-200 block hover:-translate-y-2 
-                                           ${isDark ? 'border-white bg-zinc-900 hover:bg-zinc-800 hover:shadow-[4px_4px_0px_#22d3ee]' : 'border-black bg-white hover:bg-gray-50 hover:shadow-[4px_4px_0px_#000]'}`}>
-                                            <div className="flex justify-between items-start mb-3">
-                                                <i className="fab fa-github text-2xl"></i>
-                                                <span className="text-xs md:text-sm font-bold border border-current px-2 py-0.5"><i className="fas fa-star text-brutal-yellow"></i> {repo.stargazers_count}</span>
-                                            </div>
-                                            <h4 className="font-bold text-lg md:text-xl mb-2 truncate">{repo.name}</h4>
-                                            <p className="text-xs md:text-sm opacity-70 h-10 overflow-hidden mb-4">{repo.description || "// No description."}</p>
-                                            <div className="flex justify-between items-center text-[10px] md:text-xs font-bold border-t border-current pt-3 opacity-80">
-                                                <span>{repo.language || "HTML"}</span>
-                                                <span>{(repo.size / 1024).toFixed(1)} MB</span>
-                                            </div>
-                                        </a>
-                                    ))}
-                                </div>
-                            )}
+                            <a href={`https://github.com/${username}`} target="_blank" className="hidden sm:flex text-brand-600 dark:text-brand-400 hover:text-brand-500 font-medium text-sm items-center gap-1 transition-colors">
+                                View all <i className="fas fa-arrow-right"></i>
+                            </a>
                         </div>
+
+                        {/* Status Handling */}
+                        {apiStatus === 'loading' && (
+                            <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400">
+                                <i className="fas fa-circle-notch fa-spin text-3xl text-brand-500 mb-4"></i>
+                                <p>Fetching repositories...</p>
+                            </div>
+                        )}
+
+                        {apiStatus === 'error' && (
+                            <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-600 dark:text-red-400 p-6 rounded-xl text-center">
+                                <i className="fas fa-exclamation-circle text-2xl mb-2"></i>
+                                <p className="font-medium">Unable to load repositories.</p>
+                                <p className="text-sm mt-1">GitHub API rate limit may have been reached. Please check back later or visit my profile directly.</p>
+                                <a href={`https://github.com/${username}`} target="_blank" className="inline-block mt-4 px-4 py-2 bg-red-100 dark:bg-red-900/50 rounded-lg text-sm font-medium hover:bg-red-200 dark:hover:bg-red-900 transition-colors">Go to GitHub Profile</a>
+                            </div>
+                        )}
+
+                        {apiStatus === 'success' && (
+                            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                {repos.map(repo => (
+                                    <a key={repo.id} href={repo.html_url} target="_blank" className="block bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 p-6 rounded-xl hover:shadow-md transition-shadow group">
+                                        <div className="flex justify-between items-start mb-3 text-gray-400 dark:text-gray-500">
+                                            <i className="far fa-folder text-2xl group-hover:text-brand-500 transition-colors"></i>
+                                            <div className="flex items-center gap-3 text-sm">
+                                                <span><i className="fas fa-star text-yellow-400"></i> {repo.stargazers_count}</span>
+                                            </div>
+                                        </div>
+                                        <h3 className="font-bold text-lg text-gray-900 dark:text-white mb-2 truncate group-hover:text-brand-500 transition-colors">{repo.name}</h3>
+                                        <p className="text-sm text-gray-500 dark:text-gray-400 h-10 overflow-hidden mb-4">{repo.description || "No description provided."}</p>
+                                        <div className="flex items-center text-xs font-medium text-gray-500 dark:text-gray-500">
+                                            <span className="flex items-center gap-1.5">
+                                                <span className="w-2.5 h-2.5 rounded-full bg-brand-500"></span>
+                                                {repo.language || "HTML"}
+                                            </span>
+                                        </div>
+                                    </a>
+                                ))}
+                            </div>
+                        )}
                     </section>
 
-                    {/* --- CONTACT SECTION --- */}
-                    <section id="contact" className="py-16 md:py-24 px-4 md:px-6 max-w-4xl mx-auto text-center">
-                        <div className={`border-4 md:border-8 p-8 md:p-16 shadow-[8px_8px_0px_currentColor] md:shadow-[12px_12px_0px_currentColor] 
-                            ${isDark ? 'border-brutal-yellow bg-black text-white shadow-brutal-yellow' : 'border-black bg-brutal-yellow text-black shadow-black'}`}>
-                            <h2 className="text-4xl md:text-6xl lg:text-7xl font-black mb-4 md:mb-6 uppercase tracking-tighter">Let's Connect.</h2>
-                            <p className="text-base md:text-xl font-bold mb-8 md:mb-12 opacity-90 max-w-2xl mx-auto">
-                                Open to discussing web development roles, API integrations, and building scalable platforms. Let's build something brutal.
+                    {/* --- CONTACT / FOOTER --- */}
+                    <footer className="mt-auto py-12 px-6 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800 text-center transition-colors">
+                        <div className="max-w-3xl mx-auto">
+                            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Let's Connect</h2>
+                            <p className="text-gray-600 dark:text-gray-400 mb-8 text-sm max-w-xl mx-auto">
+                                Currently based in Karnal, Haryana. I'm open to discussing web development roles, API integrations, and building scalable platforms.
                             </p>
                             
-                            <div className="space-y-4 md:space-y-6 text-sm sm:text-lg md:text-2xl font-black flex flex-col items-center">
-                                <a href="mailto:kumaramit02934@gmail.com" className={`flex items-center gap-3 md:gap-4 border-4 px-4 md:px-8 py-3 md:py-4 w-full md:w-auto justify-center hover:translate-x-1 hover:translate-y-1 transition-transform truncate
-                                    ${isDark ? 'bg-white text-black border-white' : 'bg-white text-black border-black shadow-[4px_4px_0px_#000] hover:shadow-none'}`}>
-                                    <i className="fas fa-envelope text-xl md:text-3xl"></i>
-                                    <span className="truncate">kumaramit02934@gmail.com</span>
+                            <div className="flex justify-center gap-6 mb-10">
+                                <a href="mailto:kumaramit02934@gmail.com" className="w-12 h-12 flex items-center justify-center rounded-full bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-brand-500 hover:text-white transition-all shadow-sm">
+                                    <i className="fas fa-envelope text-lg"></i>
                                 </a>
-                                
-                                <a href="tel:+917988650874" className={`flex items-center gap-3 md:gap-4 border-4 px-4 md:px-8 py-3 md:py-4 w-full md:w-auto justify-center hover:translate-x-1 hover:translate-y-1 transition-transform
-                                    ${isDark ? 'bg-brutal-cyan text-black border-white' : 'bg-brutal-cyan text-black border-black shadow-[4px_4px_0px_#000] hover:shadow-none'}`}>
-                                    <i className="fas fa-phone-alt text-xl md:text-3xl"></i>
-                                    +91 79886 50874
+                                <a href="tel:+917988650874" className="w-12 h-12 flex items-center justify-center rounded-full bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-brand-500 hover:text-white transition-all shadow-sm">
+                                    <i className="fas fa-phone-alt text-lg"></i>
+                                </a>
+                                <a href="https://linkedin.com/in/amitkumar7988" target="_blank" className="w-12 h-12 flex items-center justify-center rounded-full bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-brand-500 hover:text-white transition-all shadow-sm">
+                                    <i className="fab fa-linkedin-in text-lg"></i>
+                                </a>
+                                <a href="https://github.com/localhostamit" target="_blank" className="w-12 h-12 flex items-center justify-center rounded-full bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-brand-500 hover:text-white transition-all shadow-sm">
+                                    <i className="fab fa-github text-lg"></i>
                                 </a>
                             </div>
-                        </div>
-                    </section>
-
-                    {/* --- FOOTER --- */}
-                    <footer className={`py-8 md:py-10 px-4 md:px-6 border-t-4 text-center font-bold text-sm md:text-base ${isDark ? 'bg-zinc-900 border-white text-white' : 'bg-white border-black text-black'}`}>
-                        <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
-                            <span>© 2026 AMIT KUMAR. ALL RIGHTS RESERVED.</span>
-                            <div className="flex gap-6 text-xl md:text-2xl">
-                                <a href="https://linkedin.com/in/amitkumar7988" target="_blank" className="hover:text-brutal-pink transition-colors"><i className="fab fa-linkedin"></i></a>
-                                <a href="https://github.com/localhostamit" target="_blank" className="hover:text-brutal-pink transition-colors"><i className="fab fa-github"></i></a>
-                                <a href="https://localhostamit.me" target="_blank" className="hover:text-brutal-pink transition-colors"><i className="fas fa-globe"></i></a>
-                            </div>
+                            
+                            <p className="text-sm text-gray-400 dark:text-gray-500 font-medium">
+                                © {new Date().getFullYear()} Amit Kumar. Built with React & Tailwind.
+                            </p>
                         </div>
                     </footer>
 
