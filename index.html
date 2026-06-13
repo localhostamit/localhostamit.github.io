@@ -39,6 +39,12 @@
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 4px; }
         .dark ::-webkit-scrollbar-thumb { background-color: #475569; }
+        
+        /* Modal Animation */
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .modal-overlay { animation: fadeIn 0.2s ease-out forwards; }
+        .modal-content { animation: slideUp 0.3s ease-out forwards; }
     </style>
 </head>
 <body class="bg-gray-50 text-gray-900 dark:bg-gray-950 dark:text-gray-100 transition-colors duration-300 antialiased">
@@ -52,6 +58,7 @@
             const [isDark, setIsDark] = useState(false);
             const [repos, setRepos] = useState([]);
             const [apiStatus, setApiStatus] = useState('loading'); // loading, success, error
+            const [selectedProject, setSelectedProject] = useState(null); // For Case Study Modal
             const username = "localhostamit";
 
             // --- EFFECTS ---
@@ -97,12 +104,38 @@
                 fetchRepos();
             }, []);
 
+            // 3. Prevent scrolling when modal is open
+            useEffect(() => {
+                if (selectedProject) {
+                    document.body.style.overflow = 'hidden';
+                } else {
+                    document.body.style.overflow = 'unset';
+                }
+                return () => { document.body.style.overflow = 'unset'; }
+            }, [selectedProject]);
+
             // --- DATA STRUCTURES ---
             const skills = {
                 Frontend: ["HTML5", "CSS", "JavaScript", "React.js", "Tailwind CSS"],
                 Backend: ["Firebase (Auth/DB)", "APIs", "C/C++/Java (Basics)"],
                 Tools: ["Git & GitHub", "Linux (Ubuntu/Kali)", "SEO Optimization", "Blogger CMS"]
             };
+
+            // Dynamic Certifications Array - Add new ones here!
+            const certifications = [
+                {
+                    title: "Yuva AI for All",
+                    desc: "Fundamentals and applications of Artificial Intelligence.",
+                    issuer: "Government Initiative"
+                },
+                {
+                    title: "FCCB (Hartron)",
+                    desc: "Computer operations and applications.",
+                    issuer: "Hartron"
+                }
+                // To add a new certificate, simply add another object here like this:
+                // { title: "React Native Masterclass", desc: "Mobile app development.", issuer: "Udemy" }
+            ];
 
             const projects = [
                 {
@@ -111,7 +144,13 @@
                     img: "https://placehold.co/600x300/eff6ff/1e3a8a?text=PyqHubs",
                     tech: ["Blogger CMS", "SEO", "Drive API"],
                     live: "https://www.pyqhubs.in",
-                    github: "https://github.com/localhostamit" 
+                    github: "https://github.com/localhostamit",
+                    status: "Operational",
+                    deepDive: {
+                        architecture: "Serverless architecture utilizing Blogger CMS for hosting and Google Drive API for high-bandwidth document delivery.",
+                        challenge: "Managing thousands of PDFs without incurring high server costs while ensuring fast access during university exam seasons.",
+                        solution: "Implemented an SEO-optimized indexing system and handled domain migrations (including nameserver configurations) to improve search performance via Google Search Console."
+                    }
                 },
                 {
                     title: "AmitFlix",
@@ -119,15 +158,27 @@
                     img: "https://placehold.co/600x300/eff6ff/1e3a8a?text=AmitFlix",
                     tech: ["JavaScript", "Firebase", "REST API"],
                     live: "https://amitflix.localhostamit.me",
-                    github: "https://github.com/localhostamit"
+                    github: "https://github.com/localhostamit",
+                    status: "Operational",
+                    deepDive: {
+                        architecture: "Frontend built with vanilla JavaScript and CSS, connecting to OMDB/TMDB APIs for data and Firebase Firestore for custom list states.",
+                        challenge: "Handling async API states and creating a smooth UI for searching and filtering large datasets.",
+                        solution: "Implemented debounced search inputs to reduce API calls and utilized Firebase for secure user authentication and watchlist storage."
+                    }
                 },
                 {
                     title: "GhostLink",
                     desc: "A secure, browser-based peer-to-peer web chat application enabling direct communication without traditional backend server infrastructure.",
                     img: "https://placehold.co/600x300/eff6ff/1e3a8a?text=GhostLink",
-                    tech: ["WebRTC", "JavaScript", "P2P"],
+                    tech: ["WebRTC", "PeerJS", "JavaScript"],
                     live: "https://ghostlink.localhostamit.me",
-                    github: "https://github.com/localhostamit"
+                    github: "https://github.com/localhostamit",
+                    status: "Operational",
+                    deepDive: {
+                        architecture: "Fully decentralized P2P model using WebRTC and PeerJS to establish direct data channels between clients.",
+                        challenge: "Establishing reliable connections across different networks and NATs without a persistent middleman server.",
+                        solution: "Utilized STUN servers to resolve IP routing, ensuring that messages and video packets are transmitted securely and directly between browsers."
+                    }
                 },
                 {
                     title: "KisanMitra",
@@ -135,15 +186,21 @@
                     img: "https://placehold.co/600x300/eff6ff/1e3a8a?text=KisanMitra",
                     tech: ["Gov API", "JavaScript", "HTML/CSS"],
                     live: "https://kisanmitra.localhostamit.me",
-                    github: "https://github.com/localhostamit"
+                    github: "https://github.com/localhostamit",
+                    status: "Maintenance",
+                    deepDive: {
+                        architecture: "Client-side dashboard querying the Indian Government's Open Data API endpoints for live Mandi rates.",
+                        challenge: "Parsing complex JSON structures returned by government APIs and presenting them in a mobile-friendly format for farmers.",
+                        solution: "Created a responsive CSS grid layout with location-based filtering so users can instantly find relevant crop prices in their district."
+                    }
                 }
             ];
 
             return (
-                <div className="min-h-screen flex flex-col">
+                <div className="min-h-screen flex flex-col relative">
                     
                     {/* --- NAVIGATION --- */}
-                    <nav className="fixed w-full z-50 top-0 bg-white/80 dark:bg-gray-900/80 backdrop-blur-md border-b border-gray-200 dark:border-gray-800 transition-colors">
+                    <nav className="fixed w-full z-40 top-0 bg-white/80 dark:bg-gray-900/80 backdrop-blur-md border-b border-gray-200 dark:border-gray-800 transition-colors">
                         <div className="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
                             <a href="#" className="font-bold text-xl tracking-tight text-gray-900 dark:text-white">
                                 Amit<span className="text-brand-500">.dev</span>
@@ -191,23 +248,39 @@
                     {/* --- PROJECTS SECTION --- */}
                     <section id="projects" className="py-20 px-6 bg-white dark:bg-gray-900 border-y border-gray-100 dark:border-gray-800 transition-colors">
                         <div className="max-w-6xl mx-auto">
-                            <div className="mb-12">
-                                <h2 className="text-3xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
-                                    <span className="text-brand-500">01.</span> Featured Projects
-                                </h2>
-                                <p className="text-gray-500 dark:text-gray-400 mt-2">Real-world applications I've built and deployed.</p>
+                            
+                            {/* System Status Monitor */}
+                            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-12 border-b border-gray-200 dark:border-gray-800 pb-6">
+                                <div>
+                                    <h2 className="text-3xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                                        <span className="text-brand-500">01.</span> Featured Projects
+                                    </h2>
+                                    <p className="text-gray-500 dark:text-gray-400 mt-2">Real-world applications I've built and deployed.</p>
+                                </div>
+                                <div className="mt-4 sm:mt-0 flex items-center gap-3 px-4 py-2 bg-gray-50 dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-full shadow-sm">
+                                    <span className="relative flex h-3 w-3">
+                                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                                      <span className="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
+                                    </span>
+                                    <span className="text-sm font-medium text-gray-700 dark:text-gray-300">All Systems Active</span>
+                                </div>
                             </div>
 
                             <div className="grid md:grid-cols-2 gap-8">
                                 {projects.map((project, index) => (
-                                    <div key={index} className="bg-gray-50 dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all group">
+                                    <div key={index} className="bg-gray-50 dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all group flex flex-col">
                                         {/* Project Image */}
                                         <div className="h-48 overflow-hidden bg-gray-200 dark:bg-gray-800 relative">
                                             <img src={project.img} alt={project.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                                            {/* Individual Live Status Badge */}
+                                            <div className="absolute top-4 right-4 bg-white/90 dark:bg-gray-900/90 backdrop-blur px-3 py-1 rounded-full text-xs font-bold flex items-center gap-2 shadow-sm border border-gray-200 dark:border-gray-700">
+                                                <div className={`w-2 h-2 rounded-full ${project.status === 'Operational' ? 'bg-green-500' : 'bg-yellow-500'}`}></div>
+                                                <span className="text-gray-800 dark:text-gray-200 uppercase tracking-wider">{project.status}</span>
+                                            </div>
                                         </div>
                                         
                                         {/* Project Content */}
-                                        <div className="p-6 flex flex-col h-[calc(100%-12rem)]">
+                                        <div className="p-6 flex flex-col flex-grow">
                                             <div className="flex justify-between items-start mb-4">
                                                 <h3 className="text-xl font-bold text-gray-900 dark:text-white">{project.title}</h3>
                                                 <div className="flex gap-4 text-gray-500 dark:text-gray-400">
@@ -218,10 +291,19 @@
                                             <p className="text-gray-600 dark:text-gray-400 text-sm mb-6 flex-grow leading-relaxed">
                                                 {project.desc}
                                             </p>
-                                            <div className="flex flex-wrap gap-2 text-xs font-medium text-brand-600 dark:text-brand-400">
-                                                {project.tech.map((t, i) => (
-                                                    <span key={i} className="bg-brand-50 dark:bg-brand-900/30 px-2.5 py-1 rounded-md border border-brand-100 dark:border-brand-800/50">{t}</span>
-                                                ))}
+                                            
+                                            <div className="flex flex-col gap-4 mt-auto">
+                                                <div className="flex flex-wrap gap-2 text-xs font-medium text-brand-600 dark:text-brand-400">
+                                                    {project.tech.map((t, i) => (
+                                                        <span key={i} className="bg-brand-50 dark:bg-brand-900/30 px-2.5 py-1 rounded-md border border-brand-100 dark:border-brand-800/50">{t}</span>
+                                                    ))}
+                                                </div>
+                                                <button 
+                                                    onClick={() => setSelectedProject(project)}
+                                                    className="w-full py-2 bg-gray-200 dark:bg-gray-800 hover:bg-gray-300 dark:hover:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-lg text-sm font-semibold transition-colors flex justify-center items-center gap-2"
+                                                >
+                                                    <i className="fas fa-microscope"></i> View Case Study
+                                                </button>
                                             </div>
                                         </div>
                                     </div>
@@ -276,15 +358,16 @@
                                 <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
                                     <i className="fas fa-award text-brand-500"></i> Certifications
                                 </h2>
-                                <div className="space-y-6">
-                                    <div className="bg-gray-50 dark:bg-gray-950 border border-gray-200 dark:border-gray-800 p-4 rounded-lg">
-                                        <h3 className="font-bold text-gray-900 dark:text-white">Yuva AI for All</h3>
-                                        <p className="text-gray-500 dark:text-gray-400 text-sm mt-1">Fundamentals and applications of Artificial Intelligence.</p>
-                                    </div>
-                                    <div className="bg-gray-50 dark:bg-gray-950 border border-gray-200 dark:border-gray-800 p-4 rounded-lg">
-                                        <h3 className="font-bold text-gray-900 dark:text-white">FCCB (Hartron)</h3>
-                                        <p className="text-gray-500 dark:text-gray-400 text-sm mt-1">Computer operations and applications.</p>
-                                    </div>
+                                <div className="space-y-4">
+                                    {certifications.map((cert, index) => (
+                                        <div key={index} className="bg-gray-50 dark:bg-gray-950 border border-gray-200 dark:border-gray-800 p-4 rounded-lg hover:border-brand-500/50 transition-colors group">
+                                            <div className="flex justify-between items-start">
+                                                <h3 className="font-bold text-gray-900 dark:text-white group-hover:text-brand-500 transition-colors">{cert.title}</h3>
+                                                <span className="text-xs font-medium text-gray-400 dark:text-gray-500 bg-gray-200 dark:bg-gray-800 px-2 py-1 rounded">{cert.issuer}</span>
+                                            </div>
+                                            <p className="text-gray-500 dark:text-gray-400 text-sm mt-2">{cert.desc}</p>
+                                        </div>
+                                    ))}
                                 </div>
                             </div>
                         </div>
@@ -374,6 +457,92 @@
                         </div>
                     </footer>
 
+                    {/* --- CASE STUDY MODAL --- */}
+                    {selectedProject && (
+                        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6">
+                            {/* Backdrop */}
+                            <div 
+                                className="absolute inset-0 bg-gray-900/60 backdrop-blur-sm modal-overlay"
+                                onClick={() => setSelectedProject(null)}
+                            ></div>
+                            
+                            {/* Modal Box */}
+                            <div className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto bg-white dark:bg-gray-900 rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-800 modal-content flex flex-col">
+                                
+                                {/* Header */}
+                                <div className="sticky top-0 bg-white/95 dark:bg-gray-900/95 backdrop-blur z-10 border-b border-gray-200 dark:border-gray-800 px-6 py-4 flex justify-between items-center">
+                                    <h2 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-3">
+                                        <i className="fas fa-laptop-code text-brand-500"></i> 
+                                        {selectedProject.title} <span className="text-gray-400 dark:text-gray-500 font-normal text-lg">Deep Dive</span>
+                                    </h2>
+                                    <button 
+                                        onClick={() => setSelectedProject(null)}
+                                        className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 dark:bg-gray-800 text-gray-500 hover:bg-red-100 hover:text-red-600 dark:hover:bg-red-900/30 dark:hover:text-red-400 transition-colors"
+                                    >
+                                        <i className="fas fa-times"></i>
+                                    </button>
+                                </div>
+
+                                {/* Body */}
+                                <div className="p-6 space-y-8">
+                                    {/* Tech Stack Banner */}
+                                    <div className="flex flex-wrap gap-2">
+                                        {selectedProject.tech.map((t, i) => (
+                                            <span key={i} className="bg-brand-50 dark:bg-brand-900/30 text-brand-700 dark:text-brand-300 px-3 py-1.5 rounded-lg border border-brand-200 dark:border-brand-800/50 text-sm font-semibold">{t}</span>
+                                        ))}
+                                    </div>
+
+                                    {/* Architecture */}
+                                    <div>
+                                        <h3 className="text-sm font-bold uppercase tracking-wider text-gray-400 dark:text-gray-500 mb-3 flex items-center gap-2">
+                                            <i className="fas fa-sitemap"></i> System Architecture
+                                        </h3>
+                                        <p className="text-gray-700 dark:text-gray-300 leading-relaxed bg-gray-50 dark:bg-gray-950 p-4 rounded-lg border border-gray-100 dark:border-gray-800">
+                                            {selectedProject.deepDive.architecture}
+                                        </p>
+                                    </div>
+
+                                    {/* Challenge & Solution */}
+                                    <div className="grid sm:grid-cols-2 gap-6">
+                                        <div>
+                                            <h3 className="text-sm font-bold uppercase tracking-wider text-red-400 dark:text-red-500/80 mb-3 flex items-center gap-2">
+                                                <i className="fas fa-bolt"></i> The Challenge
+                                            </h3>
+                                            <p className="text-gray-700 dark:text-gray-300 text-sm leading-relaxed">
+                                                {selectedProject.deepDive.challenge}
+                                            </p>
+                                        </div>
+                                        <div>
+                                            <h3 className="text-sm font-bold uppercase tracking-wider text-green-500 dark:text-green-500/80 mb-3 flex items-center gap-2">
+                                                <i className="fas fa-check-circle"></i> The Solution
+                                            </h3>
+                                            <p className="text-gray-700 dark:text-gray-300 text-sm leading-relaxed">
+                                                {selectedProject.deepDive.solution}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                {/* Footer Actions */}
+                                <div className="mt-auto border-t border-gray-200 dark:border-gray-800 p-6 bg-gray-50 dark:bg-gray-950 rounded-b-2xl flex justify-end gap-4">
+                                    <a 
+                                        href={selectedProject.github} 
+                                        target="_blank" 
+                                        className="px-5 py-2.5 rounded-lg border border-gray-300 dark:border-gray-700 hover:border-gray-400 dark:hover:border-gray-500 text-gray-700 dark:text-gray-300 font-medium transition-all hover:bg-white dark:hover:bg-gray-800 text-sm"
+                                    >
+                                        <i className="fab fa-github mr-2"></i> Source Code
+                                    </a>
+                                    <a 
+                                        href={selectedProject.live} 
+                                        target="_blank" 
+                                        className="px-5 py-2.5 rounded-lg bg-brand-600 hover:bg-brand-500 text-white font-medium transition-all shadow-sm text-sm flex items-center gap-2"
+                                    >
+                                        Live Deployment <i className="fas fa-external-link-alt"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    )}
                 </div>
             );
         };
