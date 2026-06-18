@@ -5,14 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Amit Kumar | Frontend Developer</title>
     
-    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    
-    <script src="https://cdn.tailwindcss.com"></script>
-    
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js" crossorigin></script>
     
     <script>
         tailwind.config = {
@@ -33,6 +28,11 @@
             }
         }
     </script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
     <style>
         body { font-family: 'Inter', sans-serif; }
         ::-webkit-scrollbar { width: 8px; }
@@ -54,7 +54,7 @@
 <body class="bg-gray-50 text-gray-900 dark:bg-gray-950 dark:text-gray-100 transition-colors duration-300 antialiased">
     <div id="root"></div>
 
-    <script type="text/babel">
+    <script type="text/babel" data-presets="react,env">
         const { useState, useEffect, useRef } = React;
 
         // --- REVEAL ANIMATION COMPONENT ---
@@ -63,15 +63,16 @@
             const domRef = useRef();
 
             useEffect(() => {
+                const currentRef = domRef.current; // Copy ref to variable for safe cleanup
                 const observer = new IntersectionObserver(entries => {
                     if (entries[0].isIntersecting) {
                         setIsVisible(true);
-                        observer.unobserve(domRef.current);
+                        observer.unobserve(currentRef);
                     }
                 }, { threshold: 0.1 });
                 
-                if (domRef.current) observer.observe(domRef.current);
-                return () => { if (domRef.current) observer.unobserve(domRef.current); }
+                if (currentRef) observer.observe(currentRef);
+                return () => { if (currentRef) observer.unobserve(currentRef); }
             }, []);
 
             return (
@@ -249,7 +250,8 @@
             ];
 
             // --- DYNAMIC FILTER LOGIC ---
-            const allTechTags = ['All', ...new Set(projects.flatMap(p => p.tech))];
+            // Replaced flatMap with reduce for broader browser compatibility
+            const allTechTags = ['All', ...new Set(projects.reduce((acc, p) => acc.concat(p.tech), []))];
             const filteredProjects = selectedTech === 'All' ? projects : projects.filter(p => p.tech.includes(selectedTech));
             
             const filteredRepos = repos.filter(repo => 
