@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Amit Kumar | Frontend Developer</title>
     
-    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.development.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.development.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.6/babel.min.js"></script>
     
     <script>
         tailwind.config = {
@@ -52,9 +52,17 @@
     </style>
 </head>
 <body class="bg-gray-50 text-gray-900 dark:bg-gray-950 dark:text-gray-100 transition-colors duration-300 antialiased">
-    <div id="root"></div>
+    
+    <div id="root">
+        <div class="min-h-screen flex flex-col items-center justify-center bg-gray-950 text-gray-400 font-mono text-sm p-6 text-center">
+            <i class="fas fa-circle-notch fa-spin text-3xl text-blue-500 mb-4"></i>
+            <p class="mb-2 text-white text-lg">Initializing System...</p>
+            <p>If this screen remains, your browser is blocking local scripts.</p>
+            <p>Press <strong class="text-white">F12</strong> to open the console and check for CDN errors.</p>
+        </div>
+    </div>
 
-    <script type="text/babel">
+    <script type="text/babel" data-presets="react,env">
         const { useState, useEffect, useRef } = React;
 
         // --- REVEAL ANIMATION COMPONENT ---
@@ -63,11 +71,11 @@
             const domRef = useRef();
 
             useEffect(() => {
-                const currentRef = domRef.current; // Copy ref to variable for safe cleanup
+                const currentRef = domRef.current;
                 const observer = new IntersectionObserver(entries => {
                     if (entries[0].isIntersecting) {
                         setIsVisible(true);
-                        observer.unobserve(currentRef);
+                        if (currentRef) observer.unobserve(currentRef);
                     }
                 }, { threshold: 0.1 });
                 
@@ -93,11 +101,10 @@
             const [apiStatus, setApiStatus] = useState('loading');
             const [selectedProject, setSelectedProject] = useState(null);
             
-            // New Feature States
             const [selectedTech, setSelectedTech] = useState('All');
             const [repoSearchQuery, setRepoSearchQuery] = useState('');
             const [contactFormState, setContactFormState] = useState({ name: '', email: '', message: '' });
-            const [contactStatus, setContactStatus] = useState('idle'); // idle, submitting, success, error
+            const [contactStatus, setContactStatus] = useState('idle');
             const [is404, setIs404] = useState(false);
 
             const username = "localhostamit";
@@ -133,12 +140,11 @@
                 const fetchRepos = async () => {
                     try {
                         const res = await fetch(`https://api.github.com/users/${username}/repos?sort=updated&per_page=12`);
-                        if (!res.ok) throw new Error("GitHub API rate limit or network issue.");
+                        if (!res.ok) throw new Error("API Limit");
                         const data = await res.json();
                         setRepos(data);
                         setApiStatus('success');
                     } catch (error) {
-                        console.error(error);
                         setApiStatus('error');
                     }
                 };
@@ -249,8 +255,6 @@
                 }
             ];
 
-            // --- DYNAMIC FILTER LOGIC ---
-            // Replaced flatMap with reduce for broader browser compatibility
             const allTechTags = ['All', ...new Set(projects.reduce((acc, p) => acc.concat(p.tech), []))];
             const filteredProjects = selectedTech === 'All' ? projects : projects.filter(p => p.tech.includes(selectedTech));
             
@@ -259,11 +263,9 @@
                 (repo.language && repo.language.toLowerCase().includes(repoSearchQuery.toLowerCase()))
             );
 
-            // --- FORM HANDLER ---
             const handleContactSubmit = async (e) => {
                 e.preventDefault();
                 setContactStatus('submitting');
-                
                 try {
                     const res = await fetch("https://formsubmit.co/ajax/kumaramit02934@gmail.com", {
                         method: "POST",
@@ -278,14 +280,11 @@
                             _subject: "New Contact from Portfolio!"
                         })
                     });
-                    
                     if (res.ok) {
                         setContactStatus('success');
                         setContactFormState({ name: '', email: '', message: '' });
                         setTimeout(() => setContactStatus('idle'), 5000);
-                    } else {
-                        setContactStatus('error');
-                    }
+                    } else setContactStatus('error');
                 } catch (err) {
                     setContactStatus('error');
                 }
@@ -305,7 +304,7 @@
                             <div className="border border-green-800 p-4 mb-6 bg-gray-900/50">
                                 <p className="mb-2">Available recovery commands:</p>
                                 <ul className="list-none space-y-2 text-green-300">
-                                    <li>[1] <a href="#" onClick={() => { window.location.hash = ''; setIs404(false); }} className="hover:text-white underline">cd /home</a> - Return to Main Portfolio</li>
+                                    <li>[1] <a href="#" onClick={(e) => { e.preventDefault(); window.location.hash = ''; setIs404(false); }} className="hover:text-white underline">cd /home</a> - Return to Main Portfolio</li>
                                     <li>[2] <a href="https://github.com/localhostamit" className="hover:text-white underline">ping github</a> - Visit Git Repository</li>
                                 </ul>
                             </div>
@@ -317,7 +316,6 @@
 
             return (
                 <div className="min-h-screen flex flex-col relative">
-                    
                     {/* --- NAVIGATION --- */}
                     <nav className="fixed w-full z-40 top-0 bg-white/80 dark:bg-gray-900/80 backdrop-blur-md border-b border-gray-200 dark:border-gray-800 transition-colors">
                         <div className="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
@@ -334,7 +332,6 @@
                                 <button 
                                     onClick={toggleTheme}
                                     className="p-2 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
-                                    aria-label="Toggle Dark Mode"
                                 >
                                     <i className={`fas ${isDark ? 'fa-sun' : 'fa-moon'}`}></i>
                                 </button>
@@ -356,10 +353,10 @@
                                 Self-driven frontend developer experienced in building and managing platforms serving over 10,000+ users. I specialize in React, JavaScript, API integrations, and creating clean, user-centric interfaces.
                             </p>
                             <div className="flex flex-wrap items-center gap-4">
-                                <a href="#projects" className="px-6 py-3 rounded-lg bg-brand-600 hover:bg-brand-500 text-white font-medium transition-all shadow-sm hover:shadow-md hover:-translate-y-0.5">
+                                <a href="#projects" className="px-6 py-3 rounded-lg bg-brand-600 hover:bg-brand-500 text-white font-medium transition-all shadow-sm">
                                     View My Work
                                 </a>
-                                <a href="https://github.com/localhostamit" target="_blank" className="px-6 py-3 rounded-lg border border-gray-300 dark:border-gray-700 hover:border-gray-400 dark:hover:border-gray-500 text-gray-700 dark:text-gray-300 font-medium transition-all hover:bg-gray-50 dark:hover:bg-gray-800">
+                                <a href="https://github.com/localhostamit" target="_blank" className="px-6 py-3 rounded-lg border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 font-medium transition-all hover:bg-gray-50 dark:hover:bg-gray-800">
                                     <i className="fab fa-github mr-2"></i> GitHub Profile
                                 </a>
                             </div>
@@ -370,7 +367,6 @@
                     <section id="projects" className="py-20 px-6 bg-white dark:bg-gray-900 border-y border-gray-100 dark:border-gray-800 transition-colors">
                         <Reveal>
                             <div className="max-w-6xl mx-auto">
-                                {/* Header & System Status */}
                                 <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-8 border-b border-gray-200 dark:border-gray-800 pb-6">
                                     <div>
                                         <h2 className="text-3xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
@@ -387,7 +383,6 @@
                                     </div>
                                 </div>
 
-                                {/* Tech Stack Filter */}
                                 <div className="flex flex-wrap gap-2 mb-8">
                                     {allTechTags.map(tech => (
                                         <button 
@@ -395,8 +390,8 @@
                                             onClick={() => setSelectedTech(tech)}
                                             className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all border ${
                                                 selectedTech === tech 
-                                                ? 'bg-brand-500 text-white border-brand-500 shadow-sm' 
-                                                : 'bg-gray-50 dark:bg-gray-800 text-gray-600 dark:text-gray-300 border-gray-200 dark:border-gray-700 hover:border-brand-500'
+                                                ? 'bg-brand-500 text-white border-brand-500' 
+                                                : 'bg-gray-50 dark:bg-gray-800 text-gray-600 dark:text-gray-300 border-gray-200 dark:border-gray-700'
                                             }`}
                                         >
                                             {tech}
@@ -404,14 +399,13 @@
                                     ))}
                                 </div>
 
-                                {/* Projects Grid */}
                                 <div className="grid md:grid-cols-2 gap-8">
                                     {filteredProjects.map((project, index) => (
                                         <Reveal key={index} delay={index * 100}>
                                             <div className="bg-gray-50 dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all group flex flex-col h-full">
                                                 <div className="h-48 overflow-hidden bg-gray-200 dark:bg-gray-800 relative">
                                                     <img src={project.img} alt={project.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-                                                    <div className="absolute top-4 right-4 bg-white/90 dark:bg-gray-900/90 backdrop-blur px-3 py-1 rounded-full text-xs font-bold flex items-center gap-2 shadow-sm border border-gray-200 dark:border-gray-700">
+                                                    <div className="absolute top-4 right-4 bg-white/90 dark:bg-gray-900/90 backdrop-blur px-3 py-1 rounded-full text-xs font-bold flex items-center gap-2 border border-gray-200 dark:border-gray-700">
                                                         <div className={`w-2 h-2 rounded-full ${project.status === 'Operational' ? 'bg-green-500' : 'bg-yellow-500'}`}></div>
                                                         <span className="text-gray-800 dark:text-gray-200 uppercase tracking-wider">{project.status}</span>
                                                     </div>
@@ -421,13 +415,11 @@
                                                     <div className="flex justify-between items-start mb-4">
                                                         <h3 className="text-xl font-bold text-gray-900 dark:text-white">{project.title}</h3>
                                                         <div className="flex gap-4 text-gray-500 dark:text-gray-400">
-                                                            <a href={project.github} target="_blank" className="hover:text-brand-500 transition-colors" title="Source Code"><i className="fab fa-github text-xl"></i></a>
-                                                            <a href={project.live} target="_blank" className="hover:text-brand-500 transition-colors" title="Live Preview"><i className="fas fa-external-link-alt text-xl"></i></a>
+                                                            <a href={project.github} target="_blank" className="hover:text-brand-500 transition-colors"><i className="fab fa-github text-xl"></i></a>
+                                                            <a href={project.live} target="_blank" className="hover:text-brand-500 transition-colors"><i className="fas fa-external-link-alt text-xl"></i></a>
                                                         </div>
                                                     </div>
-                                                    <p className="text-gray-600 dark:text-gray-400 text-sm mb-6 flex-grow leading-relaxed">
-                                                        {project.desc}
-                                                    </p>
+                                                    <p className="text-gray-600 dark:text-gray-400 text-sm mb-6 flex-grow">{project.desc}</p>
                                                     
                                                     <div className="flex flex-col gap-4 mt-auto">
                                                         <div className="flex flex-wrap gap-2 text-xs font-medium text-brand-600 dark:text-brand-400">
@@ -437,7 +429,7 @@
                                                         </div>
                                                         <button 
                                                             onClick={() => setSelectedProject(project)}
-                                                            className="w-full py-2 bg-gray-200 dark:bg-gray-800 hover:bg-gray-300 dark:hover:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-lg text-sm font-semibold transition-colors flex justify-center items-center gap-2"
+                                                            className="w-full py-2 bg-gray-200 dark:bg-gray-800 text-gray-800 dark:text-gray-200 rounded-lg text-sm font-semibold transition-colors flex justify-center items-center gap-2"
                                                         >
                                                             <i className="fas fa-microscope"></i> View Case Study
                                                         </button>
@@ -447,14 +439,11 @@
                                         </Reveal>
                                     ))}
                                 </div>
-                                {filteredProjects.length === 0 && (
-                                    <div className="py-12 text-center text-gray-500">No projects found for the selected tech stack.</div>
-                                )}
                             </div>
                         </Reveal>
                     </section>
 
-                    {/* --- SKILLS & EDUCATION COMBINED SECTION --- */}
+                    {/* --- SKILLS & EDUCATION --- */}
                     <section id="skills" className="py-20 px-6 max-w-6xl mx-auto w-full">
                         <Reveal>
                             <div className="mb-12">
@@ -465,15 +454,14 @@
 
                             <div className="grid md:grid-cols-3 gap-8 mb-16">
                                 {Object.entries(skills).map(([category, items]) => (
-                                    <div key={category} className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 p-6 rounded-xl shadow-sm hover:border-brand-500/50 transition-colors">
+                                    <div key={category} className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 p-6 rounded-xl shadow-sm">
                                         <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 border-b border-gray-100 dark:border-gray-800 pb-2">
                                             {category}
                                         </h3>
                                         <ul className="space-y-3">
                                             {items.map((skill, index) => (
                                                 <li key={index} className="flex items-center text-gray-600 dark:text-gray-400 text-sm">
-                                                    <i className="fas fa-check text-brand-500 mr-3 text-xs"></i>
-                                                    {skill}
+                                                    <i className="fas fa-check text-brand-500 mr-3 text-xs"></i> {skill}
                                                 </li>
                                             ))}
                                         </ul>
@@ -500,10 +488,10 @@
                                     </h2>
                                     <div className="space-y-4">
                                         {certifications.map((cert, index) => (
-                                            <div key={index} className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 p-4 rounded-lg hover:border-brand-500/50 transition-colors group">
+                                            <div key={index} className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 p-4 rounded-lg">
                                                 <div className="flex justify-between items-start">
-                                                    <h3 className="font-bold text-gray-900 dark:text-white group-hover:text-brand-500 transition-colors">{cert.title}</h3>
-                                                    <span className="text-xs font-medium text-gray-400 dark:text-gray-500 bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded text-right ml-2">{cert.issuer}</span>
+                                                    <h3 className="font-bold text-gray-900 dark:text-white">{cert.title}</h3>
+                                                    <span className="text-xs font-medium text-gray-400 dark:text-gray-500 bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded ml-2">{cert.issuer}</span>
                                                 </div>
                                                 <p className="text-gray-500 dark:text-gray-400 text-sm mt-2">{cert.desc}</p>
                                             </div>
@@ -514,7 +502,7 @@
                         </Reveal>
                     </section>
 
-                    {/* --- GITHUB API SECTION WITH SEARCH --- */}
+                    {/* --- GITHUB API --- */}
                     <section id="github" className="py-20 px-6 bg-white dark:bg-gray-900 border-y border-gray-100 dark:border-gray-800 w-full transition-colors">
                         <Reveal>
                             <div className="max-w-6xl mx-auto">
@@ -523,10 +511,7 @@
                                         <h2 className="text-3xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
                                             <span className="text-brand-500">03.</span> Open Source
                                         </h2>
-                                        <p className="text-gray-500 dark:text-gray-400 mt-2 text-sm">Dynamically fetched from GitHub API</p>
                                     </div>
-                                    
-                                    {/* Client-Side Live Search */}
                                     <div className="relative w-full sm:w-64">
                                         <i className="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
                                         <input 
@@ -534,7 +519,7 @@
                                             placeholder="Filter repositories..." 
                                             value={repoSearchQuery}
                                             onChange={(e) => setRepoSearchQuery(e.target.value)}
-                                            className="w-full pl-10 pr-4 py-2 bg-gray-50 dark:bg-gray-950 border border-gray-200 dark:border-gray-700 rounded-lg text-sm focus:outline-none focus:border-brand-500 dark:focus:border-brand-500 text-gray-900 dark:text-white transition-colors"
+                                            className="w-full pl-10 pr-4 py-2 bg-gray-50 dark:bg-gray-950 border border-gray-200 dark:border-gray-700 rounded-lg text-sm focus:outline-none focus:border-brand-500 text-gray-900 dark:text-white"
                                         />
                                     </div>
                                 </div>
@@ -542,15 +527,13 @@
                                 {apiStatus === 'loading' && (
                                     <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400">
                                         <i className="fas fa-circle-notch fa-spin text-3xl text-brand-500 mb-4"></i>
-                                        <p>Fetching repositories...</p>
                                     </div>
                                 )}
 
                                 {apiStatus === 'error' && (
-                                    <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-600 dark:text-red-400 p-6 rounded-xl text-center">
+                                    <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 text-red-600 p-6 rounded-xl text-center">
                                         <i className="fas fa-exclamation-circle text-2xl mb-2"></i>
                                         <p className="font-medium">Unable to load repositories.</p>
-                                        <p className="text-sm mt-1">GitHub API rate limit may have been reached.</p>
                                     </div>
                                 )}
 
@@ -558,25 +541,20 @@
                                     <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                                         {filteredRepos.length > 0 ? filteredRepos.map((repo, i) => (
                                             <Reveal key={repo.id} delay={i * 50}>
-                                                <a href={repo.html_url} target="_blank" className="block bg-gray-50 dark:bg-gray-950 border border-gray-200 dark:border-gray-800 p-6 rounded-xl hover:shadow-md transition-shadow group h-full flex flex-col">
-                                                    <div className="flex justify-between items-start mb-3 text-gray-400 dark:text-gray-500">
-                                                        <i className="far fa-folder text-2xl group-hover:text-brand-500 transition-colors"></i>
-                                                        <div className="flex items-center gap-3 text-sm">
-                                                            <span><i className="fas fa-star text-yellow-400"></i> {repo.stargazers_count}</span>
-                                                        </div>
+                                                <a href={repo.html_url} target="_blank" className="block bg-gray-50 dark:bg-gray-950 border border-gray-200 dark:border-gray-800 p-6 rounded-xl h-full flex flex-col">
+                                                    <div className="flex justify-between items-start mb-3 text-gray-400">
+                                                        <i className="far fa-folder text-2xl"></i>
+                                                        <span className="text-sm"><i className="fas fa-star text-yellow-400"></i> {repo.stargazers_count}</span>
                                                     </div>
-                                                    <h3 className="font-bold text-lg text-gray-900 dark:text-white mb-2 truncate group-hover:text-brand-500 transition-colors">{repo.name}</h3>
-                                                    <p className="text-sm text-gray-500 dark:text-gray-400 flex-grow mb-4">{repo.description || "No description provided."}</p>
-                                                    <div className="flex items-center text-xs font-medium text-gray-500 dark:text-gray-500 mt-auto">
-                                                        <span className="flex items-center gap-1.5">
-                                                            <span className="w-2.5 h-2.5 rounded-full bg-brand-500"></span>
-                                                            {repo.language || "HTML"}
-                                                        </span>
+                                                    <h3 className="font-bold text-lg text-gray-900 dark:text-white mb-2 truncate">{repo.name}</h3>
+                                                    <p className="text-sm text-gray-500 flex-grow mb-4">{repo.description || "No description provided."}</p>
+                                                    <div className="flex items-center text-xs font-medium text-gray-500 mt-auto">
+                                                        <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-full bg-brand-500"></span>{repo.language || "HTML"}</span>
                                                     </div>
                                                 </a>
                                             </Reveal>
                                         )) : (
-                                            <div className="col-span-full py-12 text-center text-gray-500">No repositories match your search.</div>
+                                            <div className="col-span-full py-12 text-center text-gray-500">No repositories match.</div>
                                         )}
                                     </div>
                                 )}
@@ -588,119 +566,62 @@
                     <footer className="mt-auto py-16 px-6 bg-gray-50 dark:bg-gray-950 border-t border-gray-200 dark:border-gray-800 transition-colors">
                         <Reveal>
                             <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-12 items-center">
-                                {/* Contact Info */}
                                 <div>
                                     <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">Let's Connect</h2>
-                                    <p className="text-gray-600 dark:text-gray-400 mb-8 text-sm max-w-md leading-relaxed">
+                                    <p className="text-gray-600 dark:text-gray-400 mb-8 text-sm max-w-md">
                                         Currently based in Karnal, Haryana. I'm actively open to Internship opportunities in Web Development roles. Reach out if you want to build something scalable.
                                     </p>
                                     
                                     <div className="flex gap-4 mb-8">
-                                        <a href="mailto:kumaramit02934@gmail.com" className="w-12 h-12 flex items-center justify-center rounded-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 text-gray-600 dark:text-gray-300 hover:bg-brand-500 hover:border-brand-500 hover:text-white transition-all shadow-sm">
-                                            <i className="fas fa-envelope text-lg"></i>
-                                        </a>
-                                        <a href="tel:+917988650874" className="w-12 h-12 flex items-center justify-center rounded-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 text-gray-600 dark:text-gray-300 hover:bg-brand-500 hover:border-brand-500 hover:text-white transition-all shadow-sm">
-                                            <i className="fas fa-phone-alt text-lg"></i>
-                                        </a>
-                                        <a href="https://linkedin.com/in/amitkumar7988" target="_blank" className="w-12 h-12 flex items-center justify-center rounded-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 text-gray-600 dark:text-gray-300 hover:bg-brand-500 hover:border-brand-500 hover:text-white transition-all shadow-sm">
-                                            <i className="fab fa-linkedin-in text-lg"></i>
-                                        </a>
-                                        <a href="https://github.com/localhostamit" target="_blank" className="w-12 h-12 flex items-center justify-center rounded-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 text-gray-600 dark:text-gray-300 hover:bg-brand-500 hover:border-brand-500 hover:text-white transition-all shadow-sm">
-                                            <i className="fab fa-github text-lg"></i>
-                                        </a>
+                                        <a href="mailto:kumaramit02934@gmail.com" className="w-12 h-12 flex items-center justify-center rounded-full bg-white dark:bg-gray-900 border border-gray-200 text-gray-600 hover:text-white hover:bg-brand-500 transition-all"><i className="fas fa-envelope text-lg"></i></a>
+                                        <a href="tel:+917988650874" className="w-12 h-12 flex items-center justify-center rounded-full bg-white dark:bg-gray-900 border border-gray-200 text-gray-600 hover:text-white hover:bg-brand-500 transition-all"><i className="fas fa-phone-alt text-lg"></i></a>
+                                        <a href="https://linkedin.com/in/amitkumar7988" target="_blank" className="w-12 h-12 flex items-center justify-center rounded-full bg-white dark:bg-gray-900 border border-gray-200 text-gray-600 hover:text-white hover:bg-brand-500 transition-all"><i className="fab fa-linkedin-in text-lg"></i></a>
+                                        <a href="https://github.com/localhostamit" target="_blank" className="w-12 h-12 flex items-center justify-center rounded-full bg-white dark:bg-gray-900 border border-gray-200 text-gray-600 hover:text-white hover:bg-brand-500 transition-all"><i className="fab fa-github text-lg"></i></a>
                                     </div>
-                                    <p className="text-sm text-gray-400 dark:text-gray-500 font-medium">
-                                        © {new Date().getFullYear()} Made with ❤️ By Amit Kumar.
-                                    </p>
                                 </div>
 
-                                {/* FormSubmit Quick Form */}
-                                <div className="bg-white dark:bg-gray-900 p-6 sm:p-8 rounded-2xl border border-gray-200 dark:border-gray-800 shadow-sm">
+                                <div className="bg-white dark:bg-gray-900 p-6 rounded-2xl border border-gray-200 dark:border-gray-800 shadow-sm">
                                     <form onSubmit={handleContactSubmit} className="space-y-4">
                                         <h3 className="font-bold text-gray-900 dark:text-white text-xl mb-4">Send a direct message</h3>
-                                        
                                         <div className="grid grid-cols-2 gap-4">
-                                            <div>
-                                                <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">Name</label>
-                                                <input required type="text" value={contactFormState.name} onChange={e => setContactFormState({...contactFormState, name: e.target.value})} className="w-full px-4 py-2.5 bg-gray-50 dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-lg text-sm focus:outline-none focus:border-brand-500 dark:text-white transition-colors" placeholder="John Doe" />
-                                            </div>
-                                            <div>
-                                                <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">Email</label>
-                                                <input required type="email" value={contactFormState.email} onChange={e => setContactFormState({...contactFormState, email: e.target.value})} className="w-full px-4 py-2.5 bg-gray-50 dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-lg text-sm focus:outline-none focus:border-brand-500 dark:text-white transition-colors" placeholder="john@email.com" />
-                                            </div>
+                                            <input required type="text" value={contactFormState.name} onChange={e => setContactFormState({...contactFormState, name: e.target.value})} className="w-full px-4 py-2.5 bg-gray-50 dark:bg-gray-950 border border-gray-200 rounded-lg text-sm dark:text-white" placeholder="Name" />
+                                            <input required type="email" value={contactFormState.email} onChange={e => setContactFormState({...contactFormState, email: e.target.value})} className="w-full px-4 py-2.5 bg-gray-50 dark:bg-gray-950 border border-gray-200 rounded-lg text-sm dark:text-white" placeholder="Email" />
                                         </div>
-                                        <div>
-                                            <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">Message</label>
-                                            <textarea required rows="4" value={contactFormState.message} onChange={e => setContactFormState({...contactFormState, message: e.target.value})} className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-lg text-sm focus:outline-none focus:border-brand-500 dark:text-white transition-colors resize-none" placeholder="Hey Amit, loved your portfolio..."></textarea>
-                                        </div>
-                                        
-                                        <button 
-                                            type="submit" 
-                                            disabled={contactStatus === 'submitting'}
-                                            className="w-full py-3 bg-brand-600 hover:bg-brand-500 disabled:bg-gray-400 disabled:cursor-not-allowed text-white font-medium rounded-lg transition-colors flex justify-center items-center gap-2 text-sm"
-                                        >
-                                            {contactStatus === 'submitting' ? <i className="fas fa-spinner fa-spin"></i> : <i className="fas fa-paper-plane"></i>}
+                                        <textarea required rows="4" value={contactFormState.message} onChange={e => setContactFormState({...contactFormState, message: e.target.value})} className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-950 border border-gray-200 rounded-lg text-sm dark:text-white resize-none" placeholder="Message..."></textarea>
+                                        <button type="submit" disabled={contactStatus === 'submitting'} className="w-full py-3 bg-brand-600 text-white font-medium rounded-lg text-sm">
                                             {contactStatus === 'submitting' ? 'Sending...' : 'Send Message'}
                                         </button>
-
-                                        {contactStatus === 'success' && (
-                                            <p className="text-green-500 text-sm text-center font-medium mt-2"><i className="fas fa-check-circle mr-1"></i> Message sent successfully!</p>
-                                        )}
-                                        {contactStatus === 'error' && (
-                                            <p className="text-red-500 text-sm text-center font-medium mt-2"><i className="fas fa-exclamation-circle mr-1"></i> Failed to send. Please try email directly.</p>
-                                        )}
+                                        {contactStatus === 'success' && <p className="text-green-500 text-sm text-center">Message sent successfully!</p>}
                                     </form>
                                 </div>
                             </div>
                         </Reveal>
                     </footer>
 
-                    {/* --- CASE STUDY MODAL --- */}
+                    {/* --- MODAL --- */}
                     {selectedProject && (
-                        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6">
-                            <div className="absolute inset-0 bg-gray-900/60 backdrop-blur-sm modal-overlay" onClick={() => setSelectedProject(null)}></div>
-                            <div className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto bg-white dark:bg-gray-900 rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-800 modal-content flex flex-col">
-                                <div className="sticky top-0 bg-white/95 dark:bg-gray-900/95 backdrop-blur z-10 border-b border-gray-200 dark:border-gray-800 px-6 py-4 flex justify-between items-center">
-                                    <h2 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-3">
-                                        <i className="fas fa-laptop-code text-brand-500"></i> 
-                                        {selectedProject.title} <span className="text-gray-400 dark:text-gray-500 font-normal text-lg">Deep Dive</span>
-                                    </h2>
-                                    <button onClick={() => setSelectedProject(null)} className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 dark:bg-gray-800 text-gray-500 hover:bg-red-100 hover:text-red-600 dark:hover:bg-red-900/30 dark:hover:text-red-400 transition-colors">
-                                        <i className="fas fa-times"></i>
-                                    </button>
+                        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+                            <div className="absolute inset-0 bg-gray-900/60 backdrop-blur-sm" onClick={() => setSelectedProject(null)}></div>
+                            <div className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto bg-white dark:bg-gray-900 rounded-2xl shadow-2xl p-6">
+                                <div className="flex justify-between items-center mb-6">
+                                    <h2 className="text-2xl font-bold dark:text-white">{selectedProject.title}</h2>
+                                    <button onClick={() => setSelectedProject(null)} className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 dark:bg-gray-800 text-gray-500"><i className="fas fa-times"></i></button>
                                 </div>
-
-                                <div className="p-6 space-y-8">
-                                    <div className="flex flex-wrap gap-2">
-                                        {selectedProject.tech.map((t, i) => (
-                                            <span key={i} className="bg-brand-50 dark:bg-brand-900/30 text-brand-700 dark:text-brand-300 px-3 py-1.5 rounded-lg border border-brand-200 dark:border-brand-800/50 text-sm font-semibold">{t}</span>
-                                        ))}
-                                    </div>
-
+                                <div className="space-y-6">
                                     <div>
-                                        <h3 className="text-sm font-bold uppercase tracking-wider text-gray-400 dark:text-gray-500 mb-3 flex items-center gap-2"><i className="fas fa-sitemap"></i> System Architecture</h3>
-                                        <p className="text-gray-700 dark:text-gray-300 leading-relaxed bg-gray-50 dark:bg-gray-950 p-4 rounded-lg border border-gray-100 dark:border-gray-800">{selectedProject.deepDive.architecture}</p>
+                                        <h3 className="text-sm font-bold text-gray-500 mb-2">Architecture</h3>
+                                        <p className="text-gray-700 dark:text-gray-300 text-sm">{selectedProject.deepDive.architecture}</p>
                                     </div>
-
-                                    <div className="grid sm:grid-cols-2 gap-6">
+                                    <div className="grid sm:grid-cols-2 gap-4">
                                         <div>
-                                            <h3 className="text-sm font-bold uppercase tracking-wider text-red-400 dark:text-red-500/80 mb-3 flex items-center gap-2"><i className="fas fa-bolt"></i> The Challenge</h3>
-                                            <p className="text-gray-700 dark:text-gray-300 text-sm leading-relaxed">{selectedProject.deepDive.challenge}</p>
+                                            <h3 className="text-sm font-bold text-red-500 mb-2">Challenge</h3>
+                                            <p className="text-gray-700 dark:text-gray-300 text-sm">{selectedProject.deepDive.challenge}</p>
                                         </div>
                                         <div>
-                                            <h3 className="text-sm font-bold uppercase tracking-wider text-green-500 dark:text-green-500/80 mb-3 flex items-center gap-2"><i className="fas fa-check-circle"></i> The Solution</h3>
-                                            <p className="text-gray-700 dark:text-gray-300 text-sm leading-relaxed">{selectedProject.deepDive.solution}</p>
+                                            <h3 className="text-sm font-bold text-green-500 mb-2">Solution</h3>
+                                            <p className="text-gray-700 dark:text-gray-300 text-sm">{selectedProject.deepDive.solution}</p>
                                         </div>
                                     </div>
-                                </div>
-                                
-                                <div className="mt-auto border-t border-gray-200 dark:border-gray-800 p-6 bg-gray-50 dark:bg-gray-950 rounded-b-2xl flex justify-end gap-4">
-                                    <a href={selectedProject.github} target="_blank" className="px-5 py-2.5 rounded-lg border border-gray-300 dark:border-gray-700 hover:border-gray-400 text-gray-700 dark:text-gray-300 font-medium transition-all hover:bg-white dark:hover:bg-gray-800 text-sm">
-                                        <i className="fab fa-github mr-2"></i> Source Code
-                                    </a>
-                                    <a href={selectedProject.live} target="_blank" className="px-5 py-2.5 rounded-lg bg-brand-600 hover:bg-brand-500 text-white font-medium transition-all shadow-sm text-sm flex items-center gap-2">
-                                        Live Deployment <i className="fas fa-external-link-alt"></i>
-                                    </a>
                                 </div>
                             </div>
                         </div>
