@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amit Kumar | Full-Stack Developer</title>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.development.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.development.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.6/babel.min.js"></script>
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class', 
+            theme: {
+                extend: {
+                    fontFamily: { 
+                        poppins: ['Poppins', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=JetBrains+Mono&display=swap" rel="stylesheet">
+    
+    <style>
+        body { font-family: 'Poppins', sans-serif; }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 4px; }
+        .dark ::-webkit-scrollbar-thumb { background-color: #475569; }
+        
+        /* Orbit Animations */
+        @keyframes shubham-home-orbit {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        @keyframes shubham-home-counter-orbit {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(-360deg); }
+        }
+        .home-orbit-track {
+            animation: shubham-home-orbit var(--home-orbit-duration) linear infinite;
+        }
+        .home-counter-orbit {
+            animation: shubham-home-counter-orbit var(--home-orbit-duration) linear infinite;
+        }
+
+        /* 3D Transform Utilities */
+        .perspective-1500 { perspective: 1500px; }
+        .transform-3d { transform-style: preserve-3d; }
+    </style>
+</head>
+<body class="antialiased selection:bg-cyan-400/30 transition-colors duration-500 bg-slate-50 text-slate-950 dark:bg-[#070b14] dark:text-slate-100">
+    <div id="root"></div>
+
+    <script type="text/babel" data-presets="react,env">
+        const { useState, useEffect, useRef } = React;
+
+        // --- NAVIGATION COMPONENT ---
+        const Navbar = ({ darkMode, setDarkMode }) => {
+            const [isMenuOpen, setIsMenuOpen] = useState(false);
+            const navLinks = [
+                { href: "#home", label: "Home" },
+                { href: "#overview", label: "Overview" },
+                { href: "#projects", label: "Projects" },
+                { href: "#certifications", label: "Certifications" },
+                { href: "#contact", label: "Contact" },
+            ];
+
+            return (
+                <nav className={`fixed inset-x-0 top-0 z-50 border-b backdrop-blur-xl transition-all duration-500 ${darkMode ? "border-white/10 text-white shadow-[0_12px_40px_rgba(2,6,23,0.28)]" : "border-slate-200/70 text-slate-950 shadow-[0_12px_40px_rgba(15,23,42,0.07)]"}`}>
+                    <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-3.5 sm:px-6 lg:px-8">
+                        <a href="#home" className="group flex items-center gap-3">
+                            <span className="text-lg font-bold tracking-tight sm:text-xl">Amit Kumar</span>
+                        </a>
+                        <ul className="hidden items-center gap-1 lg:flex">
+                            {navLinks.map((link) => (
+                                <li key={link.href}>
+                                    <a href={link.href} className={`group relative block rounded-xl px-3.5 py-2 text-sm font-medium transition-all duration-300 ${darkMode ? "text-slate-300 hover:bg-white/5 hover:text-white" : "text-slate-600 hover:bg-slate-100 hover:text-slate-950"}`}>
+                                        {link.label}
+                                        <span className="absolute inset-x-3 bottom-1 h-px origin-left scale-x-0 bg-gradient-to-r from-indigo-500 to-cyan-400 transition-transform duration-300 group-hover:scale-x-100" />
+                                    </a>
+                                </li>
+                            ))}
+                        </ul>
+                        <div className="flex items-center gap-2">
+                            <button onClick={() => setDarkMode(!darkMode)} className={`group rounded-xl border p-2.5 transition-all duration-300 hover:-translate-y-0.5 ${darkMode ? "border-white/10 bg-white/5 text-white hover:bg-white/10" : "border-slate-200 bg-white text-black shadow-sm hover:border-indigo-200"}`}>
+                                <i className={`fas ${darkMode ? 'fa-sun' : 'fa-moon'} transition-transform duration-500 group-hover:rotate-12`}></i>
+                            </button>
+                        </div>
+                    </div>
+                </nav>
+            );
+        };
+
+        // --- HOME COMPONENT ---
+        const Home = ({ darkMode }) => {
+            const OUTER_TECHNOLOGIES = [
+                { name: "MongoDB", icon: "fas fa-leaf", color: "#47A248", angle: -22 },
+                { name: "React", icon: "fab fa-react", color: "#61DAFB", angle: 50 },
+                { name: "Node.js", icon: "fab fa-node-js", color: "#5FA04E", angle: 122 },
+                { name: "Tailwind", icon: "fas fa-wind", color: "#06B6D4", angle: 194 },
+                { name: "Firebase", icon: "fas fa-fire", color: "#FFCA28", angle: 266 },
+            ];
+
+            const INNER_TECHNOLOGIES = [
+                { name: "HTML5", icon: "fab fa-html5", color: "#E34F26", angle: 8 },
+                { name: "CSS3", icon: "fab fa-css3-alt", color: "#2965F1", angle: 98 },
+                { name: "JavaScript", icon: "fab fa-js", color: "#F7DF1E", angle: 188 },
+                { name: "C++", icon: "fas fa-code", color: "#00599C", angle: 278 },
+            ];
+
+            const TechnologyOrbit = ({ technologies, duration, inner }) => (
+                <div className={`home-orbit-track pointer-events-none absolute ${inner ? "inset-[22%]" : "inset-[10%]"}`} style={{ "--home-orbit-duration": duration }}>
+                    {technologies.map((tech) => (
+                        <div key={tech.name} className="absolute inset-0" style={{ transform: `rotate(${tech.angle}deg)` }}>
+                            <div className="absolute left-1/2 top-0 -translate-x-1/2 -translate-y-1/2">
+                                <div style={{ transform: `rotate(${-tech.angle}deg)` }}>
+                                    <div className="home-counter-orbit relative flex flex-col items-center">
+                                        <div className={`flex items-center justify-center rounded-xl border shadow-lg ${inner ? "h-10 w-10" : "h-12 w-12"} ${darkMode ? "border-white/20 bg-[#151e32] shadow-black/30" : "border-slate-200 bg-white shadow-slate-900/10"}`}>
+                                            <i className={`${tech.icon} ${inner ? "text-lg" : "text-xl"}`} style={{ color: tech.color || (darkMode ? "#E2E8F0" : "#334155") }}></i>
+                                        </div>
+                                        <span className={`absolute left-1/2 top-full mt-1.5 -translate-x-1/2 whitespace-nowrap text-[10px] font-medium ${darkMode ? "text-slate-300" : "text-slate-600"}`}>{tech.name}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            );
+
+            return (
+                <section id="home" className={`relative flex min-h-screen items-center overflow-hidden pt-16 transition-colors duration-500 ${darkMode ? "bg-[#070b14] text-white" : "bg-[linear-gradient(180deg,#f8fafc_0%,#eef2ff_48%,#f8fafc_100%)] text-slate-950"}`}>
+                    <div className="pointer-events-none absolute inset-0 overflow-hidden">
+                        <div className={`absolute -left-24 top-32 h-72 w-72 rounded-full blur-3xl animate-pulse ${darkMode ? "bg-indigo-600/20" : "bg-indigo-300/35"}`} />
+                        <div className={`absolute -right-24 top-44 h-80 w-80 rounded-full blur-3xl animate-pulse ${darkMode ? "bg-cyan-500/15" : "bg-cyan-200/45"}`} />
+                    </div>
+
+                    <div className="relative mx-auto grid w-full max-w-7xl items-center gap-8 px-5 py-10 lg:grid-cols-[1.08fr_0.92fr]">
+                        <div className="order-2 text-center lg:order-1 lg:text-left">
+                            <div className={`mx-auto mb-6 inline-flex items-center gap-2 rounded-full border px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] lg:mx-0 ${darkMode ? "border-cyan-400/20 bg-cyan-400/5 text-cyan-300" : "border-indigo-200 bg-white/80 text-indigo-700"}`}>
+                                <span className="h-2 w-2 rounded-full bg-emerald-400 shadow-[0_0_14px_rgba(52,211,153,0.7)]" />
+                                Full-Stack Web Developer
+                            </div>
+                            <h1 className="text-4xl font-extrabold leading-[1.08] tracking-tight sm:text-5xl md:text-6xl">
+                                Hi, I'm <span className="bg-gradient-to-r from-indigo-500 via-violet-500 to-cyan-400 bg-clip-text text-transparent">Amit Kumar</span>
+                            </h1>
+                            <p className={`mx-auto mt-6 max-w-2xl text-base font-light leading-6 sm:text-lg lg:mx-0 ${darkMode ? "text-slate-300" : "text-slate-600"}`}>
+                                Self-driven frontend developer experienced in building and managing platforms serving over 10,000+ users. I specialize in React, JavaScript, API integrations, and creating clean interfaces.
+                            </p>
+                            
+                            <div className="mt-8 flex justify-center gap-3 lg:justify-start perspective-1500">
+                                <a href="mailto:kumaramit02934@gmail.com" className={`group flex h-12 w-12 items-center justify-center rounded-2xl border transition-all duration-500 transform-3d hover:-translate-y-2 hover:rotate-12 ${darkMode ? "border-white/10 bg-white/5 hover:bg-cyan-400/10 text-slate-200 hover:text-cyan-300" : "border-slate-200 bg-white hover:border-indigo-300 text-slate-700 hover:text-indigo-600"}`}>
+                                    <i className="fas fa-envelope text-xl transition-transform duration-500 group-hover:translate-z-4"></i>
+                                </a>
+                                <a href="https://github.com/localhostamit" target="_blank" className={`group flex h-12 w-12 items-center justify-center rounded-2xl border transition-all duration-500 transform-3d hover:-translate-y-2 hover:rotate-12 ${darkMode ? "border-white/10 bg-white/5 hover:bg-cyan-400/10 text-slate-200 hover:text-cyan-300" : "border-slate-200 bg-white hover:border-indigo-300 text-slate-700 hover:text-indigo-600"}`}>
+                                    <i className="fab fa-github text-xl transition-transform duration-500 group-hover:translate-z-4"></i>
+                                </a>
+                                <a href="https://linkedin.com/in/amitkumar7988" target="_blank" className={`group flex h-12 w-12 items-center justify-center rounded-2xl border transition-all duration-500 transform-3d hover:-translate-y-2 hover:rotate-12 ${darkMode ? "border-white/10 bg-white/5 hover:bg-cyan-400/10 text-slate-200 hover:text-cyan-300" : "border-slate-200 bg-white hover:border-indigo-300 text-slate-700 hover:text-indigo-600"}`}>
+                                    <i className="fab fa-linkedin-in text-xl transition-transform duration-500 group-hover:translate-z-4"></i>
+                                </a>
+                            </div>
+                        </div>
+
+                        <div className="order-1 flex w-full justify-center lg:order-2">
+                            <figure className="relative m-0 aspect-square w-full max-w-[400px]">
+                                <div className={`absolute inset-[10%] rounded-full border-2 border-dashed ${darkMode ? "border-slate-500/65" : "border-slate-400/70"}`} />
+                                <div className={`absolute inset-[22%] rounded-full border border-dashed ${darkMode ? "border-slate-500/65" : "border-slate-400/70"}`} />
+                                <TechnologyOrbit technologies={OUTER_TECHNOLOGIES} duration="15s" inner={false} darkMode={darkMode}/>
+                                <TechnologyOrbit technologies={INNER_TECHNOLOGIES} duration="10s" inner={true} darkMode={darkMode}/>
+                                <div className="absolute inset-[26%] z-10 overflow-hidden rounded-full bg-gradient-to-br from-indigo-500 to-cyan-400 flex items-center justify-center shadow-2xl">
+                                    <span className="text-6xl font-bold text-white tracking-tighter">AK</span>
+                                </div>
+                            </figure>
+                        </div>
+                    </div>
+                </section>
+            );
+        };
+
+        // --- OVERVIEW COMPONENT ---
+        const Overview = ({ darkMode }) => {
+            const experiences = [
+                {
+                    title: "Background",
+                    icon: "fas fa-user",
+                    content: "Hi, I'm Amit Kumar, a passionate Full-Stack Web Developer. I enjoy building responsive, scalable, and user-focused web applications utilizing modern frameworks and API integrations."
+                },
+                {
+                    title: "Education",
+                    icon: "fas fa-graduation-cap",
+                    items: [
+                        { duration: "Expected 2027", degree: "B.Sc. Computer Applications (BCA)", institution: "Kurukshetra University (KUK)" }
+                    ]
+                },
+                {
+                    title: "Skillset",
+                    icon: "fas fa-laptop-code",
+                    content: "Frontend: HTML5, CSS, JS, React.js, Tailwind. Backend: Firebase, APIs, C/C++/Java Basics. Tools: Git/GitHub, Linux, SEO, Blogger CMS."
+                }
+            ];
+
+            return (
+                <section id="overview" className={`relative py-24 ${darkMode ? "bg-[#0a0f1c] text-white" : "bg-white text-slate-950"}`}>
+                    <div className="relative mx-auto max-w-6xl px-5 sm:px-6 lg:px-8">
+                        <div className="mb-16 text-center">
+                            <h2 className="text-4xl font-extrabold tracking-tight sm:text-5xl">OVER<span className="bg-gradient-to-r from-indigo-500 via-violet-500 to-cyan-400 bg-clip-text text-transparent">VIEW</span></h2>
+                        </div>
+                        <div className="grid max-w-5xl mx-auto gap-6 lg:grid-cols-3 perspective-1500">
+                            {experiences.map((exp, index) => (
+                                <article key={index} className={`group relative overflow-hidden rounded-3xl border p-6 transition-all duration-700 transform-3d hover:-translate-y-2 hover:rotate-1 ${darkMode ? "border-white/10 bg-white/5 hover:border-cyan-400/25" : "border-slate-200 bg-white hover:border-indigo-200 shadow-lg"}`}>
+                                    <div className="mb-5 flex items-center gap-4">
+                                        <span className={`flex h-12 w-12 items-center justify-center rounded-2xl text-xl shadow-inner ${darkMode ? "bg-white/10" : "bg-indigo-50 text-indigo-600"}`}>
+                                            <i className={exp.icon}></i>
+                                        </span>
+                                        <h3 className="text-xl font-bold">{exp.title}</h3>
+                                    </div>
+                                    {exp.content && <p className={`leading-7 text-sm ${darkMode ? "text-slate-300" : "text-slate-600"}`}>{exp.content}</p>}
+                                    {exp.items && (
+                                        <div className="mt-5 space-y-5">
+                                            {exp.items.map((item, idx) => (
+                                                <div key={idx} className="relative pl-5 border-l-2 border-indigo-500">
+                                                    <p className="font-semibold">{item.degree}</p>
+                                                    <p className={`mt-1 text-sm font-medium ${darkMode ? "text-cyan-300" : "text-indigo-600"}`}>{item.duration}</p>
+                                                    <p className={`mt-2 text-sm leading-6 ${darkMode ? "text-slate-400" : "text-slate-500"}`}>{item.institution}</p>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    )}
+                                </article>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+            );
+        };
+
+        // --- PROJECTS COMPONENT ---
+        const Projects = ({ darkMode }) => {
+            const projects = [
+                { title: "PyqHubs.in", desc: "Educational platform serving 10,000+ KUK students. Built with Blogger CMS and Google Drive API.", tech: ["Blogger", "SEO", "Drive API"], live: "https://www.pyqhubs.in" },
+                { title: "AmitFlix", desc: "Dynamic movie database fetching real-time data via Open Movie APIs with Firebase authentication.", tech: ["JavaScript", "Firebase", "REST API"], live: "https://amitflix.localhostamit.me" },
+                { title: "GhostLink", desc: "Secure, P2P web chat application enabling direct communication using WebRTC and PeerJS.", tech: ["WebRTC", "PeerJS", "JavaScript"], live: "https://ghostlink.localhostamit.me" },
+                { title: "KisanMitra", desc: "Agricultural dashboard displaying real-time market rates via Government Open Data APIs.", tech: ["Gov API", "JavaScript", "HTML/CSS"], live: "https://kisanmitra.localhostamit.me" }
+            ];
+
+            return (
+                <section id="projects" className={`relative py-24 ${darkMode ? "bg-[#070b14] text-white" : "bg-slate-50 text-slate-950"}`}>
+                    <div className="relative mx-auto max-w-7xl px-5 sm:px-6 lg:px-8">
+                        <div className="mb-16 text-center">
+                            <h2 className="text-4xl font-extrabold tracking-tight sm:text-5xl">PRO<span className="bg-gradient-to-r from-indigo-500 via-violet-500 to-cyan-400 bg-clip-text text-transparent">JECTS</span></h2>
+                        </div>
+                        <div className="grid gap-7 md:grid-cols-2 lg:grid-cols-2 perspective-1500">
+                            {projects.map((project, index) => (
+                                <article key={index} className={`group relative flex flex-col overflow-hidden rounded-3xl border transition-all duration-700 transform-3d hover:-translate-y-2 hover:rotate-1 p-6 ${darkMode ? "border-white/10 bg-white/5 hover:border-cyan-400/25" : "border-slate-200 bg-white hover:border-indigo-200 shadow-lg"}`}>
+                                    <h3 className="text-2xl font-bold mb-3">{project.title}</h3>
+                                    <p className={`text-sm mb-6 flex-grow ${darkMode ? "text-slate-400" : "text-slate-600"}`}>{project.desc}</p>
+                                    <div className="flex flex-wrap gap-2 mb-6">
+                                        {project.tech.map((t, i) => (
+                                            <span key={i} className={`text-xs px-3 py-1 rounded-full font-medium ${darkMode ? "bg-cyan-500/10 text-cyan-300 border border-cyan-500/20" : "bg-indigo-50 text-indigo-700 border border-indigo-200"}`}>{t}</span>
+                                        ))}
+                                    </div>
+                                    <a href={project.live} target="_blank" className="inline-flex items-center gap-2 font-semibold text-sm hover:text-cyan-500 transition-colors">
+                                        View Live <i className="fas fa-external-link-alt"></i>
+                                    </a>
+                                </article>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+            );
+        };
+
+        // --- CERTIFICATES COMPONENT ---
+        const Certificates = ({ darkMode }) => {
+            const certs = [
+                { title: "Front End Web Development", issuer: "Reliance Skill Academy", date: "Completed", icon: "fas fa-code", gradient: "from-cyan-400 via-blue-500 to-indigo-500" },
+                { title: "Yuva AI for All", issuer: "Government Initiative", date: "Completed", icon: "fas fa-robot", gradient: "from-blue-500 via-indigo-500 to-violet-500" },
+                { title: "FCCB", issuer: "Hartron", date: "Completed", icon: "fas fa-desktop", gradient: "from-orange-500 via-amber-500 to-yellow-400" }
+            ];
+
+            return (
+                <section id="certifications" className={`relative py-24 ${darkMode ? "bg-[#0a0f1c] text-white" : "bg-white text-slate-950"}`}>
+                    <div className="relative mx-auto max-w-7xl px-5 sm:px-6 lg:px-8">
+                        <div className="mb-16 text-center">
+                            <h2 className="text-4xl font-extrabold tracking-tight sm:text-5xl">CERTI<span className="bg-gradient-to-r from-indigo-500 via-violet-500 to-cyan-400 bg-clip-text text-transparent">FICATIONS</span></h2>
+                        </div>
+                        <div className="grid gap-7 md:grid-cols-2 lg:grid-cols-3 perspective-1500">
+                            {certs.map((cert, index) => (
+                                <article key={index} className={`group relative flex flex-col overflow-hidden rounded-3xl border transition-all duration-700 transform-3d hover:-translate-y-3 ${darkMode ? "border-white/10 bg-white/5 hover:border-cyan-400/25 shadow-lg" : "border-slate-200 bg-white hover:border-indigo-200 shadow-xl"}`}>
+                                    <div className={`absolute left-0 top-0 h-1 w-full bg-gradient-to-r ${cert.gradient}`}></div>
+                                    <div className="p-6 flex flex-col h-full">
+                                        <div className={`flex h-14 w-14 items-center justify-center rounded-2xl mb-6 ${darkMode ? "bg-white/10" : "bg-slate-100"}`}>
+                                            <i className={`${cert.icon} text-2xl`}></i>
+                                        </div>
+                                        <p className={`mb-2 text-xs font-bold uppercase tracking-widest ${darkMode ? "text-cyan-400" : "text-indigo-600"}`}>{cert.issuer}</p>
+                                        <h3 className="mb-5 text-xl font-bold leading-snug">{cert.title}</h3>
+                                        <div className={`mt-auto flex items-center justify-between border-t pt-4 ${darkMode ? "border-white/10" : "border-slate-200"}`}>
+                                            <span className={`text-sm ${darkMode ? "text-slate-400" : "text-slate-500"}`}>Status</span>
+                                            <span className="text-sm font-semibold text-emerald-500">{cert.date}</span>
+                                        </div>
+                                    </div>
+                                </article>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+            );
+        };
+
+        // --- CONTACT COMPONENT ---
+        const Contact = ({ darkMode }) => {
+            const inputClass = `w-full rounded-2xl border px-4 py-3.5 text-sm outline-none transition-all focus:ring-4 ${darkMode ? "border-white/10 bg-white/5 text-white focus:border-cyan-400/40 focus:ring-cyan-400/10" : "border-slate-200 bg-slate-50 text-slate-900 focus:border-indigo-300 focus:ring-indigo-500/10"}`;
+            
+            return (
+                <section id="contact" className={`relative py-24 ${darkMode ? "bg-[#070b14] text-white" : "bg-slate-50 text-slate-950"}`}>
+                    <div className="relative mx-auto max-w-7xl px-5 sm:px-6 lg:px-8">
+                        <div className="mb-16 text-center">
+                            <h2 className="text-4xl font-extrabold tracking-tight sm:text-5xl">CON<span className="bg-gradient-to-r from-indigo-500 via-violet-500 to-cyan-400 bg-clip-text text-transparent">TACT</span></h2>
+                        </div>
+                        <div className={`mx-auto grid max-w-6xl overflow-hidden rounded-[2rem] border lg:grid-cols-[0.85fr_1.15fr] ${darkMode ? "border-white/10 bg-white/5 shadow-2xl" : "border-slate-200 bg-white shadow-xl"}`}>
+                            <div className={`p-8 lg:p-10 ${darkMode ? "border-b border-white/10 lg:border-b-0 lg:border-r bg-white/5" : "border-b border-slate-200 lg:border-b-0 lg:border-r bg-slate-50"}`}>
+                                <h3 className="text-2xl font-bold sm:text-3xl">Let's build something great.</h3>
+                                <p className={`mt-4 text-sm leading-7 ${darkMode ? "text-slate-400" : "text-slate-600"}`}>I'm open to full-stack development opportunities, internships, and interesting ideas.</p>
+                                <div className="mt-9 space-y-4">
+                                    <div className="flex items-center gap-4">
+                                        <div className={`flex h-11 w-11 items-center justify-center rounded-xl ${darkMode ? "bg-white/10 text-cyan-300" : "bg-indigo-50 text-indigo-600"}`}><i className="fas fa-envelope"></i></div>
+                                        <div><p className="text-xs font-medium text-slate-500">Email</p><p className="text-sm font-semibold">kumaramit02934@gmail.com</p></div>
+                                    </div>
+                                    <div className="flex items-center gap-4">
+                                        <div className={`flex h-11 w-11 items-center justify-center rounded-xl ${darkMode ? "bg-white/10 text-cyan-300" : "bg-indigo-50 text-indigo-600"}`}><i className="fas fa-map-marker-alt"></i></div>
+                                        <div><p className="text-xs font-medium text-slate-500">Location</p><p className="text-sm font-semibold">Karnal, Haryana, India</p></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="p-8 lg:p-10">
+                                <form action="https://formsubmit.co/kumaramit02934@gmail.com" method="POST" className="space-y-5">
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                                        <input type="text" name="name" className={inputClass} placeholder="Your Name" required />
+                                        <input type="email" name="email" className={inputClass} placeholder="Email Address" required />
+                                    </div>
+                                    <input type="text" name="_subject" className={inputClass} placeholder="Subject" required />
+                                    <textarea name="message" rows="5" className={`${inputClass} resize-none`} placeholder="Message" required></textarea>
+                                    <button type="submit" className="w-full rounded-2xl bg-gradient-to-r from-indigo-600 via-violet-600 to-cyan-500 px-6 py-4 text-sm font-semibold text-white shadow-lg transition-transform hover:-translate-y-1">Send Message</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            );
+        };
+
+        // --- FOOTER COMPONENT ---
+        const Footer = ({ darkMode }) => (
+            <footer className={`border-t py-6 transition-colors duration-500 ${darkMode ? "border-white/10 bg-[#060912] text-slate-400" : "border-slate-200 bg-white text-slate-500"}`}>
+                <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 px-5 text-center text-sm md:flex-row md:text-left">
+                    <p>© {new Date().getFullYear()} Amit Kumar. All Rights Reserved.</p>
+                    <p>Designed with React & Tailwind CSS</p>
+                </div>
+            </footer>
+        );
+
+        // --- APP ROOT ---
+        const App = () => {
+            const [darkMode, setDarkMode] = useState(true);
+
+            useEffect(() => {
+                if (darkMode) document.documentElement.classList.add("dark");
+                else document.documentElement.classList.remove("dark");
+            }, [darkMode]);
+
+            return (
+                <div className="min-h-screen">
+                    <Navbar darkMode={darkMode} setDarkMode={setDarkMode} />
+                    <Home darkMode={darkMode} />
+                    <Overview darkMode={darkMode} />
+                    <Projects darkMode={darkMode} />
+                    <Certificates darkMode={darkMode} />
+                    <Contact darkMode={darkMode} />
+                    <Footer darkMode={darkMode} />
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
